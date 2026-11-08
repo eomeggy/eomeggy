@@ -3,43 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eomeggy - Sân Chơi Mèo & Cửa Hàng</title>
+    <title>Eomeggy - Thế Giới Mèo & Mua Sắm</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: Arial, sans-serif;
-            background-color: #fce4ec;
-            text-align: center;
-            padding: 50px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fff0f3;
             color: #333;
         }
-        h1 {
+        /* Thanh Menu điều hướng */
+        header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
             color: #d81b60;
         }
-        .box {
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: #d81b60;
+        }
+        /* Khu vực nội dung chính */
+        .hero {
+            max-width: 900px;
+            margin: 60px auto;
+            text-align: center;
+            padding: 40px;
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            display: inline-block;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-            max-width: 600px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(216, 27, 96, 0.1);
+        }
+        .hero h1 {
+            color: #d81b60;
+            font-size: 38px;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            font-size: 18px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
         }
         .btn {
-            background-color: #e91e63;
+            background-color: #d81b60;
             color: white;
-            padding: 10px 20px;
+            padding: 12px 24px;
             text-decoration: none;
-            border-radius: 5px;
-            display: inline-block;
-            margin-top: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background-color: #ad1457;
+        }
+        .btn-outline {
+            background-color: transparent;
+            color: #d81b60;
+            border: 2px solid #d81b60;
+        }
+        .btn-outline:hover {
+            background-color: #fff0f3;
         }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h1>🐾 Chào mừng đến với Eomeggy!</h1>
-        <p>Đây là phiên bản thử nghiệm website bán hàng kết hợp sân chơi mèo đáng yêu của bạn.</p>
-        <p><em>Sắp tới, danh mục game mèo và các sản phẩm độc đáo sẽ được cập nhật tại đây!</em></p>
-        <a class="btn" href="#">Khám phá ngay</a>
-    </div>
+
+    <!-- Thanh Menu đầu trang -->
+    <header>
+        <nav>
+            <div class="logo">🐾 Eomeggy</div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Trang Chủ</a></li>
+                <li><a href="shop.html">Cửa Hàng</a></li>
+                <li><a href="cat-game.html">Góc Game Mèo</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Nội dung trang chủ -->
+    <main class="hero">
+        <h1>Chào mừng bạn đến với Eomeggy!</h1>
+        <p>Nơi hội tụ những món đồ dễ thương cho thú cưng và không gian giải trí siêu cưng cùng những chú mèo. Hãy khám phá ngay các sản phẩm mới hoặc ghé thăm sân chơi mèo bên dưới nhé!</p>
+        <div class="btn-group">
+            <a href="shop.html" class="btn">Đi đến Cửa Hàng</a>
+            <a href="cat-game.html" class="btn btn-outline">Chơi Game Mèo Ngay</a>
+        </div>
+    </main>
+
 </body>
 </html>
