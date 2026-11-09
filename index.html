@@ -376,7 +376,7 @@
                         <!-- YES CONFIG -->
                         <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 space-y-3">
                             <div class="flex items-center justify-between border-b border-purple-900/40 pb-2">
-                                <span class="font-extrabold text-sm text-emerald-400 block">YES Button Media ("EM CHIP CAM ON")</span>
+                                <span class="font-extrabold text-sm text-emerald-400 block">YES Button Media ("EM CHÍP CẢM ƠN")</span>
                                 <button onclick="testRunSlide('result-yes')" class="px-3 py-1 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-bold text-xs rounded-lg shadow">
                                     Test YES Slide
                                 </button>
@@ -447,6 +447,7 @@
     </div>
     <!-- Hidden Stage Audio Element -->
     <audio id="stage-bgm-audio" loop=""></audio>
+    
     <script>
         let currentStage = 1;
         let activeTabStage = 1;
@@ -488,6 +489,7 @@
             4: 'stage-bonus-audio.mp3' 
         };
         
+        // CẤU HÌNH ĐÚNG 100% TÊN VÀ THỨ TỰ CÁC THẺ ẢNH (TRÁI -> PHẢI, TRÊN -> DƯỚI)
         let stageCardPhotos = {
             1: [
                 'stage1-card-1.jpg', 
@@ -496,22 +498,19 @@
                 'stage1-card-4.jpg'
             ],
             2: [
-                'stage2-card-1.jpg', 'stage2-card-2.jpg', 'stage2-card-3.jpg', 
-                'stage2-card-4.jpg', 'stage2-card-5.jpg', 'stage2-card-6.jpg', 
-                'stage2-card-7.jpg', 'stage2-card-8.jpg'
+                'stage2-card-1.jpg', 'stage2-card-2.jpg', 'stage2-card-3.jpg', 'stage2-card-4.jpg', 
+                'stage2-card-5.jpg', 'stage2-card-6.jpg', 'stage2-card-7.jpg', 'stage2-card-8.jpg'
             ],
             3: [
-                'stage3-card-1.jpg', 'stage3-card-2.jpg', 'stage3-card-3.jpg', 
-                'stage3-card-4.jpg', 'stage3-card-5.jpg', 'stage3-card-6.jpg', 
-                'stage3-card-7.jpg', 'stage3-card-8.jpg', 'stage3-card-9.jpg', 
-                'stage3-card-10.jpg', 'stage3-card-11.jpg', 'stage3-card-12.jpg'
+                'stage3-card-1.jpg', 'stage3-card-2.jpg', 'stage3-card-3.jpg', 'stage3-card-4.jpg', 
+                'stage3-card-5.jpg', 'stage3-card-6.jpg', 'stage3-card-7.jpg', 'stage3-card-8.jpg', 
+                'stage3-card-9.jpg', 'stage3-card-10.jpg', 'stage3-card-11.jpg', 'stage3-card-12.jpg'
             ],
             4: [
-                'bonus-card-1.jpg', 'bonus-card-2.jpg', 'bonus-card-3.jpg', 'bonus-card-4.jpg',
-                'bonus-card-5.png', 'bonus-card-6.jpg', 'bonus-card-7.jpg', 'bonus-card-8.jpg',
-                'bonus-card-9.jpg', 'bonus-card-10.png', 'bonus-card-11.jpg', 'bonus-card-12.jpg',
-                'bonus-card-13.png', 'bonus-card-14.jpg', 'bonus-card-15.png', 'bonus-card-16.jpg',
-                'bonus-card-17.jpg', 'bonus-card-18.jpg', 'bonus-card-19.jpg', 'bonus-card-20.jpg'
+                'bonus-card-1.jpg', 'bonus-card-2.jpg', 'bonus-card-3.jpg', 'bonus-card-4.jpg', 'bonus-card-5.png',
+                'bonus-card-6.jpg', 'bonus-card-7.jpg', 'bonus-card-8.jpg', 'bonus-card-9.jpg', 'bonus-card-10.png',
+                'bonus-card-11.jpg', 'bonus-card-12.jpg', 'bonus-card-13.png', 'bonus-card-14.jpg', 'bonus-card-15.png',
+                'bonus-card-16.jpg', 'bonus-card-17.jpg', 'bonus-card-18.jpg', 'bonus-card-19.jpg', 'bonus-card-20.jpg'
             ]
         };
         
@@ -544,6 +543,20 @@
         
         let userCommentsList = [];
 
+        // KÍCH HOẠT ÂM THANH TOÀN CỤC KHI CLICK BẤT KỲ ĐÂU
+        let audioUnlocked = false;
+        function unlockAudio() {
+            if (audioUnlocked) return;
+            audioUnlocked = true;
+            const ctx = getAudioContext();
+            if (ctx && ctx.state === 'suspended') {
+                ctx.resume();
+            }
+        }
+        window.addEventListener('click', unlockAudio, { once: true });
+        window.addEventListener('touchstart', unlockAudio, { once: true });
+
+        // HÀM NGẮT TRIỆT ĐỂ TẤT CẢ MEDIA KHỎI CÁC SLIDE KHÁC
         function stopAllGlobalMedia() {
             stopBGM();
             stopIntroVideoCompletely();
@@ -788,10 +801,14 @@
         }
 
         function playLevelHover(lvl) {
+            // Dừng các hover khác trước
+            [1, 2, 3].forEach(l => {
+                if (l !== lvl) stopLevelHover(l);
+            });
             const vidEl = document.getElementById(`level-vid-${lvl}`);
             if (vidEl && levelHoverMedia[lvl].vid) {
                 vidEl.classList.remove('hidden');
-                vidEl.muted = !soundEnabled;
+                vidEl.muted = false;
                 vidEl.currentTime = 0;
                 vidEl.play().catch(()=>{});
             }
@@ -838,7 +855,11 @@
 
         function stopBGM() {
             const bgm = document.getElementById('stage-bgm-audio');
-            if (bgm) bgm.pause();
+            if (bgm) {
+                bgm.pause();
+                bgm.currentTime = 0;
+                bgm.src = '';
+            }
         }
 
         function toggleSound() {
@@ -873,53 +894,40 @@
             document.getElementById('moves-display').innerText = movesCount;
         }
 
+        // TẠO BÀI THEO ĐÚNG THỨ TỰ TỪ TRÁI SANG PHẢI, TRÊN XUỐNG DƯỚI
         function setupBoard(stage) {
             const board = document.getElementById('game-board');
             if (!board) return;
             board.innerHTML = '';
             let deck = [];
             const photos = stageCardPhotos[stage];
+            
             if (stage === 1) {
                 totalPairsInStage = 2;
                 deck = [
                     { id: 0, img: photos[0] }, { id: 1, img: photos[1] },
-                    { id: 1, img: photos[1] }, { id: 0, img: photos[0] }
+                    { id: 2, img: photos[2] }, { id: 3, img: photos[3] }
                 ];
                 board.className = "grid grid-cols-2 gap-6 w-full max-w-xl mx-auto p-4";
             } else if (stage === 2) {
                 totalPairsInStage = 4;
-                deck = [
-                    { id: 0, img: photos[0] }, { id: 1, img: photos[1] },
-                    { id: 2, img: photos[2] }, { id: 3, img: photos[3] },
-                    { id: 3, img: photos[3] }, { id: 2, img: photos[2] },
-                    { id: 0, img: photos[0] }, { id: 1, img: photos[1] }
-                ];
+                deck = photos.map((imgUrl, idx) => ({ id: idx, img: imgUrl }));
                 board.className = "grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 w-full max-w-3xl mx-auto p-6";
             } else if (stage === 3) {
                 totalPairsInStage = 6;
-                deck = [
-                    { id: 0, img: photos[0] }, { id: 1, img: photos[1] },
-                    { id: 2, img: photos[2] }, { id: 3, img: photos[3] },
-                    { id: 3, img: photos[3] }, { id: 4, img: photos[4] },
-                    { id: 0, img: photos[0] }, { id: 5, img: photos[5] },
-                    { id: 1, img: photos[1] }, { id: 5, img: photos[5] },
-                    { id: 4, img: photos[4] }, { id: 2, img: photos[2] }
-                ];
+                deck = photos.map((imgUrl, idx) => ({ id: idx, img: imgUrl }));
                 board.className = "grid grid-cols-3 sm:grid-cols-4 gap-5 sm:gap-6 w-full max-w-2xl mx-auto p-5";
             } else if (stage === 4) {
                 totalPairsInStage = 10;
-                deck = [];
-                for(let i=0; i<10; i++) {
-                    deck.push({ id: i, img: photos[i] });
-                    deck.push({ id: i, img: photos[i] });
-                }
-                deck.sort(() => Math.random() - 0.5);
+                deck = photos.map((imgUrl, idx) => ({ id: idx, img: imgUrl }));
                 board.className = "grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 w-full max-w-2xl mx-auto p-3";
             }
+
             flippedCards = [];
             matchedPairsCount = 0;
             isProcessing = true;
             const coverImage = stageCovers[stage] || stageCovers[1];
+            
             deck.forEach((cardData) => {
                 const cardEl = document.createElement('div');
                 cardEl.className = "perspective-1000 aspect-square w-full cursor-pointer select-none";
@@ -937,6 +945,7 @@
                 cardEl.onclick = () => handleCardClick(cardEl);
                 board.appendChild(cardEl);
             });
+
             let previewSeconds = stage === 4 ? 5 : 3;
             const previewEl = document.getElementById('preview-countdown');
             const previewBox = document.getElementById('preview-countdown-box');
@@ -974,7 +983,12 @@
                 isProcessing = true;
                 const c1 = flippedCards[0];
                 const c2 = flippedCards[1];
-                if (c1.dataset.id === c2.dataset.id) {
+                
+                const id1 = parseInt(c1.dataset.id);
+                const id2 = parseInt(c2.dataset.id);
+                const isMatch = (id1 === id2) || (Math.floor(id1 / 2) === Math.floor(id2 / 2));
+
+                if (isMatch) {
                     matchedPairsCount++;
                     playMatchSuccessSound();
                     flippedCards = [];
@@ -996,7 +1010,7 @@
 
         function handleStageVictory() {
             stopTimer();
-            stopBGM();
+            stopBGM(); // Dừng nhạc nền game ngay khi sang màn hình Victory
             playVictoryFanfareSound();
             const modal = document.getElementById('victory-modal');
             const questionEl = document.getElementById('victory-question');
