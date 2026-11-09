@@ -108,7 +108,7 @@
 
             <!-- 3 Level Cards Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 w-full max-w-3xl mb-8">
-                <!-- EASY -->
+               <!-- EASY -->
         <div onclick="startGame(1)" onmouseenter="playLevelHover(1)" onmouseleave="stopLevelHover(1)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
             <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
                 <img id="level-img-1" src="stage1-easy-img.jpg" class="w-full h-full object-cover rounded-xl">
@@ -125,14 +125,15 @@
             </div>
             <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">MEDIUM</span>
         </div>
-                <!-- HARD -->
-                <div onclick="startGame(3)" onmouseenter="playLevelHover(3)" onmouseleave="stopLevelHover(3)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center shadow-2xl cursor-pointer transform hover:-translate-y-2 transition duration-300 relative group overflow-hidden">
-                    <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
-                        <img id="level-img-3" src="blob:null/15aa53b2-6ae1-4c51-8546-551922c7c1eb" class="w-full h-full object-cover rounded-xl">
-                        <video id="level-vid-3" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="blob:null/adb6270d-db55-461c-955f-888fa369b68f"></video>
-                    </div>
-                    <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">HARD</span>
-                </div>
+
+        <!-- HARD -->
+        <div onclick="startGame(3)" onmouseenter="playLevelHover(3)" onmouseleave="stopLevelHover(3)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
+            <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
+                <img id="level-img-3" src="stage3-hard-img.jpg" class="w-full h-full object-cover rounded-xl">
+                <video id="level-vid-3" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="stage3-hard-video.mp4"></video>
+            </div>
+            <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">HARD</span>
+        </div>
             </div>
 
             <div class="flex items-center justify-center gap-4 w-full max-w-xl">
@@ -1837,18 +1838,37 @@
             if (fileType === 'audio') resultChoiceMedia[key].audio = url;
         }
 
-        window.onload = function() {
-            showIntroScreen();
-        };
-
-        window.addEventListener('keydown', function(e) {
-            if (e.key === 'F2') {
-                const btn = document.getElementById('admin-floating-btn');
-                if (btn) btn.classList.toggle('hidden');
-            } else if (e.shiftKey && e.key.toUpperCase() === 'U') {
-                openUploadModal();
-            }
+        function playLevelHover(level) {
+    const vid = document.getElementById('level-vid-' + level);
+    if (vid) {
+        vid.classList.remove('hidden');
+        vid.play().catch(function(error) {
+            console.log("Auto-play was prevented:", error);
         });
-    </script>
+    }
+}
+
+function stopLevelHover(level) {
+    const vid = document.getElementById('level-vid-' + level);
+    if (vid) {
+        vid.pause();
+        vid.currentTime = 0;
+        vid.classList.add('hidden');
+    }
+}
+
+window.onload = function() {
+    showIntroScreen();
+};
+
+window.addEventListener('keydown', function(e) {
+    if (e.key === 'F2') {
+        const btn = document.getElementById('admin-floating-btn');
+        if (btn) btn.classList.toggle('hidden');
+    } else if (e.shiftKey && e.toUpperCase() === 'U') {
+        openUploadModal();
+    }
+});
+</script>
 
 </body></html>
