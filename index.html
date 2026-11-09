@@ -90,7 +90,7 @@
         </div>
     </div>
 
-    <!-- STAGE SELECT SCREEN -->
+    <!-- STAGE SELECT SCREEN (Ẩn Stage Bonus để tạo bất ngờ) -->
     <div id="stage-select-screen" class="fixed inset-0 bg-[#c96b92] z-40 flex flex-col items-center justify-center p-4 hidden">
         <div class="w-full max-w-4xl flex flex-col items-center justify-center">
             
@@ -187,6 +187,7 @@
     <audio id="bg-audio" loop></audio>
 
     <script>
+        // Cấu hình luật chơi chuẩn xác theo yêu cầu
         const stagesConfig = {
             1: {
                 name: "SKEPTICAL",
@@ -327,6 +328,7 @@
             let totalCards = imagesArr.length * 2;
             let cardAssignment = new Array(totalCards);
 
+            // Gán đúng các cặp đáp án cố định, không trộn chéo
             config.pairs.forEach((pair, index) => {
                 let imgFile = imagesArr[index % imagesArr.length];
                 let pos1 = pair[0] - 1;
@@ -345,6 +347,7 @@
                 card.className = "aspect-square rounded-2xl cursor-pointer perspective-1000 relative";
                 card.dataset.image = imgSrc;
 
+                // Ban đầu lật ngửa hết để người chơi xem trước (preview)
                 card.innerHTML = `
                     <div class="w-full h-full relative transform-style-3d transition-transform duration-500 rounded-2xl shadow-md card-inner rotate-y-180">
                         <div class="absolute inset-0 bg-[#5d223c] rounded-2xl flex items-center justify-center backface-hidden border-2 border-white/40">
@@ -359,6 +362,7 @@
                 board.appendChild(card);
             });
 
+            // Bắt đầu đếm ngược thời gian xem trước (hiển thị đủ giây 3 hoặc giây 5)
             startPreviewCountdown(config.previewTime);
         }
 
@@ -369,6 +373,12 @@
             overlay.classList.remove('hidden');
             counterEl.innerText = seconds;
 
+            // Mở tất cả các thẻ ra cho người chơi xem trước trong thời gian đếm ngược
+            document.querySelectorAll('#grid-board > div').forEach(card => {
+                card.classList.add('flipped');
+                card.querySelector('.card-inner').classList.add('rotate-y-180');
+            });
+
             let currentSec = seconds;
             let timer = setInterval(() => {
                 currentSec--;
@@ -378,6 +388,7 @@
                     clearInterval(timer);
                     counterEl.innerText = 0;
                     overlay.classList.add('hidden');
+                    // Hết giờ, úp toàn bộ thẻ xuống để bắt đầu chơi
                     document.querySelectorAll('#grid-board > div').forEach(card => {
                         card.classList.remove('flipped');
                         card.querySelector('.card-inner').classList.remove('rotate-y-180');
@@ -453,7 +464,15 @@
                 let nextBtn = document.createElement('button');
                 nextBtn.className = "px-6 py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black rounded-2xl shadow-md transition font-bubble-title mt-2";
                 nextBtn.innerText = config.buttonText;
-                nextBtn.onclick = () => startGame(config.nextStage);
+                
+                // Nếu đang ở Stage 3, khi bấm nút chuyển sẽ mở sang màn hình Stage Bonus (UNSHAKABLE)
+                nextBtn.onclick = () => {
+                    if (config.nextStage === 'bonus') {
+                        startGame('bonus');
+                    } else {
+                        startGame(config.nextStage);
+                    }
+                };
 
                 actionArea.appendChild(qTitle);
                 actionArea.appendChild(nextBtn);
