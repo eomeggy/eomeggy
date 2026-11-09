@@ -1868,65 +1868,91 @@ window.addEventListener('keydown', function(e) {
     } else if (e.shiftKey && e.toUpperCase() === 'U') {
         openUploadModal();
     }
-});const _oldStartGame = window.startGame;
-
-const LEVEL_ASSETS = {
-    1: {
-        audio: 'stage1-audio.mp3',
-        cardBack: 'card-back-1.jpg',
-        cardFronts: ['stage1-card-1.jpg', 'stage1-card-2.jpg', 'stage1-card-3.jpg', 'stage1-card-4.jpg']
-    },
-    2: {
-        audio: 'stage2-audio.mp3',
-        cardBack: 'card-back-2.jpg',
-        cardFronts: ['stage2-card-1.jpg', 'stage2-card-2.jpg', 'stage2-card-3.jpg', 'stage2-card-4.jpg', 'stage2-card-5.jpg']
-    },
-    3: {
-        audio: 'stage3-audio.mp3',
-        cardBack: 'card-back-3.jpg',
-        cardFronts: ['stage3-card-1.jpg', 'stage3-card-2.jpg', 'stage3-card-3.jpg', 'stage3-card-4.jpg', 'stage3-card-5.jpg', 'stage3-card-6.jpg']
-    },
-    'bonus': {
-        audio: 'bonus-audio.mp3',
-        cardBack: 'card-back-bonus.jpg',
-        cardFronts: ['bonus-card-1.jpg', 'bonus-card-2.jpg', 'bonus-card-3.jpg', 'bonus-card-4.jpg']
-    }
-};
-
-let currentStageAudio = null;
-
-function playStageAudio(level) {
-    if (currentStageAudio) {
-        currentStageAudio.pause();
-        currentStageAudio.currentTime = 0;
-    }
-    const assetConfig = LEVEL_ASSETS[level] || LEVEL_ASSETS[1];
-    currentStageAudio = new Audio(assetConfig.audio);
-    currentStageAudio.loop = true;
-    currentStageAudio.play().catch(e => console.log("Audio play deferred"));
-}
-
-window.startGame = function(level) {
-    if (typeof _oldStartGame === 'function') {
-        _oldStartGame(level);
-    }
-    
-    playStageAudio(level);
-
-    setTimeout(() => {
-        const config = LEVEL_ASSETS[level] || LEVEL_ASSETS[1];
-
-        document.querySelectorAll('.card-back img').forEach(img => {
-            img.src = config.cardBack;
-        });
-
-        const fronts = document.querySelectorAll('.card-front img');
-        fronts.forEach((img, idx) => {
-            const assetIdx = Math.floor((idx % config.cardFronts.length));
-            img.src = config.cardFronts[assetIdx];
-        });
-    }, 50);
-};
+});
 </script>
+<script>
+    const LEVEL_ASSETS = {
+        1: {
+            audio: 'stage1-audio.mp3',
+            cardBack: 'card-back-1.2.3-bonus.jpg',
+            cardFronts: ['stage1-card-1.jpg', 'stage1-card-2.jpg']
+        },
+        2: {
+            audio: 'stage2-audio.mp3',
+            cardBack: 'card-back-1.2.3-bonus.jpg',
+            cardFronts: [
+                'stage2-card-1.jpg', 'stage2-card-2.jpg', 'stage2-card-3.jpg', 
+                'stage2-card-4.jpg', 'stage2-card-5.jpg', 'stage2-card-6.jpg', 
+                'stage2-card-7.jpg', 'stage2-card-8.jpg'
+            ]
+        },
+        3: {
+            audio: 'stage3-audio.mp3',
+            cardBack: 'card-back-1.2.3-bonus.jpg',
+            cardFronts: [
+                'stage3-card-1.jpg', 'stage3-card-2.jpg', 'stage3-card-3.jpg', 
+                'stage3-card-4.jpg', 'stage3-card-5.jpg', 'stage3-card-6.jpg', 
+                'stage3-card-7.jpg', 'stage3-card-8.jpg', 'stage3-card-9.jpg', 
+                'stage3-card-10.jpg', 'stage3-card-11.jpg', 'stage3-card-12.jpg'
+            ]
+        },
+        4: {
+            audio: 'stage-bonus-aud.mp3',
+            cardBack: 'card-back-1.2.3-bonus.jpg',
+            cardFronts: [
+                'bonus-card-1.jpg', 'bonus-card-2.jpg', 'bonus-card-3.jpg', 'bonus-card-4.jpg',
+                'bonus-card-5.jpg', 'bonus-card-6.jpg', 'bonus-card-7.jpg', 'bonus-card-8.jpg',
+                'bonus-card-9.jpg', 'bonus-card-10.jpg', 'bonus-card-11.jpg', 'bonus-card-12.jpg',
+                'bonus-card-13.jpg', 'bonus-card-14.jpg', 'bonus-card-15.jpg', 'bonus-card-16.jpg',
+                'bonus-card-17.jpg', 'bonus-card-18.jpg', 'bonus-card-19.jpg', 'bonus-card-20.jpg'
+            ]
+        },
+        'bonus': {
+            audio: 'stage-bonus-aud.mp3',
+            cardBack: 'card-back-1.2.3-bonus.jpg',
+            cardFronts: [
+                'bonus-card-1.jpg', 'bonus-card-2.jpg', 'bonus-card-3.jpg', 'bonus-card-4.jpg',
+                'bonus-card-5.jpg', 'bonus-card-6.jpg', 'bonus-card-7.jpg', 'bonus-card-8.jpg',
+                'bonus-card-9.jpg', 'bonus-card-10.jpg', 'bonus-card-11.jpg', 'bonus-card-12.jpg',
+                'bonus-card-13.jpg', 'bonus-card-14.jpg', 'bonus-card-15.jpg', 'bonus-card-16.jpg',
+                'bonus-card-17.jpg', 'bonus-card-18.jpg', 'bonus-card-19.jpg', 'bonus-card-20.jpg'
+            ]
+        }
+    };
 
+    let activeBGM = null;
+    const originalStartGame = window.startGame;
+
+    window.startGame = function(level) {
+        if (typeof originalStartGame === 'function') {
+            originalStartGame(level);
+        }
+
+        if (activeBGM) {
+            activeBGM.pause();
+            activeBGM.currentTime = 0;
+        }
+
+        const cfg = LEVEL_ASSETS[level] || LEVEL_ASSETS[1];
+        if (cfg && cfg.audio) {
+            activeBGM = new Audio(cfg.audio);
+            activeBGM.loop = true;
+            activeBGM.play().catch(() => {});
+        }
+
+        setTimeout(() => {
+            if (!cfg) return;
+            
+            document.querySelectorAll('.card-back img, [class*="card-back"] img').forEach(img => {
+                img.src = cfg.cardBack;
+            });
+
+            const frontImgs = document.querySelectorAll('.card-front img, [class*="card-front"] img');
+            frontImgs.forEach((img, idx) => {
+                const assetIndex = idx % cfg.cardFronts.length;
+                img.src = cfg.cardFronts[assetIndex];
+            });
+        }, 60);
+    };
+</script>
 </body></html>
