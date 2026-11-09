@@ -376,7 +376,7 @@
                         <!-- YES CONFIG -->
                         <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 space-y-3">
                             <div class="flex items-center justify-between border-b border-purple-900/40 pb-2">
-                                <span class="font-extrabold text-sm text-emerald-400 block">YES Button Media ("EM CHÍP CẢM ƠN")</span>
+                                <span class="font-extrabold text-sm text-emerald-400 block">YES Button Media ("EM CHIP CAM ON")</span>
                                 <button onclick="testRunSlide('result-yes')" class="px-3 py-1 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-bold text-xs rounded-lg shadow">
                                     Test YES Slide
                                 </button>
@@ -512,6 +512,18 @@
                 'bonus-card-11.jpg', 'bonus-card-12.jpg', 'bonus-card-13.png', 'bonus-card-14.jpg', 'bonus-card-15.png',
                 'bonus-card-16.jpg', 'bonus-card-17.jpg', 'bonus-card-18.jpg', 'bonus-card-19.jpg', 'bonus-card-20.jpg'
             ]
+        };
+
+        // ĐỊNH NGHĨA CHÍNH XÁC CÁC CẶP ĐÁP ÁN THEO ĐÚNG YÊU CẦU (CHỈ SỐ THẺ TỪ 0 ĐẾN N-1)
+        // Stage 1: (1;4)(2;3) -> tương ứng index (0;3) và (1;2)
+        // Stage 2: (1;7)(2;8)(3;6)(4;5) -> index (0;6), (1;7), (2;5), (3;4)
+        // Stage 3: (1;7)(2;9)(3;12)(4;5)(6;11)(8;10) -> index (0;6), (1;8), (2;11), (3;4), (5;10), (7;9)
+        // Stage Bonus: (1;17)(2;10)(3;16)(4;6)(5;15)(8;20)(7;14)(9;12)(13;19)(11;18) -> index (0;16), (1;9), (2;15), (3;5), (4;14), (7;19), (6;13), (8;11), (12;18), (10;17)
+        let stageMatchingPairs = {
+            1: { 0: 0, 3: 0, 1: 1, 2: 1 },
+            2: { 0: 0, 6: 0, 1: 1, 7: 1, 2: 2, 5: 2, 3: 3, 4: 3 },
+            3: { 0: 0, 6: 0, 1: 1, 8: 1, 2: 2, 11: 2, 3: 3, 4: 3, 5: 4, 10: 4, 7: 5, 9: 5 },
+            4: { 0: 0, 16: 0, 1: 1, 9: 1, 2: 2, 15: 2, 3: 3, 5: 3, 4: 4, 14: 4, 7: 5, 19: 5, 6: 6, 13: 6, 8: 7, 11: 7, 12: 8, 18: 8, 10: 9, 17: 9 }
         };
         
         let resultChoiceMedia = {
@@ -801,7 +813,6 @@
         }
 
         function playLevelHover(lvl) {
-            // Dừng các hover khác trước
             [1, 2, 3].forEach(l => {
                 if (l !== lvl) stopLevelHover(l);
             });
@@ -894,34 +905,34 @@
             document.getElementById('moves-display').innerText = movesCount;
         }
 
-        // TẠO BÀI THEO ĐÚNG THỨ TỰ TỪ TRÁI SANG PHẢI, TRÊN XUỐNG DƯỚI
+        // TẠO BÀI VÀ GÁN ĐÁP ÁN CHÍNH XÁC CHO TỪNG STAGE
         function setupBoard(stage) {
             const board = document.getElementById('game-board');
             if (!board) return;
             board.innerHTML = '';
             let deck = [];
             const photos = stageCardPhotos[stage];
+            const pairsMap = stageMatchingPairs[stage];
             
             if (stage === 1) {
                 totalPairsInStage = 2;
-                deck = [
-                    { id: 0, img: photos[0] }, { id: 1, img: photos[1] },
-                    { id: 2, img: photos[2] }, { id: 3, img: photos[3] }
-                ];
                 board.className = "grid grid-cols-2 gap-6 w-full max-w-xl mx-auto p-4";
             } else if (stage === 2) {
                 totalPairsInStage = 4;
-                deck = photos.map((imgUrl, idx) => ({ id: idx, img: imgUrl }));
                 board.className = "grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 w-full max-w-3xl mx-auto p-6";
             } else if (stage === 3) {
                 totalPairsInStage = 6;
-                deck = photos.map((imgUrl, idx) => ({ id: idx, img: imgUrl }));
                 board.className = "grid grid-cols-3 sm:grid-cols-4 gap-5 sm:gap-6 w-full max-w-2xl mx-auto p-5";
             } else if (stage === 4) {
                 totalPairsInStage = 10;
-                deck = photos.map((imgUrl, idx) => ({ id: idx, img: imgUrl }));
                 board.className = "grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 w-full max-w-2xl mx-auto p-3";
             }
+
+            deck = photos.map((imgUrl, idx) => ({
+                index: idx,
+                img: imgUrl,
+                pairId: pairsMap[idx] !== undefined ? pairsMap[idx] : idx
+            }));
 
             flippedCards = [];
             matchedPairsCount = 0;
@@ -931,7 +942,8 @@
             deck.forEach((cardData) => {
                 const cardEl = document.createElement('div');
                 cardEl.className = "perspective-1000 aspect-square w-full cursor-pointer select-none";
-                cardEl.dataset.id = cardData.id;
+                cardEl.dataset.index = cardData.index;
+                cardEl.dataset.pair = cardData.pairId;
                 cardEl.innerHTML = `
                     <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
                         <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
@@ -946,6 +958,7 @@
                 board.appendChild(cardEl);
             });
 
+            // THỜI GIAN XEM TRƯỚC: STAGE 1, 2, 3 LÀ 3S; STAGE BONUS LÀ 5S
             let previewSeconds = stage === 4 ? 5 : 3;
             const previewEl = document.getElementById('preview-countdown');
             const previewBox = document.getElementById('preview-countdown-box');
@@ -984,9 +997,9 @@
                 const c1 = flippedCards[0];
                 const c2 = flippedCards[1];
                 
-                const id1 = parseInt(c1.dataset.id);
-                const id2 = parseInt(c2.dataset.id);
-                const isMatch = (id1 === id2) || (Math.floor(id1 / 2) === Math.floor(id2 / 2));
+                const pair1 = c1.dataset.pair;
+                const pair2 = c2.dataset.pair;
+                const isMatch = (pair1 === pair2) && (c1.dataset.index !== c2.dataset.index);
 
                 if (isMatch) {
                     matchedPairsCount++;
@@ -1010,7 +1023,7 @@
 
         function handleStageVictory() {
             stopTimer();
-            stopBGM(); // Dừng nhạc nền game ngay khi sang màn hình Victory
+            stopBGM();
             playVictoryFanfareSound();
             const modal = document.getElementById('victory-modal');
             const questionEl = document.getElementById('victory-question');
@@ -1060,7 +1073,7 @@
                 if (key === 'NO') {
                     actionBtn.innerText = "WHY NOT ME!?";
                 } else {
-                    actionBtn.innerText = "EM CHÍP CẢM ƠN";
+                    actionBtn.innerText = "EM CHIP CAM ON"; // ĐÃ SỬA KHÔNG DẤU THEO YÊU CẦU
                 }
             }
             if (mediaData && mediaData.type === 'video' && mediaData.video) {
