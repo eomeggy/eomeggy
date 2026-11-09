@@ -1,4 +1,5 @@
-<html lang="en"><head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IS SEONGHYEON A CAT? - Memory Game</title>
@@ -6,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts for Bold Bubble Display (Titan One) & Be Vietnam Pro for Comments -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;900&amp;family=Titan+One&amp;display=swap" rel="stylesheet">
     <style>
         body {
@@ -27,12 +28,6 @@
                 0 0 6px #fce0e8,
                 0 0 12px rgba(252, 224, 232, 0.7),
                 2px 2px 4px rgba(0, 0, 0, 0.15);
-        }
-        .stage-title-bubbly {
-            color: #72334f;
-            text-shadow: 
-                0 0 4px #fce0e8,
-                1px 1px 3px rgba(0, 0, 0, 0.15);
         }
         .perspective-1000 {
             perspective: 1000px;
@@ -70,24 +65,19 @@
     </div>
 
     <!-- INTRO VIDEO SCREEN -->
-    <div id="intro-screen" class="fixed inset-0 bg-[#fcebeb] z-50 flex flex-col items-center justify-center p-4 sm:p-8 hidden">
+    <div id="intro-screen" class="fixed inset-0 bg-[#fcebeb] z-50 flex flex-col items-center justify-center p-4 sm:p-8">
         <div class="w-full max-w-4xl bg-[#fcebeb] flex flex-col items-center justify-center">
             
             <h1 class="text-3xl sm:text-5xl font-bubble-title title-exact-match mb-4 tracking-wide text-center">
                 IS SEONGHYEON A CAT?
             </h1>
 
-            <!-- Video Frame Container -->
             <div id="intro-video-container" class="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-[#fcebeb] flex items-center justify-center relative">
                 <div id="intro-video-wrapper" class="w-full h-full flex items-center justify-center">
                     <video id="intro-main-video" class="w-full h-full object-cover" controls autoplay loop playsinline src="intro-video.mp4"></video>
                 </div>
-                <div id="intro-placeholder-text" class="absolute inset-0 flex items-center justify-center text-[#5d223c] font-bold text-base sm:text-lg bg-[#fff0f0] p-4 text-center rounded-2xl font-vietnamese hidden">
-                    (No Intro Video Loaded. Press F2 or click Admin Upload to configure media)
-                </div>
             </div>
 
-            <!-- Intro Buttons Bar -->
             <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-6 w-full max-w-2xl">
                 <button onclick="replayIntroVideo()" class="px-6 sm:px-8 py-3 bg-white hover:bg-gray-50 text-[#5d223c] border-2 border-[#5d223c]/20 font-black text-sm sm:text-base rounded-2xl shadow-sm transition-all flex items-center gap-2">
                     <i class="fa-solid fa-rotate-right"></i> REPLAY INTRO
@@ -101,45 +91,44 @@
     </div>
 
     <!-- STAGE SELECT SCREEN -->
-    <div id="stage-select-screen" class="fixed inset-0 bg-[#c96b92] z-40 flex flex-col items-center justify-center p-4">
+    <div id="stage-select-screen" class="fixed inset-0 bg-[#c96b92] z-40 flex flex-col items-center justify-center p-4 hidden">
         <div class="w-full max-w-4xl flex flex-col items-center justify-center">
             
             <h2 class="text-4xl sm:text-6xl font-bubble-title title-exact-match mb-8 tracking-wider text-center">
                 SELECT STAGE
             </h2>
 
-            <!-- 3 Level Cards Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 w-full max-w-3xl mb-8">
-                <!-- EASY -->
+                <!-- STAGE 1: SKEPTICAL -->
                 <div onclick="startGame(1)" onmouseenter="playLevelHover(1)" onmouseleave="stopLevelHover(1)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center shadow-2xl cursor-pointer transform hover:-translate-y-2 transition duration-300 relative group overflow-hidden">
                     <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
                         <img id="level-img-1" src="stage1-easy-img.jpg" class="w-full h-full object-cover rounded-xl">
                         <video id="level-vid-1" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="stage1-easy-video.mp4"></video>
                     </div>
-                    <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">EASY</span>
+                    <span class="font-extrabold text-xl sm:text-2xl text-[#6b2d4b] tracking-wide font-bubble-title text-center">SKEPTICAL</span>
                 </div>
 
-                <!-- MEDIUM -->
+                <!-- STAGE 2: TENTATIVE -->
                 <div onclick="startGame(2)" onmouseenter="playLevelHover(2)" onmouseleave="stopLevelHover(2)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center shadow-2xl cursor-pointer transform hover:-translate-y-2 transition duration-300 relative group overflow-hidden">
                     <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
                         <img id="level-img-2" src="stage2-medium-img.jpg" class="w-full h-full object-cover rounded-xl">
                         <video id="level-vid-2" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="stage2-medium-video.mp4"></video>
                     </div>
-                    <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">MEDIUM</span>
+                    <span class="font-extrabold text-xl sm:text-2xl text-[#6b2d4b] tracking-wide font-bubble-title text-center">TENTATIVE</span>
                 </div>
 
-                <!-- HARD -->
+                <!-- STAGE 3: CONVINCED -->
                 <div onclick="startGame(3)" onmouseenter="playLevelHover(3)" onmouseleave="stopLevelHover(3)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center shadow-2xl cursor-pointer transform hover:-translate-y-2 transition duration-300 relative group overflow-hidden">
                     <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
                         <img id="level-img-3" src="stage3-hard-img.jpg" class="w-full h-full object-cover rounded-xl">
                         <video id="level-vid-3" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="stage3-hard-video.mp4"></video>
                     </div>
-                    <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">HARD</span>
+                    <span class="font-extrabold text-xl sm:text-2xl text-[#6b2d4b] tracking-wide font-bubble-title text-center">CONVINCED</span>
                 </div>
             </div>
 
             <div class="flex items-center justify-center gap-4 w-full max-w-xl">
-                <button onclick="showIntroScreen()" class="px-6 py-3 bg-white/20 hover:bg-white/30 text-white border-2 border-white font-extrabold text-sm sm:text-base rounded-2xl transition flex items-center gap-2 backdrop-blur-sm font-bubble-title">
+                <button onclick="showIntroScreen()" class="px-6 py-3 bg-white/25 hover:bg-white/40 text-white border-2 border-white font-extrabold text-sm sm:text-base rounded-2xl transition flex items-center gap-2 backdrop-blur-sm font-bubble-title">
                     <i class="fa-solid fa-play"></i> REPLAY INTRO
                 </button>
             </div>
@@ -154,7 +143,7 @@
         </button>
 
         <div id="stage-indicator" class="font-extrabold text-sm sm:text-xl font-bubble-title text-[#5d223c]">
-            STAGE 1: EASY
+            STAGE 1: SKEPTICAL
         </div>
 
         <div id="moves-counter" class="font-bold text-xs sm:text-sm text-[#5d223c]">
@@ -162,23 +151,35 @@
         </div>
     </header>
 
+    <!-- PREVIEW COUNTDOWN OVERLAY -->
+    <div id="preview-overlay" class="fixed inset-0 bg-black/70 z-50 flex flex-col items-center justify-center hidden">
+        <div class="bg-[#fff7e6] border-4 border-white rounded-3xl p-8 max-w-md w-full text-center shadow-2xl">
+            <h3 class="text-2xl font-bubble-title text-[#72334f] mb-3">MEMORIZE THE CARDS!</h3>
+            <div id="countdown-number" class="text-6xl font-black text-[#5d223c] my-4 animate-bounce">3</div>
+            <p class="text-sm font-vietnamese text-gray-700 font-bold">Get ready before cards flip over...</p>
+        </div>
+    </div>
+
     <!-- GAME BOARD CONTAINER -->
     <main id="game-container" class="w-full max-w-4xl flex-1 flex items-center justify-center hidden">
         <div id="grid-board" class="grid grid-cols-4 gap-3 sm:gap-4 w-full p-4 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 shadow-xl">
-            <!-- Thẻ bài động -->
+            <!-- Dynamic Cards -->
         </div>
     </main>
 
-    <!-- VICTORY MODAL -->
-    <div id="victory-modal" class="fixed inset-0 bg-black/80 z-50 flex flex-col items-center justify-center p-4 hidden">
-        <div class="bg-[#fff7e6] border-4 border-white rounded-3xl p-6 max-w-lg w-full flex flex-col items-center text-center shadow-2xl">
-            <h3 id="victory-title" class="text-3xl font-bubble-title text-[#72334f] mb-4">VICTORY!</h3>
-            <div id="victory-image-container" class="w-full aspect-square rounded-2xl overflow-hidden mb-4 border-2 border-white shadow-inner">
+    <!-- VICTORY / QUESTION MODAL -->
+    <div id="victory-modal" class="fixed inset-0 bg-black/85 z-50 flex flex-col items-center justify-center p-4 hidden overflow-y-auto">
+        <div id="victory-modal-content" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-6 max-w-xl w-full flex flex-col items-center text-center shadow-2xl my-auto">
+            <h3 id="victory-title" class="text-2xl sm:text-3xl font-bubble-title text-[#72334f] mb-2">CONGRATULATIONS!</h3>
+            <p id="victory-desc" class="text-sm font-vietnamese font-bold text-gray-700 mb-4">You successfully completed this stage!</p>
+            
+            <div id="victory-image-container" class="w-full aspect-square max-h-52 rounded-2xl overflow-hidden mb-4 border-2 border-white shadow-inner bg-black">
                 <img id="victory-img" src="victory1-img.png" class="w-full h-full object-cover" alt="Victory">
             </div>
-            <button onclick="goToStageSelect()" class="px-8 py-3 bg-[#5d223c] text-white font-black rounded-2xl shadow-md hover:bg-[#461a2d] transition font-bubble-title">
-                BACK TO STAGE SELECT
-            </button>
+
+            <div id="transition-action-area" class="w-full flex flex-col items-center gap-3">
+                <!-- Dynamic Content -->
+            </div>
         </div>
     </div>
 
@@ -186,31 +187,62 @@
     <audio id="bg-audio" loop></audio>
 
     <script>
-        const stageCards = {
-            1: ['stage1-card-1.jpg', 'stage1-card-2.jpg', 'stage1-card-3.png', 'stage1-card-4.jpg'],
-            2: ['stage2-card-1.jpg', 'stage2-card-2.jpg', 'stage2-card-3.jpg', 'stage2-card-4.jpg', 'stage2-card-5.jpg', 'stage2-card-6.jpg', 'stage2-card-7.jpg', 'stage2-card-8.jpg'],
-            3: ['stage3-card-1.jpg', 'stage3-card-2.jpg', 'stage3-card-3.jpg', 'stage3-card-4.jpg', 'stage3-card-5.jpg', 'stage3-card-6.jpg', 'stage3-card-7.jpg', 'stage3-card-8.jpg', 'stage3-card-9.jpg', 'stage3-card-10.jpg', 'stage3-card-11.jpg', 'stage3-card-12.jpg']
+        const stagesConfig = {
+            1: {
+                name: "SKEPTICAL",
+                audio: "stage1-audio.mp3",
+                victoryImg: "victory1-img.png",
+                previewTime: 3,
+                cards: ['stage1-card-1.jpg', 'stage1-card-2.jpg', 'stage1-card-3.png', 'stage1-card-4.jpg'],
+                pairs: [[1, 4], [2, 3]],
+                question: "ARE YOU STILL SKEPTICAL?",
+                buttonText: "NOT SURE ➔",
+                nextStage: 2
+            },
+            2: {
+                name: "TENTATIVE",
+                audio: "stage2-audio.mp3",
+                victoryImg: "victory2-img.png",
+                previewTime: 3,
+                cards: ['stage2-card-1.jpg', 'stage2-card-2.jpg', 'stage2-card-3.jpg', 'stage2-card-4.jpg', 'stage2-card-5.jpg', 'stage2-card-6.jpg', 'stage2-card-7.jpg', 'stage2-card-8.jpg'],
+                pairs: [[1, 7], [2, 8], [3, 6], [4, 5]],
+                question: "HAVE YOU STARTED TO BELIEVE?",
+                buttonText: "A LITTLE",
+                nextStage: 3
+            },
+            3: {
+                name: "CONVINCED",
+                audio: "stage3-audio.mp3",
+                victoryImg: "victory3-img.png",
+                previewTime: 3,
+                cards: ['stage3-card-1.jpg', 'stage3-card-2.jpg', 'stage3-card-3.jpg', 'stage3-card-4.jpg', 'stage3-card-5.jpg', 'stage3-card-6.jpg', 'stage3-card-7.jpg', 'stage3-card-8.jpg', 'stage3-card-9.jpg', 'stage3-card-10.jpg', 'stage3-card-11.jpg', 'stage3-card-12.jpg'],
+                pairs: [[1, 7], [2, 9], [3, 12], [4, 5], [6, 11], [8, 10]],
+                question: "ARE YOU FULLY CONVINCED NOW?",
+                buttonText: "ABSOLUTELY",
+                nextStage: 'bonus'
+            },
+            bonus: {
+                name: "UNSHAKABLE",
+                audio: "stage-bonus-audio.mp3",
+                victoryImg: "victory-bonus-img.png",
+                previewTime: 5,
+                cards: [
+                    'bonus-card-1.jpg', 'bonus-card-2.jpg', 'bonus-card-3.jpg', 'bonus-card-4.jpg', 'bonus-card-5.png',
+                    'bonus-card-6.jpg', 'bonus-card-7.jpg', 'bonus-card-8.jpg', 'bonus-card-9.jpg', 'bonus-card-10.png'
+                ],
+                pairs: [[1, 17], [2, 10], [3, 16], [4, 6], [5, 15], [8, 20], [7, 14], [9, 12], [13, 19], [11, 18]],
+                question: "IS SEONGHYEON A CAT?",
+                isBonusFinal: true
+            }
         };
 
-        const stageAudios = {
-            1: 'stage1-audio.mp3',
-            2: 'stage2-audio.mp3',
-            3: 'stage3-audio.mp3',
-            bonus: 'stage-bonus-audio.mp3'
-        };
-
-        const victoryImages = {
-            1: 'victory1-img.png',
-            2: 'victory2-img.png',
-            3: 'victory3-img.png',
-            bonus: 'victory-bonus-img.png'
-        };
-
+        let currentStageKey = 1;
         let moves = 0;
         let flippedCards = [];
         let matchedPairs = 0;
         let isLocked = false;
-        let currentStage = 1;
+        let bonusClickCount = { yes: 0, no: 0 };
+        let commentsList = [];
 
         function replayIntroVideo() {
             const vid = document.getElementById('intro-main-video');
@@ -239,16 +271,16 @@
             }
         }
 
-        function playLevelHover(level) {
-            const vid = document.getElementById(`level-vid-${level}`);
+        function playLevelHover(stageKey) {
+            const vid = document.getElementById(`level-vid-${stageKey}`);
             if (vid) {
                 vid.classList.remove('hidden');
                 vid.play().catch(() => {});
             }
         }
 
-        function stopLevelHover(level) {
-            const vid = document.getElementById(`level-vid-${level}`);
+        function stopLevelHover(stageKey) {
+            const vid = document.getElementById(`level-vid-${stageKey}`);
             if (vid) {
                 vid.classList.add('hidden');
                 vid.pause();
@@ -270,18 +302,18 @@
             document.getElementById('stage-select-screen').classList.remove('hidden');
         }
 
-        function startGame(stage) {
-            currentStage = stage;
+        function startGame(stageKey) {
+            currentStageKey = stageKey;
             document.getElementById('stage-select-screen').classList.add('hidden');
             document.getElementById('game-header').classList.remove('hidden');
             document.getElementById('game-container').classList.remove('hidden');
             document.getElementById('victory-modal').classList.add('hidden');
             
-            const titles = {1: "STAGE 1: EASY", 2: "STAGE 2: MEDIUM", 3: "STAGE 3: HARD"};
-            document.getElementById('stage-indicator').innerText = titles[stage];
+            const config = stagesConfig[stageKey];
+            document.getElementById('stage-indicator').innerText = `STAGE: ${config.name}`;
 
             const bgAudio = document.getElementById('bg-audio');
-            bgAudio.src = stageAudios[stage] || stageAudios[1];
+            bgAudio.src = config.audio;
             bgAudio.play().catch(() => {});
 
             moves = 0;
@@ -291,21 +323,30 @@
             const board = document.getElementById('grid-board');
             board.innerHTML = '';
 
-            let images = stageCards[stage] || stageCards[1];
-            let cardSet = [...images, ...images];
-            cardSet.sort(() => Math.random() - 0.5);
+            let imagesArr = config.cards;
+            let totalCards = imagesArr.length * 2;
+            let cardAssignment = new Array(totalCards);
 
-            if (stage === 1) board.className = "grid grid-cols-2 sm:grid-cols-4 gap-4 w-full p-4 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 shadow-xl";
-            else if (stage === 2) board.className = "grid grid-cols-4 gap-3 sm:gap-4 w-full p-4 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 shadow-xl";
-            else board.className = "grid grid-cols-4 sm:grid-cols-6 gap-2 sm:gap-3 w-full p-4 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 shadow-xl";
+            config.pairs.forEach((pair, index) => {
+                let imgFile = imagesArr[index % imagesArr.length];
+                let pos1 = pair[0] - 1;
+                let pos2 = pair[1] - 1;
+                cardAssignment[pos1] = imgFile;
+                cardAssignment[pos2] = imgFile;
+            });
 
-            cardSet.forEach((imgSrc) => {
+            if (stageKey === 1) board.className = "grid grid-cols-2 sm:grid-cols-4 gap-4 w-full p-4 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 shadow-xl";
+            else if (stageKey === 2) board.className = "grid grid-cols-4 gap-3 sm:gap-4 w-full p-4 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 shadow-xl";
+            else if (stageKey === 3) board.className = "grid grid-cols-4 sm:grid-cols-6 gap-2 sm:gap-3 w-full p-4 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 shadow-xl";
+            else board.className = "grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 w-full p-4 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 shadow-xl";
+
+            cardAssignment.forEach((imgSrc) => {
                 const card = document.createElement('div');
                 card.className = "aspect-square rounded-2xl cursor-pointer perspective-1000 relative";
                 card.dataset.image = imgSrc;
 
                 card.innerHTML = `
-                    <div class="w-full h-full relative transform-style-3d transition-transform duration-500 rounded-2xl shadow-md card-inner">
+                    <div class="w-full h-full relative transform-style-3d transition-transform duration-500 rounded-2xl shadow-md card-inner rotate-y-180">
                         <div class="absolute inset-0 bg-[#5d223c] rounded-2xl flex items-center justify-center backface-hidden border-2 border-white/40">
                             <img src="card-back-1-2-3-bonus.jpg" class="w-full h-full object-cover rounded-2xl" alt="Back">
                         </div>
@@ -314,10 +355,36 @@
                         </div>
                     </div>
                 `;
-
                 card.addEventListener('click', () => flipCard(card));
                 board.appendChild(card);
             });
+
+            startPreviewCountdown(config.previewTime);
+        }
+
+        function startPreviewCountdown(seconds) {
+            isLocked = true;
+            const overlay = document.getElementById('preview-overlay');
+            const counterEl = document.getElementById('countdown-number');
+            overlay.classList.remove('hidden');
+            counterEl.innerText = seconds;
+
+            let currentSec = seconds;
+            let timer = setInterval(() => {
+                currentSec--;
+                if (currentSec > 0) {
+                    counterEl.innerText = currentSec;
+                } else {
+                    clearInterval(timer);
+                    counterEl.innerText = 0;
+                    overlay.classList.add('hidden');
+                    document.querySelectorAll('#grid-board > div').forEach(card => {
+                        card.classList.remove('flipped');
+                        card.querySelector('.card-inner').classList.remove('rotate-y-180');
+                    });
+                    isLocked = false;
+                }
+            }, 1000);
         }
 
         function flipCard(card) {
@@ -345,8 +412,8 @@
                 flippedCards = [];
                 matchedPairs++;
 
-                const currentStageCards = document.querySelectorAll('#grid-board > div');
-                if (matchedPairs === currentStageCards.length / 2) {
+                const totalPairs = document.querySelectorAll('#grid-board > div').length / 2;
+                if (matchedPairs === totalPairs) {
                     setTimeout(() => {
                         showVictoryModal();
                     }, 500);
@@ -365,21 +432,153 @@
         }
 
         function showVictoryModal() {
+            const config = stagesConfig[currentStageKey];
             const modal = document.getElementById('victory-modal');
             const victoryImg = document.getElementById('victory-img');
             const victoryTitle = document.getElementById('victory-title');
+            const victoryDesc = document.getElementById('victory-desc');
+            const actionArea = document.getElementById('transition-action-area');
 
-            const bgAudio = document.getElementById('bg-audio');
-            bgAudio.src = stageAudios.bonus;
-            bgAudio.play().catch(() => {});
+            victoryTitle.innerText = `STAGE ${config.name} COMPLETED!`;
+            victoryDesc.innerText = `Congratulations! You successfully completed ${config.name} stage with ${moves} moves!`;
+            victoryImg.src = config.victoryImg;
 
-            victoryTitle.innerText = `STAGE ${currentStage} COMPLETED!`;
-            victoryImg.src = victoryImages[currentStage] || victoryImages.bonus;
+            actionArea.innerHTML = '';
+
+            if (!config.isBonusFinal) {
+                let qTitle = document.createElement('h4');
+                qTitle.className = "text-xl font-bubble-title text-[#72334f] mt-2";
+                qTitle.innerText = config.question;
+                
+                let nextBtn = document.createElement('button');
+                nextBtn.className = "px-6 py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black rounded-2xl shadow-md transition font-bubble-title mt-2";
+                nextBtn.innerText = config.buttonText;
+                nextBtn.onclick = () => startGame(config.nextStage);
+
+                actionArea.appendChild(qTitle);
+                actionArea.appendChild(nextBtn);
+            } else {
+                bonusClickCount = { yes: 0, no: 0 };
+                let qTitle = document.createElement('h4');
+                qTitle.className = "text-xl font-bubble-title text-[#72334f] mt-2";
+                qTitle.innerText = config.question;
+
+                let btnRow = document.createElement('div');
+                btnRow.className = "flex items-center justify-center gap-4 w-full mt-2";
+
+                let noBtn = document.createElement('button');
+                noBtn.className = "px-8 py-3 bg-rose-600 hover:bg-rose-700 text-white font-black rounded-2xl shadow-md transition font-bubble-title";
+                noBtn.innerText = "NO";
+                noBtn.onclick = () => handleBonusChoice('NO');
+
+                let yesBtn = document.createElement('button');
+                yesBtn.className = "px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-2xl shadow-md transition font-bubble-title";
+                yesBtn.innerText = "YES";
+                yesBtn.onclick = () => handleBonusChoice('YES');
+
+                btnRow.appendChild(noBtn);
+                btnRow.appendChild(yesBtn);
+
+                actionArea.appendChild(qTitle);
+                actionArea.appendChild(btnRow);
+            }
+
             modal.classList.remove('hidden');
         }
 
+        function handleBonusChoice(choice) {
+            const actionArea = document.getElementById('transition-action-area');
+            actionArea.innerHTML = '';
+
+            let vidSrc = choice === 'YES' ? 'yes-button-video.mp4' : 'no-button-video.mp4';
+            let buttonLabel = choice === 'YES' ? 'EM CHIP CAM ON' : 'WHY NOT ME!?';
+
+            let containerDiv = document.createElement('div');
+            containerDiv.className = "w-full flex flex-col items-center gap-3 transition-all duration-500";
+
+            let vidEl = document.createElement('video');
+            vidEl.className = "w-full aspect-video rounded-2xl object-cover shadow-md border-2 border-white";
+            vidEl.src = vidSrc;
+            vidEl.controls = true;
+            vidEl.autoplay = true;
+            vidEl.loop = true;
+            vidEl.playsInline = true;
+
+            let actionBtn = document.createElement('button');
+            actionBtn.className = "px-6 py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black rounded-2xl shadow-md transition font-bubble-title mt-1";
+            actionBtn.innerText = buttonLabel;
+
+            let clickKey = choice.toLowerCase();
+            actionBtn.onclick = () => {
+                bonusClickCount[clickKey]++;
+                if (bonusClickCount[clickKey] === 1) {
+                    containerDiv.innerHTML = '';
+                    vidEl.className = "w-full aspect-video rounded-2xl object-cover shadow-md border-2 border-white mb-2";
+                    
+                    let commentSection = document.createElement('div');
+                    commentSection.className = "w-full bg-[#fcebeb] rounded-2xl p-4 border-2 border-pink-200 shadow-inner my-1 flex flex-col gap-2.5 font-vietnamese";
+                    commentSection.innerHTML = `
+                        <div class="flex items-center gap-1.5 text-[#72334f] font-bold text-xs uppercase tracking-wider">
+                            <i class="fa-solid fa-comments"></i> LEAVE YOUR COMMENT
+                        </div>
+                        <input id="comment-name" type="text" placeholder="YOUR NAME" class="w-full px-3 py-2 rounded-xl text-stone-900 border border-gray-300 text-xs uppercase font-bold focus:outline-none focus:ring-2 focus:ring-[#5d223c]">
+                        <div class="flex gap-2">
+                            <input id="comment-input" type="text" placeholder="WRITE COMMENT..." class="flex-1 px-3 py-2 rounded-xl text-stone-900 border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#5d223c]">
+                            <button onclick="postComment('${choice}')" class="px-4 py-2 bg-[#5d223c] text-white font-bold rounded-xl text-xs hover:bg-[#461a2d] transition uppercase">SENT</button>
+                        </div>
+                        <div id="comments-list" class="max-h-36 overflow-y-auto space-y-2 text-left text-xs custom-scrollbar mt-1">
+                            ${commentsList.length === 0 ? '<p class="text-gray-500 italic text-center">No comments yet. Be the first one!</p>' : commentsList.map(c => `
+                                <div class="bg-white p-2.5 rounded-xl shadow-sm text-gray-800">
+                                    <div class="font-extrabold text-[#72334f] mb-0.5 text-[11px]">${c.name} <span class="text-[9px] px-1.5 py-0.5 rounded ml-1 text-white ${c.vote === 'YES' ? 'bg-emerald-600' : 'bg-rose-600'}">voted ${c.vote.toLowerCase()}</span></div>
+                                    <div class="font-bold text-xs">${c.text}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+
+                    containerDiv.appendChild(vidEl);
+                    containerDiv.appendChild(commentSection);
+                    containerDiv.appendChild(actionBtn);
+                } else {
+                    goToStageSelect();
+                }
+            };
+
+            containerDiv.appendChild(vidEl);
+            containerDiv.appendChild(actionBtn);
+            actionArea.appendChild(containerDiv);
+        }
+
+        function postComment(voteType) {
+            const nameInput = document.getElementById('comment-name');
+            const commentInput = document.getElementById('comment-input');
+            
+            let nameVal = nameInput && nameInput.value.trim() !== '' ? nameInput.value.trim() : 'Anonymous';
+            let textVal = commentInput ? commentInput.value.trim() : '';
+
+            if (textVal !== '') {
+                commentsList.push({
+                    name: nameVal,
+                    vote: voteType,
+                    text: textVal
+                });
+                
+                commentInput.value = '';
+                const listEl = document.getElementById('comments-list');
+                if (listEl) {
+                    listEl.innerHTML = commentsList.map(c => `
+                        <div class="bg-white p-2.5 rounded-xl shadow-sm text-gray-800">
+                            <div class="font-extrabold text-[#72334f] mb-0.5 text-[11px]">${c.name} <span class="text-[9px] px-1.5 py-0.5 rounded ml-1 text-white ${c.vote === 'YES' ? 'bg-emerald-600' : 'bg-rose-600'}">voted ${c.vote.toLowerCase()}</span></div>
+                            <div class="font-bold text-xs">${c.text}</div>
+                        </div>
+                    `).join('');
+                    listEl.scrollTop = listEl.scrollHeight;
+                }
+            }
+        }
+
         function openUploadModal() {
-            alert("Admin Upload is currently disabled in live mode.");
+            alert("Admin Upload tool is currently disabled in live web mode.");
         }
     </script>
 </body>
