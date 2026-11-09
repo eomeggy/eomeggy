@@ -693,7 +693,7 @@
             } catch (e) {}
         }
 
-        // HÀM HIỂN THỊ DANH SÁCH BÌNH LUẬN KÈM ĐUÔI "voted YES" HOẶC "voted NO"
+        // RENDER DANH SÁCH BÌNH LUẬN KÈM ĐUÔI "voted YES" HOẶC "voted NO"
         function renderCommentsList() {
             const listContainer = document.getElementById('comments-list');
             if (!listContainer) return;
@@ -719,7 +719,7 @@
             
             const newComment = {
                 name: nameEl && nameEl.value.trim() ? nameEl.value.trim() : 'Ẩn danh',
-                vote: currentChoiceVote, // Lưu trực tiếp nhãn voted hiện tại
+                vote: currentChoiceVote, // Lưu nhãn voted (YES hoặc NO) tương ứng nút người dùng vừa chọn
                 text: textEl.value.trim()
             };
             userCommentsList.unshift(newComment);
@@ -883,4 +883,380 @@
 
         function startTimer() {
             stopTimer();
-            timerInterval = setInterval(() =>
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                updateHeaderStats();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            if (previewInterval) clearInterval(previewInterval);
+        }
+
+        function updateHeaderStats() {
+            const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+            const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+            document.getElementById('timer-display').innerText = `${mins}:${secs}`;
+            document.getElementById('moves-display').innerText = movesCount;
+        }
+
+        function setupBoard(stage) {
+            const board = document.getElementById('game-board');
+            if (!board) return;
+            board.innerHTML = '';
+            let deck = [];
+            const photos = stageCardPhotos[stage];
+            const pairsMap = stageMatchingPairs[stage];
+            
+            if (stage === 1) {
+                totalPairsInStage = 2;
+                board.className = "grid grid-cols-2 gap-6 w-full max-w-xl mx-auto p-4";
+            } else if (stage === 2) {
+                totalPairsInStage = 4;
+                board.className = "grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 w-full max-w-3xl mx-auto p-6";
+            } else if (stage === 3) {
+                totalPairsInStage = 6;
+                board.className = "grid grid-cols-3 sm:grid-cols-4 gap-5 sm:gap-6 w-full max-w-2xl mx-auto p-5";
+            } else if (stage === 4) {
+                totalPairsInStage = 10;
+                board.className = "grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 w-full max-w-2xl mx-auto p-3";
+            }
+
+            deck = photos.map((imgUrl, idx) => ({
+                index: idx,
+                img: imgUrl,
+                pairId: pairsMap[idx] !== undefined ? pairsMap[idx] : idx
+            }));
+
+            flippedCards = [];
+            matchedPairsCount = 0;
+            isProcessing = true;
+            const coverImage = stageCovers[stage] || stageCovers[1];
+            
+            deck.forEach((cardData) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = "perspective-1000 aspect-square w-full cursor-pointer select-none";
+                cardEl.dataset.index = cardData.index;
+                cardEl.dataset.pair = cardData.pairId;
+                cardEl.innerHTML = `
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="${cardData.img}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="${coverImage}" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                `;
+                cardEl.onclick = () => handleCardClick(cardEl);
+                board.appendChild(cardEl);
+            });
+
+            let previewSeconds = stage === 4 ? 5 : 3;
+            const previewEl = document.getElementById('preview-countdown');
+            const previewBox = document.getElementById('preview-countdown-box');
+            if (previewBox) previewBox.classList.remove('hidden');
+            if (previewEl) previewEl.innerText = `${previewSeconds}s`;
+            playTickSound();
+            clearInterval(previewInterval);
+            previewInterval = setInterval(() => {
+                previewSeconds--;
+                if (previewEl) previewEl.innerText = `${previewSeconds}s`;
+                if (previewSeconds > 0) {
+                    playTickSound();
+                }
+                if (previewSeconds <= 0) {
+                    clearInterval(previewInterval);
+                    if (previewBox) previewBox.classList.add('hidden');
+                    const allCards = board.querySelectorAll('.card-inner');
+                    allCards.forEach(c => c.classList.add('rotate-y-180'));
+                    isProcessing = false;
+                    startTimer();
+                }
+            }, 1200);
+        }
+
+        function handleCardClick(cardEl) {
+            if (isProcessing) return;
+            const inner = cardEl.querySelector('.card-inner');
+            if (!inner.classList.contains('rotate-y-180')) return;
+            inner.classList.remove('rotate-y-180');
+            playCardFlipSound();
+            flippedCards.push(cardEl);
+            if (flippedCards.length === 2) {
+                movesCount++;
+                updateHeaderStats();
+                isProcessing = true;
+                const c1 = flippedCards[0];
+                const c2 = flippedCards[1];
+                
+                const pair1 = c1.dataset.pair;
+                const pair2 = c2.dataset.pair;
+                const isMatch = (pair1 === pair2) && (c1.dataset.index !== c2.dataset.index);
+
+                if (isMatch) {
+                    matchedPairsCount++;
+                    playMatchSuccessSound();
+                    flippedCards = [];
+                    isProcessing = false;
+                    if (matchedPairsCount === totalPairsInStage) {
+                        setTimeout(() => handleStageVictory(), 600);
+                    }
+                } else {
+                    playMatchFailSound();
+                    setTimeout(() => {
+                        c1.querySelector('.card-inner').classList.add('rotate-y-180');
+                        c2.querySelector('.card-inner').classList.add('rotate-y-180');
+                        flippedCards = [];
+                        isProcessing = false;
+                    }, 800);
+                }
+            }
+        }
+
+        function handleStageVictory() {
+            stopTimer();
+            stopBGM();
+            playVictoryFanfareSound();
+            const modal = document.getElementById('victory-modal');
+            const questionEl = document.getElementById('victory-question');
+            const victoryImg = document.getElementById('victory-stage-img');
+            const actionBtn = document.getElementById('victory-action-btn');
+            const bonusBtns = document.getElementById('bonus-choice-buttons');
+            questionEl.innerText = victoryQuestions[currentStage] || victoryQuestions[1];
+            if (stageVictoryImages[currentStage] && stageVictoryImages[currentStage].trim() !== '') {
+                victoryImg.src = stageVictoryImages[currentStage];
+                victoryImg.classList.remove('hidden');
+            } else {
+                victoryImg.classList.add('hidden');
+            }
+            if (currentStage === 4) {
+                actionBtn.classList.add('hidden');
+                bonusBtns.classList.remove('hidden');
+            } else {
+                actionBtn.classList.remove('hidden');
+                bonusBtns.classList.add('hidden');
+                actionBtn.innerText = victoryBtnLabels[currentStage] || 'NEXT STAGE ➔';
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function handleVictoryNext() {
+            document.getElementById('victory-modal').classList.add('hidden');
+            if (currentStage === 1) startGame(2);
+            else if (currentStage === 2) startGame(3);
+            else if (currentStage === 3) startGame(4);
+        }
+
+        // HÀM XỬ LÝ LỰA CHỌN NÚT (YES / NO) CỦA NGƯỜI CHƠI
+        function handleBonusChoice(choice) {
+            document.getElementById('victory-modal').classList.add('hidden');
+            const modal = document.getElementById('media-display-modal');
+            const container = document.getElementById('media-display-content');
+            const actionBtn = document.getElementById('result-action-button');
+            const commentBox = document.getElementById('comment-section-box');
+            
+            // Cập nhật trạng thái vote chính xác
+            currentChoiceVote = choice.toUpperCase(); 
+
+            container.innerHTML = '';
+            if (commentBox) commentBox.classList.add('hidden');
+            resultActionState = 0;
+            const key = choice.toUpperCase();
+            const mediaData = resultChoiceMedia[key];
+            
+            if (actionBtn) {
+                actionBtn.classList.remove('hidden');
+                if (key === 'NO') {
+                    actionBtn.innerText = "WHY NOT ME!?";
+                } else {
+                    actionBtn.innerText = "EM CHIP CAM ON";
+                }
+            }
+            if (mediaData && mediaData.type === 'video' && mediaData.video) {
+                container.innerHTML = `<video id="result-active-video" src="${mediaData.video}" class="w-full h-auto max-h-[50vh] object-contain rounded-xl" controls autoplay loop playsinline></video>`;
+            } else if (mediaData && mediaData.image) {
+                let audioHtml = mediaData.audio ? `<audio id="result-active-audio" src="${mediaData.audio}" autoplay controls class="mt-2 w-full"></audio>` : '';
+                container.innerHTML = `<div class="w-full flex flex-col items-center justify-center"><img src="${mediaData.image}" class="w-full h-auto max-h-[50vh] object-contain rounded-xl">${audioHtml}</div>`;
+            } else {
+                container.innerHTML = `<div class="p-6 text-center text-[#5d223c] font-bold text-sm font-vietnamese">Chưa có media được upload cho lựa chọn ${choice}.</div>`;
+            }
+            renderCommentsList();
+            modal.classList.remove('hidden');
+        }
+
+        function handleResultActionButtonClick() {
+            if (resultActionState === 0) {
+                resultActionState = 1;
+                const commentBox = document.getElementById('comment-section-box');
+                const commentInput = document.getElementById('comment-text');
+                const actionBtn = document.getElementById('result-action-button');
+                if (commentBox) {
+                    commentBox.classList.remove('hidden');
+                    commentBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                if (actionBtn) {
+                    actionBtn.classList.remove('mt-4');
+                    actionBtn.classList.add('mt-2');
+                }
+                if (commentInput) {
+                    commentInput.focus();
+                }
+            } else {
+                closeMediaDisplayModal();
+                goToStageSelect();
+            }
+        }
+
+        function setUploadTab(tabKey) {
+            const tabs = ['intro', 's1', 's2', 's3', 's4', 'result'];
+            tabs.forEach(t => {
+                const sec = document.getElementById(`tab-sec-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (sec) sec.classList.add('hidden');
+                if (btn) btn.className = "px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/15 whitespace-nowrap";
+            });
+            const activeSec = document.getElementById(`tab-sec-${tabKey}`);
+            const activeBtn = document.getElementById(`tab-btn-${tabKey}`);
+            if (activeSec) activeSec.classList.remove('hidden');
+            if (activeBtn) activeBtn.className = "px-4 py-2 text-xs font-extrabold rounded-xl bg-teal-400 text-stone-900 whitespace-nowrap shadow";
+        }
+
+        function renderUploadModalGrids() {
+            [1, 2, 3, 4].forEach(s => {
+                const bgmLabel = document.getElementById(`bgm-label-${s}`);
+                if (bgmLabel && stageBGMTracks[s]) {
+                    bgmLabel.innerText = `Loaded: ${stageBGMTracks[s]} ✅`;
+                }
+                const grid = document.getElementById(`cards-grid-s${s}`);
+                if (!grid) return;
+                grid.innerHTML = '';
+                const coverCard = document.createElement('div');
+                coverCard.className = "p-3 bg-[#23182d] rounded-2xl border-2 border-teal-400 flex flex-col items-center justify-between gap-2 shadow-lg";
+                coverCard.innerHTML = `
+                    <div class="text-[11px] font-extrabold text-teal-300">🖼️ Card Back / Cover</div>
+                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                        <img src="${stageCovers[s]}" class="w-full h-full object-cover">
+                    </div>
+                    <input type="file" id="input-cover-${s}" accept="image/*" onchange="uploadCoverPhoto(event, ${s})" class="hidden">
+                    <button onclick="document.getElementById('input-cover-${s}').click()" class="w-full py-1.5 bg-teal-400 text-stone-900 font-extrabold text-xs rounded-xl shadow">Change Back</button>
+                `;
+                grid.appendChild(coverCard);
+                stageCardPhotos[s].forEach((photoUrl, i) => {
+                    const card = document.createElement('div');
+                    card.className = "p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow";
+                    card.innerHTML = `
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #${i + 1}</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="${photoUrl}" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-${s}-${i}" accept="image/*" onchange="uploadCardPhoto(event, ${s}, ${i})" class="hidden">
+                        <button onclick="document.getElementById('input-card-${s}-${i}').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    `;
+                    grid.appendChild(card);
+                });
+                const vicCard = document.createElement('div');
+                vicCard.className = "p-3 bg-[#23182d] rounded-2xl border border-amber-400/50 flex flex-col items-center justify-between gap-2 shadow";
+                vicCard.innerHTML = `
+                    <div class="text-[11px] font-extrabold text-amber-300">🏆 Victory Image</div>
+                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center p-1">
+                        <img src="${stageVictoryImages[s]}" class="w-full h-full object-contain">
+                    </div>
+                    <input type="file" id="input-vic-${s}" accept="image/*" onchange="uploadVictoryPhoto(event, ${s})" class="hidden">
+                    <button onclick="document.getElementById('input-vic-${s}').click()" class="w-full py-1.5 bg-amber-500 text-stone-900 font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                `;
+                grid.appendChild(vicCard);
+            });
+        }
+
+        function uploadIntroVideo(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            introVideoUrl = URL.createObjectURL(file);
+            const msg = document.getElementById('intro-placeholder-text');
+            if (msg) msg.classList.add('hidden');
+            recreateIntroVideoElement();
+        }
+
+        function uploadLevelHoverMedia(e, lvl, type) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
+            if (type === 'img') levelHoverMedia[lvl].img = url;
+            if (type === 'vid') levelHoverMedia[lvl].vid = url;
+        }
+
+        function uploadStageBGM(e, stage) {
+            const file = e.target.files[0];
+            if (!file) return;
+            stageBGMTracks[stage] = URL.createObjectURL(file);
+            const label = document.getElementById(`bgm-label-${stage}`);
+            if (label) label.innerText = `Loaded: ${file.name} ✅`;
+            if (currentStage === stage && soundEnabled) {
+                playBGM(stage);
+            }
+        }
+
+        function uploadCoverPhoto(e, stage) {
+            const file = e.target.files[0];
+            if (!file) return;
+            stageCovers[stage] = URL.createObjectURL(file);
+            renderUploadModalGrids();
+        }
+
+        function uploadCardPhoto(e, stage, idx) {
+            const file = e.target.files[0];
+            if (!file) return;
+            stageCardPhotos[stage][idx] = URL.createObjectURL(file);
+            renderUploadModalGrids();
+        }
+
+        function uploadVictoryPhoto(e, stage) {
+            const file = e.target.files[0];
+            if (!file) return;
+            stageVictoryImages[stage] = URL.createObjectURL(file);
+            renderUploadModalGrids();
+        }
+
+        function toggleResultMediaType(choiceKey) {
+            const key = choiceKey.toUpperCase();
+            const selectEl = document.getElementById(`result-type-${choiceKey.toLowerCase()}`);
+            if (!selectEl) return;
+            resultChoiceMedia[key].type = selectEl.value;
+            const vidBox = document.getElementById(`result-vid-box-${choiceKey.toLowerCase()}`);
+            const imgBox = document.getElementById(`result-img-box-${choiceKey.toLowerCase()}`);
+            if (selectEl.value === 'video') {
+                if (vidBox) vidBox.classList.remove('hidden');
+                if (imgBox) imgBox.classList.add('hidden');
+            } else {
+                if (vidBox) vidBox.classList.add('hidden');
+                if (imgBox) imgBox.classList.remove('hidden');
+            }
+        }
+
+        function uploadResultMedia(e, choiceKey, fileType) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const key = choiceKey.toUpperCase();
+            const url = URL.createObjectURL(file);
+            if (fileType === 'video') resultChoiceMedia[key].video = url;
+            if (fileType === 'image') resultChoiceMedia[key].image = url;
+            if (fileType === 'audio') resultChoiceMedia[key].audio = url;
+        }
+
+        window.onload = function() {
+            showIntroScreen();
+            renderCommentsList();
+        };
+
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'F2') {
+                const btn = document.getElementById('admin-floating-btn');
+                if (btn) btn.classList.toggle('hidden');
+            } else if (e.shiftKey && e.toUpperCase() === 'U') {
+                openUploadModal();
+            }
+        });
+    </script>
+</body></html>
