@@ -90,7 +90,7 @@
                 <button onclick="document.getElementById('intro-main-video').currentTime=0; document.getElementById('intro-main-video').play();" class="px-6 sm:px-8 py-3 bg-white hover:bg-gray-50 text-[#5d223c] border-2 border-[#5d223c]/20 font-black">
                     <i class="fa-solid fa-rotate-right"></i> REPLAY INTRO
                 </button>
-                <button onclick="skipIntroToStageSelect()" class="px-6 sm:px-8 py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-sm sm:text-base rounded-2xl shadow-lg transition transform hover:scale-105 flex items-center gap-2 font-bubble-title">
+               <button onclick="document.getElementById('intro-main-video').pause(); document.getElementById('intro-main-video').currentTime=0; skipIntroToStageSelect()" class="px-6 sm:px-8 py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-sm sm:text-base rounded-2xl shadow-lg transition-all flex items-center gap-2">
                     Start Game ➔
                 </button>
             </div>
@@ -109,23 +109,22 @@
             <!-- 3 Level Cards Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 w-full max-w-3xl mb-8">
                 <!-- EASY -->
-                <div onclick="startGame(1)" onmouseenter="playLevelHover(1)" onmouseleave="stopLevelHover(1)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center shadow-2xl cursor-pointer transform hover:-translate-y-2 transition duration-300 relative group overflow-hidden">
-                    <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
-                        <img id="level-img-1" src="blob:null/86bc53a4-fc3d-4898-9f7e-c96dd80f052a" class="w-full h-full object-cover rounded-xl">
-                        <video id="level-vid-1" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="blob:null/b5ca68bb-2cd3-42a8-a4e8-788754f8d269"></video>
-                    </div>
-                    <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">EASY</span>
-                </div>
+        <div onclick="startGame(1)" onmouseenter="playLevelHover(1)" onmouseleave="stopLevelHover(1)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
+            <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
+                <img id="level-img-1" src="stage1-easy-img.jpg" class="w-full h-full object-cover rounded-xl">
+                <video id="level-vid-1" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="stage1-easy-video.mp4"></video>
+            </div>
+            <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">EASY</span>
+        </div>
 
-                <!-- MEDIUM -->
-                <div onclick="startGame(2)" onmouseenter="playLevelHover(2)" onmouseleave="stopLevelHover(2)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center shadow-2xl cursor-pointer transform hover:-translate-y-2 transition duration-300 relative group overflow-hidden">
-                    <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
-                        <img id="level-img-2" src="blob:null/4cbda631-fdab-45cc-9bde-94d99456120b" class="w-full h-full object-cover rounded-xl">
-                        <video id="level-vid-2" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="blob:null/2911086a-d40b-40e6-b482-d3089980344a"></video>
-                    </div>
-                    <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">MEDIUM</span>
-                </div>
-
+        <!-- MEDIUM -->
+        <div onclick="startGame(2)" onmouseenter="playLevelHover(2)" onmouseleave="stopLevelHover(2)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
+            <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
+                <img id="level-img-2" src="stage2-medium-img.jpg" class="w-full h-full object-cover rounded-xl">
+                <video id="level-vid-2" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="stage2-medium-video.mp4"></video>
+            </div>
+            <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">MEDIUM</span>
+        </div>
                 <!-- HARD -->
                 <div onclick="startGame(3)" onmouseenter="playLevelHover(3)" onmouseleave="stopLevelHover(3)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center shadow-2xl cursor-pointer transform hover:-translate-y-2 transition duration-300 relative group overflow-hidden">
                     <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
