@@ -1235,10 +1235,7 @@
         function renderCommentsList() {
             const listContainer = document.getElementById('comments-list');
             if (!listContainer) return;
-            if (userCommentsList.length === 0) {
-                listContainer.innerHTML = '<div class="text-[11px] text-gray-500 italic text-center py-2">Chưa có bình luận nào. Hãy là người đầu tiên!</div>';
-                return;
-            }
+            
             listContainer.innerHTML = userCommentsList.map(c => `
                 <div class="bg-pink-50/70 p-2 rounded-xl border border-pink-100">
                     <div class="font-bold text-xs text-[#5d223c]">${c.name || 'Ẩn danh'}</div>
