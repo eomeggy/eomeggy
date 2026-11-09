@@ -159,7 +159,7 @@
     </header>
     <main id="game-main-area" class="w-full max-w-4xl flex-1 flex flex-col items-center justify-center relative my-auto hidden">
         <div id="preview-countdown-box" class="mb-5 sm:mb-8 px-5 py-2 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border-2 border-[#5d223c]/20 flex items-center gap-2 text-[#5d223c] font-black text-sm sm:text-base font-vietnamese hidden">
-            <span>Thời gian xem trước: </span>
+            <span>Preview Time: </span>
             <span id="preview-countdown" class="text-rose-600 text-lg font-black font-bubble-title">0s</span>
         </div>
         <div id="game-board" class="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 w-full max-w-2xl mx-auto p-3"></div>
@@ -224,7 +224,7 @@
         <div class="bg-[#18111e] text-white rounded-3xl max-w-4xl w-full h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-purple-900/50 font-vietnamese">
             <div class="p-4 bg-[#23182d] border-b border-purple-900/40 flex items-center justify-between">
                 <h3 class="font-extrabold text-base sm:text-lg text-teal-300 flex items-center gap-2 tracking-wide">
-                    <i class="fa-solid fa-sliders"></i> TÙY CHỈNH GAME &amp; UPLOAD MEDIA
+                    <i class="fa-solid fa-sliders"></i> GAME CONFIGURATION &amp; MEDIA UPLOAD
                 </h3>
                 <div class="flex items-center gap-3">
                     <button onclick="closeUploadModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
@@ -256,7 +256,7 @@
                 <div id="tab-sec-intro" class="space-y-5 hidden">
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
                         <div class="space-y-2 flex-1">
-                            <span class="font-extrabold text-sm text-teal-300 block">1. Video Intro Ban Đầu</span>
+                            <span class="font-extrabold text-sm text-teal-300 block">1. Intro Video</span>
                             <input type="file" accept="video/*" onchange="uploadIntroVideo(event)" class="text-xs text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
                         </div>
                         <button onclick="testRunSlide('intro')" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
@@ -435,7 +435,7 @@
             </div>
             <div class="p-4 bg-[#18111e] border-t border-purple-900/40 flex justify-end">
                 <button onclick="closeUploadModal()" class="px-6 py-2.5 bg-teal-400 text-stone-900 font-extrabold text-xs rounded-xl shadow hover:bg-teal-300">
-                    Lưu &amp; Đóng (Done)
+                    Save &amp; Close (Done)
                 </button>
             </div>
         </div>
@@ -692,45 +692,48 @@
             } catch (e) {}
         }
 
-        // RENDER DANH SÁCH BÌNH LUẬN NÂNG CẤP (3 CHẤM, REACT, REPLY)
+        // RENDER COMMENTS LIST (ENGLISH & FULL REPLY VOTE NAMES)
         function renderCommentsList() {
             const listContainer = document.getElementById('comments-list');
             if (!listContainer) return;
             if (userCommentsList.length === 0) {
-                listContainer.innerHTML = '<div class="text-[11px] text-gray-500 italic text-center py-2">Chưa có bình luận nào. Hãy là người đầu tiên!</div>';
+                listContainer.innerHTML = '<div class="text-[11px] text-gray-500 italic text-center py-2">No comments yet. Be the first one!</div>';
                 return;
             }
             listContainer.innerHTML = userCommentsList.map((c, index) => {
                 let voteBadge = c.vote ? ` voted ${c.vote}` : '';
-                let repliesHtml = (c.replies || []).map((rep, rIdx) => `
-                    <div class="bg-pink-100/60 p-2 rounded-xl border border-pink-200 mt-2 ml-4 flex flex-col gap-1">
-                        <div class="flex items-center justify-between">
-                            <span class="font-bold text-[11px] text-[#5d223c]">↳ ${rep.name}</span>
-                            <button onclick="deleteReply(${index}, ${rIdx})" class="text-rose-500 hover:text-rose-700 text-[10px]"><i class="fa-solid fa-xmark"></i></button>
+                let repliesHtml = (c.replies || []).map((rep, rIdx) => {
+                    let repVoteBadge = rep.vote ? ` voted ${rep.vote}` : '';
+                    return `
+                        <div class="bg-pink-100/60 p-2.5 rounded-xl border border-pink-200 mt-2 ml-4 flex flex-col gap-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-[11px] text-[#5d223c]">↳ ${rep.name || 'Anonymous'}<span class="text-rose-600 font-normal ml-1">${repVoteBadge}</span></span>
+                                <button onclick="deleteReply(${index}, ${rIdx})" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <div class="text-[11px] text-gray-700">${rep.text}</div>
                         </div>
-                        <div class="text-[11px] text-gray-700">${rep.text}</div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
 
                 return `
                     <div class="bg-pink-50/80 p-3 rounded-2xl border border-pink-100 flex flex-col gap-2 relative">
                         <!-- Top Header info & 3 Dots Menu -->
                         <div class="flex items-center justify-between">
                             <div class="font-bold text-xs text-[#5d223c]">
-                                ${c.name || 'Ẩn danh'}<span class="text-rose-600 font-normal ml-1">${voteBadge}</span>
-                                <span class="text-[10px] text-gray-400 font-normal ml-2">Vừa xong</span>
+                                ${c.name || 'Anonymous'}<span class="text-rose-600 font-normal ml-1">${voteBadge}</span>
+                                <span class="text-[10px] text-gray-400 font-normal ml-2">Just now</span>
                             </div>
                             <div class="relative">
                                 <button onclick="toggleCommentMenu(${index})" class="w-7 h-7 flex items-center justify-center text-gray-500 hover:text-[#5d223c] rounded-full hover:bg-pink-100/50 transition">
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
-                                <!-- Menu 3 Chấm (Sửa / Xóa) -->
+                                <!-- Menu 3 Dots (Edit / Delete) -->
                                 <div id="comment-menu-${index}" class="absolute right-0 top-8 bg-white shadow-xl rounded-xl border border-pink-100 p-1.5 z-30 hidden flex flex-col w-28 text-xs font-vietnamese">
                                     <button onclick="editComment(${index})" class="text-left px-3 py-1.5 text-teal-700 hover:bg-pink-50 rounded-lg flex items-center gap-1.5 font-bold">
-                                        <i class="fa-solid fa-pen text-[10px]"></i> Sửa
+                                        <i class="fa-solid fa-pen text-[10px]"></i> Edit
                                     </button>
                                     <button onclick="deleteComment(${index})" class="text-left px-3 py-1.5 text-rose-600 hover:bg-pink-50 rounded-lg flex items-center gap-1.5 font-bold">
-                                        <i class="fa-solid fa-trash text-[10px]"></i> Xóa
+                                        <i class="fa-solid fa-trash text-[10px]"></i> Delete
                                     </button>
                                 </div>
                             </div>
@@ -752,12 +755,15 @@
                         </div>
 
                         <!-- Reply Input Box (Hidden by default) -->
-                        <div id="reply-box-${index}" class="hidden flex gap-2 mt-2 pt-2 border-t border-pink-200">
-                            <input type="text" id="reply-input-${index}" placeholder="Viết phản hồi..." class="flex-1 px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5d223c] focus:outline-none focus:ring-1 focus:ring-[#5d223c]">
-                            <button onclick="submitReply(${index})" class="px-3 py-1.5 bg-[#5d223c] text-white text-xs font-bold rounded-xl hover:bg-[#461a2d] transition shadow">Gửi</button>
+                        <div id="reply-box-${index}" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-pink-200">
+                            <input type="text" id="reply-name-${index}" placeholder="Your name..." class="w-full px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5d223c] font-bold focus:outline-none focus:ring-1 focus:ring-[#5d223c]">
+                            <div class="flex gap-2">
+                                <input type="text" id="reply-input-${index}" placeholder="Write a reply..." class="flex-1 px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5d223c] focus:outline-none focus:ring-1 focus:ring-[#5d223c]">
+                                <button onclick="submitReply(${index})" class="px-3 py-1.5 bg-[#5d223c] text-white text-xs font-bold rounded-xl hover:bg-[#461a2d] transition shadow">Send</button>
+                            </div>
                         </div>
 
-                        <!-- Danh sách các phản hồi (Replies) -->
+                        <!-- List of Replies -->
                         <div class="space-y-1">
                             ${repliesHtml}
                         </div>
@@ -772,7 +778,7 @@
             if (!textEl || !textEl.value.trim()) return;
             
             const newComment = {
-                name: nameEl && nameEl.value.trim() ? nameEl.value.trim() : 'Ẩn danh',
+                name: nameEl && nameEl.value.trim() ? nameEl.value.trim() : 'Anonymous',
                 vote: currentChoiceVote,
                 text: textEl.value.trim(),
                 likes: 0,
@@ -784,9 +790,8 @@
             renderCommentsList();
         }
 
-        // Đóng/Mở menu 3 chấm
+        // Toggle 3 dots menu
         function toggleCommentMenu(index) {
-            // Đóng tất cả menu khác trước
             document.querySelectorAll('[id^="comment-menu-"]').forEach((el, idx) => {
                 if (idx !== index) el.classList.add('hidden');
             });
@@ -794,23 +799,23 @@
             if (menu) menu.classList.toggle('hidden');
         }
 
-        // Xóa bình luận chính
+        // Delete comment
         function deleteComment(index) {
             userCommentsList.splice(index, 1);
             renderCommentsList();
         }
 
-        // Sửa bình luận chính
+        // Edit comment
         function editComment(index) {
             const currentCmt = userCommentsList[index];
-            const newText = prompt("Chỉnh sửa nội dung bình luận của bạn:", currentCmt.text);
+            const newText = prompt("Edit your comment:", currentCmt.text);
             if (newText !== null && newText.trim() !== "") {
                 userCommentsList[index].text = newText.trim();
                 renderCommentsList();
             }
         }
 
-        // Thả tim bình luận
+        // Like comment
         function toggleLikeComment(index) {
             const cmt = userCommentsList[index];
             if (cmt.liked) {
@@ -823,34 +828,37 @@
             renderCommentsList();
         }
 
-        // Hiện/Ẩn khung nhập reply
+        // Toggle reply box
         function toggleReplyBox(index) {
             const box = document.getElementById(`reply-box-${index}`);
             if (box) {
                 box.classList.toggle('hidden');
                 if (!box.classList.contains('hidden')) {
-                    const input = document.getElementById(`reply-input-${index}`);
-                    if (input) input.focus();
+                    const nameInput = document.getElementById(`reply-name-${index}`);
+                    if (nameInput) nameInput.focus();
                 }
             }
         }
 
-        // Gửi reply
+        // Submit reply
         function submitReply(index) {
+            const nameInput = document.getElementById(`reply-name-${index}`);
             const input = document.getElementById(`reply-input-${index}`);
             if (!input || !input.value.trim()) return;
+            
             if (!userCommentsList[index].replies) {
                 userCommentsList[index].replies = [];
             }
             userCommentsList[index].replies.push({
-                name: 'Bạn (' + currentChoiceVote + ')',
+                name: nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Anonymous',
+                vote: currentChoiceVote,
                 text: input.value.trim()
             });
             input.value = '';
             renderCommentsList();
         }
 
-        // Xóa reply
+        // Delete reply
         function deleteReply(cIndex, rIndex) {
             userCommentsList[cIndex].replies.splice(rIndex, 1);
             renderCommentsList();
@@ -1178,218 +1186,4 @@
         }
 
         function handleVictoryNext() {
-            document.getElementById('victory-modal').classList.add('hidden');
-            if (currentStage === 1) startGame(2);
-            else if (currentStage === 2) startGame(3);
-            else if (currentStage === 3) startGame(4);
-        }
-
-        function handleBonusChoice(choice) {
-            document.getElementById('victory-modal').classList.add('hidden');
-            const modal = document.getElementById('media-display-modal');
-            const container = document.getElementById('media-display-content');
-            const actionBtn = document.getElementById('result-action-button');
-            const commentBox = document.getElementById('comment-section-box');
-            
-            currentChoiceVote = choice.toUpperCase(); 
-
-            container.innerHTML = '';
-            if (commentBox) commentBox.classList.add('hidden');
-            resultActionState = 0;
-            const key = choice.toUpperCase();
-            const mediaData = resultChoiceMedia[key];
-            
-            if (actionBtn) {
-                actionBtn.classList.remove('hidden');
-                if (key === 'NO') {
-                    actionBtn.innerText = "WHY NOT ME!?";
-                } else {
-                    actionBtn.innerText = "EM CHIP CAM ON";
-                }
-            }
-            if (mediaData && mediaData.type === 'video' && mediaData.video) {
-                container.innerHTML = `<video id="result-active-video" src="${mediaData.video}" class="w-full h-auto max-h-[50vh] object-contain rounded-xl" controls autoplay loop playsinline onloadedmetadata="this.currentTime=0;"></video>`;
-            } else if (mediaData && mediaData.image) {
-                let audioHtml = mediaData.audio ? `<audio id="result-active-audio" src="${mediaData.audio}" autoplay controls class="mt-2 w-full"></audio>` : '';
-                container.innerHTML = `<div class="w-full flex flex-col items-center justify-center"><img src="${mediaData.image}" class="w-full h-auto max-h-[50vh] object-contain rounded-xl">${audioHtml}</div>`;
-            } else {
-                container.innerHTML = `<div class="p-6 text-center text-[#5d223c] font-bold text-sm font-vietnamese">Chưa có media được upload cho lựa chọn ${choice}.</div>`;
-            }
-            renderCommentsList();
-            modal.classList.remove('hidden');
-        }
-
-        function handleResultActionButtonClick() {
-            if (resultActionState === 0) {
-                resultActionState = 1;
-                const commentBox = document.getElementById('comment-section-box');
-                const commentInput = document.getElementById('comment-text');
-                const actionBtn = document.getElementById('result-action-button');
-                if (commentBox) {
-                    commentBox.classList.remove('hidden');
-                    commentBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-                if (actionBtn) {
-                    actionBtn.classList.remove('mt-4');
-                    actionBtn.classList.add('mt-2');
-                }
-                if (commentInput) {
-                    commentInput.focus();
-                }
-            } else {
-                closeMediaDisplayModal();
-                goToStageSelect();
-            }
-        }
-
-        function setUploadTab(tabKey) {
-            const tabs = ['intro', 's1', 's2', 's3', 's4', 'result'];
-            tabs.forEach(t => {
-                const sec = document.getElementById(`tab-sec-${t}`);
-                const btn = document.getElementById(`tab-btn-${t}`);
-                if (sec) sec.classList.add('hidden');
-                if (btn) btn.className = "px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/15 whitespace-nowrap";
-            });
-            const activeSec = document.getElementById(`tab-sec-${tabKey}`);
-            const activeBtn = document.getElementById(`tab-btn-${tabKey}`);
-            if (activeSec) activeSec.classList.remove('hidden');
-            if (activeBtn) activeBtn.className = "px-4 py-2 text-xs font-extrabold rounded-xl bg-teal-400 text-stone-900 whitespace-nowrap shadow";
-        }
-
-        function renderUploadModalGrids() {
-            [1, 2, 3, 4].forEach(s => {
-                const bgmLabel = document.getElementById(`bgm-label-${s}`);
-                if (bgmLabel && stageBGMTracks[s]) {
-                    bgmLabel.innerText = `Loaded: ${stageBGMTracks[s]} ✅`;
-                }
-                const grid = document.getElementById(`cards-grid-s${s}`);
-                if (!grid) return;
-                grid.innerHTML = '';
-                const coverCard = document.createElement('div');
-                coverCard.className = "p-3 bg-[#23182d] rounded-2xl border-2 border-teal-400 flex flex-col items-center justify-between gap-2 shadow-lg";
-                coverCard.innerHTML = `
-                    <div class="text-[11px] font-extrabold text-teal-300">🖼️ Card Back / Cover</div>
-                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
-                        <img src="${stageCovers[s]}" class="w-full h-full object-cover">
-                    </div>
-                    <input type="file" id="input-cover-${s}" accept="image/*" onchange="uploadCoverPhoto(event, ${s})" class="hidden">
-                    <button onclick="document.getElementById('input-cover-${s}').click()" class="w-full py-1.5 bg-teal-400 text-stone-900 font-extrabold text-xs rounded-xl shadow">Change Back</button>
-                `;
-                grid.appendChild(coverCard);
-                stageCardPhotos[s].forEach((photoUrl, i) => {
-                    const card = document.createElement('div');
-                    card.className = "p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow";
-                    card.innerHTML = `
-                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #${i + 1}</div>
-                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
-                            <img src="${photoUrl}" class="w-full h-full object-cover">
-                        </div>
-                        <input type="file" id="input-card-${s}-${i}" accept="image/*" onchange="uploadCardPhoto(event, ${s}, ${i})" class="hidden">
-                        <button onclick="document.getElementById('input-card-${s}-${i}').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
-                    `;
-                    grid.appendChild(card);
-                });
-                const vicCard = document.createElement('div');
-                vicCard.className = "p-3 bg-[#23182d] rounded-2xl border border-amber-400/50 flex flex-col items-center justify-between gap-2 shadow";
-                vicCard.innerHTML = `
-                    <div class="text-[11px] font-extrabold text-amber-300">🏆 Victory Image</div>
-                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center p-1">
-                        <img src="${stageVictoryImages[s]}" class="w-full h-full object-contain">
-                    </div>
-                    <input type="file" id="input-vic-${s}" accept="image/*" onchange="uploadVictoryPhoto(event, ${s})" class="hidden">
-                    <button onclick="document.getElementById('input-vic-${s}').click()" class="w-full py-1.5 bg-amber-500 text-stone-900 font-extrabold text-xs rounded-xl shadow">Select Image</button>
-                `;
-                grid.appendChild(vicCard);
-            });
-        }
-
-        function uploadIntroVideo(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            introVideoUrl = URL.createObjectURL(file);
-            const msg = document.getElementById('intro-placeholder-text');
-            if (msg) msg.classList.add('hidden');
-            recreateIntroVideoElement();
-        }
-
-        function uploadLevelHoverMedia(e, lvl, type) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const url = URL.createObjectURL(file);
-            if (type === 'img') levelHoverMedia[lvl].img = url;
-            if (type === 'vid') levelHoverMedia[lvl].vid = url;
-        }
-
-        function uploadStageBGM(e, stage) {
-            const file = e.target.files[0];
-            if (!file) return;
-            stageBGMTracks[stage] = URL.createObjectURL(file);
-            const label = document.getElementById(`bgm-label-${stage}`);
-            if (label) label.innerText = `Loaded: ${file.name} ✅`;
-            if (currentStage === stage && soundEnabled) {
-                playBGM(stage);
-            }
-        }
-
-        function uploadCoverPhoto(e, stage) {
-            const file = e.target.files[0];
-            if (!file) return;
-            stageCovers[stage] = URL.createObjectURL(file);
-            renderUploadModalGrids();
-        }
-
-        function uploadCardPhoto(e, stage, idx) {
-            const file = e.target.files[0];
-            if (!file) return;
-            stageCardPhotos[stage][idx] = URL.createObjectURL(file);
-            renderUploadModalGrids();
-        }
-
-        function uploadVictoryPhoto(e, stage) {
-            const file = e.target.files[0];
-            if (!file) return;
-            stageVictoryImages[stage] = URL.createObjectURL(file);
-            renderUploadModalGrids();
-        }
-
-        function toggleResultMediaType(choiceKey) {
-            const key = choiceKey.toUpperCase();
-            const selectEl = document.getElementById(`result-type-${choiceKey.toLowerCase()}`);
-            if (!selectEl) return;
-            resultChoiceMedia[key].type = selectEl.value;
-            const vidBox = document.getElementById(`result-vid-box-${choiceKey.toLowerCase()}`);
-            const imgBox = document.getElementById(`result-img-box-${choiceKey.toLowerCase()}`);
-            if (selectEl.value === 'video') {
-                if (vidBox) vidBox.classList.remove('hidden');
-                if (imgBox) imgBox.classList.add('hidden');
-            } else {
-                if (vidBox) vidBox.classList.add('hidden');
-                if (imgBox) imgBox.classList.remove('hidden');
-            }
-        }
-
-        function uploadResultMedia(e, choiceKey, fileType) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const key = choiceKey.toUpperCase();
-            const url = URL.createObjectURL(file);
-            if (fileType === 'video') resultChoiceMedia[key].video = url;
-            if (fileType === 'image') resultChoiceMedia[key].image = url;
-            if (fileType === 'audio') resultChoiceMedia[key].audio = url;
-        }
-
-        window.onload = function() {
-            showIntroScreen();
-            renderCommentsList();
-        };
-
-        window.addEventListener('keydown', function(e) {
-            if (e.key === 'F2') {
-                const btn = document.getElementById('admin-floating-btn');
-                if (btn) btn.classList.toggle('hidden');
-            } else if (e.shiftKey && e.toUpperCase() === 'U') {
-                openUploadModal();
-            }
-        });
-    </script>
-</body></html>
+            document.getElementById('victory-modal').classList.add
