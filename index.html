@@ -77,7 +77,7 @@
             <!-- Video Frame Container -->
             <div id="intro-video-container" class="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-[#fcebeb] flex items-center justify-center relative">
                 <div id="intro-video-wrapper" class="w-full h-full">
-                    <video id="main-intro-video" class="w-full h-full object-cover" controls autoplay loop playsinline src="intro-video.mp4"></video>
+                    <video id="main-intro-video" class="w-full h-full object-cover" controls autoplay loop playsinline src="intro-video.mp4" onloadedmetadata="this.currentTime=0;"></video>
                 </div>
                 <div id="intro-placeholder-text" class="absolute inset-0 flex items-center justify-center text-[#5d223c] font-bold text-base sm:text-lg bg-[#fff0f0] p-4 text-center rounded-2xl font-vietnamese hidden">
                     (No Intro Video Loaded. Press F2 or click Admin Upload to configure media)
@@ -213,7 +213,7 @@
                         </button>
                     </div>
                 </div>
-                <div id="comments-list" class="max-h-36 overflow-y-auto custom-scrollbar flex flex-col gap-2 text-left pt-2 border-t border-pink-100 font-vietnamese"></div>
+                <div id="comments-list" class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col gap-3 text-left pt-2 border-t border-pink-100 font-vietnamese"></div>
             </div>
             <!-- Dynamic Action Button -->
             <button id="result-action-button" onclick="handleResultActionButtonClick()" class="px-6.5 py-3.5 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-sm rounded-2xl transition shadow-md font-bubble-title transform hover:scale-105 border-2 border-white/40 w-auto px-6 mt-2">WHY NOT ME!?</button>
@@ -543,9 +543,7 @@
             3: 'ABSOLUTELY ➔'
         };
         
-        let userCommentsList = [
-            { name: 'eom_eggy', vote: 'YES', text: 'ờ, em chíp cảm ơn' }
-        ];
+        let userCommentsList = [];
 
         let audioUnlocked = false;
         function unlockAudio() {
@@ -581,6 +579,7 @@
                 vid.autoplay = true;
                 vid.loop = true;
                 vid.playsInline = true;
+                vid.onloadedmetadata = function() { this.currentTime = 0; };
                 if (introVideoUrl) vid.src = introVideoUrl;
                 wrapper.appendChild(vid);
             }
@@ -645,7 +644,7 @@
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
                 osc.connect(gain);
                 gain.connect(ctx.destination);
-                osc.start(now);
+                osc.start();
                 osc.stop(now + 0.25);
             } catch (e) {}
         }
@@ -693,7 +692,7 @@
             } catch (e) {}
         }
 
-        // RENDER DANH SÁCH BÌNH LUẬN KÈM ĐUÔI "voted YES" HOẶC "voted NO"
+        // RENDER DANH SÁCH BÌNH LUẬN NÂNG CẤP (3 CHẤM, REACT, REPLY)
         function renderCommentsList() {
             const listContainer = document.getElementById('comments-list');
             if (!listContainer) return;
@@ -701,12 +700,67 @@
                 listContainer.innerHTML = '<div class="text-[11px] text-gray-500 italic text-center py-2">Chưa có bình luận nào. Hãy là người đầu tiên!</div>';
                 return;
             }
-            listContainer.innerHTML = userCommentsList.map(c => {
+            listContainer.innerHTML = userCommentsList.map((c, index) => {
                 let voteBadge = c.vote ? ` voted ${c.vote}` : '';
+                let repliesHtml = (c.replies || []).map((rep, rIdx) => `
+                    <div class="bg-pink-100/60 p-2 rounded-xl border border-pink-200 mt-2 ml-4 flex flex-col gap-1">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-[11px] text-[#5d223c]">↳ ${rep.name}</span>
+                            <button onclick="deleteReply(${index}, ${rIdx})" class="text-rose-500 hover:text-rose-700 text-[10px]"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <div class="text-[11px] text-gray-700">${rep.text}</div>
+                    </div>
+                `).join('');
+
                 return `
-                    <div class="bg-pink-50/70 p-2 rounded-xl border border-pink-100">
-                        <div class="font-bold text-xs text-[#5d223c]">${c.name || 'Ẩn danh'}${voteBadge}</div>
-                        <div class="text-xs text-gray-700 mt-0.5">${c.text}</div>
+                    <div class="bg-pink-50/80 p-3 rounded-2xl border border-pink-100 flex flex-col gap-2 relative">
+                        <!-- Top Header info & 3 Dots Menu -->
+                        <div class="flex items-center justify-between">
+                            <div class="font-bold text-xs text-[#5d223c]">
+                                ${c.name || 'Ẩn danh'}<span class="text-rose-600 font-normal ml-1">${voteBadge}</span>
+                                <span class="text-[10px] text-gray-400 font-normal ml-2">Vừa xong</span>
+                            </div>
+                            <div class="relative">
+                                <button onclick="toggleCommentMenu(${index})" class="w-7 h-7 flex items-center justify-center text-gray-500 hover:text-[#5d223c] rounded-full hover:bg-pink-100/50 transition">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
+                                <!-- Menu 3 Chấm (Sửa / Xóa) -->
+                                <div id="comment-menu-${index}" class="absolute right-0 top-8 bg-white shadow-xl rounded-xl border border-pink-100 p-1.5 z-30 hidden flex flex-col w-28 text-xs font-vietnamese">
+                                    <button onclick="editComment(${index})" class="text-left px-3 py-1.5 text-teal-700 hover:bg-pink-50 rounded-lg flex items-center gap-1.5 font-bold">
+                                        <i class="fa-solid fa-pen text-[10px]"></i> Sửa
+                                    </button>
+                                    <button onclick="deleteComment(${index})" class="text-left px-3 py-1.5 text-rose-600 hover:bg-pink-50 rounded-lg flex items-center gap-1.5 font-bold">
+                                        <i class="fa-solid fa-trash text-[10px]"></i> Xóa
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="text-xs text-gray-800">${c.text}</div>
+
+                        <!-- React & Reply Action Bar -->
+                        <div class="flex items-center gap-5 text-xs text-gray-600 pt-1 border-t border-pink-100/80 mt-1">
+                            <button onclick="toggleLikeComment(${index})" class="flex items-center gap-1.5 hover:text-rose-600 transition">
+                                <i class="${c.liked ? 'fa-solid text-rose-500' : 'fa-regular'} fa-heart"></i>
+                                <span class="font-bold">${c.likes || 0}</span>
+                            </button>
+                            <button onclick="toggleReplyBox(${index})" class="flex items-center gap-1.5 hover:text-[#5d223c] transition">
+                                <i class="fa-regular fa-comment"></i>
+                                <span class="font-bold">${(c.replies || []).length}</span>
+                            </button>
+                        </div>
+
+                        <!-- Reply Input Box (Hidden by default) -->
+                        <div id="reply-box-${index}" class="hidden flex gap-2 mt-2 pt-2 border-t border-pink-200">
+                            <input type="text" id="reply-input-${index}" placeholder="Viết phản hồi..." class="flex-1 px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5d223c] focus:outline-none focus:ring-1 focus:ring-[#5d223c]">
+                            <button onclick="submitReply(${index})" class="px-3 py-1.5 bg-[#5d223c] text-white text-xs font-bold rounded-xl hover:bg-[#461a2d] transition shadow">Gửi</button>
+                        </div>
+
+                        <!-- Danh sách các phản hồi (Replies) -->
+                        <div class="space-y-1">
+                            ${repliesHtml}
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -719,11 +773,86 @@
             
             const newComment = {
                 name: nameEl && nameEl.value.trim() ? nameEl.value.trim() : 'Ẩn danh',
-                vote: currentChoiceVote, // Lưu nhãn voted (YES hoặc NO) tương ứng nút người dùng vừa chọn
-                text: textEl.value.trim()
+                vote: currentChoiceVote,
+                text: textEl.value.trim(),
+                likes: 0,
+                liked: false,
+                replies: []
             };
             userCommentsList.unshift(newComment);
             textEl.value = '';
+            renderCommentsList();
+        }
+
+        // Đóng/Mở menu 3 chấm
+        function toggleCommentMenu(index) {
+            // Đóng tất cả menu khác trước
+            document.querySelectorAll('[id^="comment-menu-"]').forEach((el, idx) => {
+                if (idx !== index) el.classList.add('hidden');
+            });
+            const menu = document.getElementById(`comment-menu-${index}`);
+            if (menu) menu.classList.toggle('hidden');
+        }
+
+        // Xóa bình luận chính
+        function deleteComment(index) {
+            userCommentsList.splice(index, 1);
+            renderCommentsList();
+        }
+
+        // Sửa bình luận chính
+        function editComment(index) {
+            const currentCmt = userCommentsList[index];
+            const newText = prompt("Chỉnh sửa nội dung bình luận của bạn:", currentCmt.text);
+            if (newText !== null && newText.trim() !== "") {
+                userCommentsList[index].text = newText.trim();
+                renderCommentsList();
+            }
+        }
+
+        // Thả tim bình luận
+        function toggleLikeComment(index) {
+            const cmt = userCommentsList[index];
+            if (cmt.liked) {
+                cmt.liked = false;
+                cmt.likes = Math.max(0, cmt.likes - 1);
+            } else {
+                cmt.liked = true;
+                cmt.likes = (cmt.likes || 0) + 1;
+            }
+            renderCommentsList();
+        }
+
+        // Hiện/Ẩn khung nhập reply
+        function toggleReplyBox(index) {
+            const box = document.getElementById(`reply-box-${index}`);
+            if (box) {
+                box.classList.toggle('hidden');
+                if (!box.classList.contains('hidden')) {
+                    const input = document.getElementById(`reply-input-${index}`);
+                    if (input) input.focus();
+                }
+            }
+        }
+
+        // Gửi reply
+        function submitReply(index) {
+            const input = document.getElementById(`reply-input-${index}`);
+            if (!input || !input.value.trim()) return;
+            if (!userCommentsList[index].replies) {
+                userCommentsList[index].replies = [];
+            }
+            userCommentsList[index].replies.push({
+                name: 'Bạn (' + currentChoiceVote + ')',
+                text: input.value.trim()
+            });
+            input.value = '';
+            renderCommentsList();
+        }
+
+        // Xóa reply
+        function deleteReply(cIndex, rIndex) {
+            userCommentsList[cIndex].replies.splice(rIndex, 1);
             renderCommentsList();
         }
 
@@ -750,6 +879,12 @@
             document.getElementById('stage-select-screen').classList.add('hidden');
             document.getElementById('game-header').classList.add('hidden');
             document.getElementById('game-main-area').classList.add('hidden');
+            
+            const vid = document.getElementById('main-intro-video');
+            if (vid) {
+                vid.currentTime = 0;
+                vid.play().catch(()=>{});
+            }
         }
 
         function skipIntroToStageSelect() {
@@ -1049,7 +1184,6 @@
             else if (currentStage === 3) startGame(4);
         }
 
-        // HÀM XỬ LÝ LỰA CHỌN NÚT (YES / NO) CỦA NGƯỜI CHƠI
         function handleBonusChoice(choice) {
             document.getElementById('victory-modal').classList.add('hidden');
             const modal = document.getElementById('media-display-modal');
@@ -1057,7 +1191,6 @@
             const actionBtn = document.getElementById('result-action-button');
             const commentBox = document.getElementById('comment-section-box');
             
-            // Cập nhật trạng thái vote chính xác
             currentChoiceVote = choice.toUpperCase(); 
 
             container.innerHTML = '';
@@ -1075,7 +1208,7 @@
                 }
             }
             if (mediaData && mediaData.type === 'video' && mediaData.video) {
-                container.innerHTML = `<video id="result-active-video" src="${mediaData.video}" class="w-full h-auto max-h-[50vh] object-contain rounded-xl" controls autoplay loop playsinline></video>`;
+                container.innerHTML = `<video id="result-active-video" src="${mediaData.video}" class="w-full h-auto max-h-[50vh] object-contain rounded-xl" controls autoplay loop playsinline onloadedmetadata="this.currentTime=0;"></video>`;
             } else if (mediaData && mediaData.image) {
                 let audioHtml = mediaData.audio ? `<audio id="result-active-audio" src="${mediaData.audio}" autoplay controls class="mt-2 w-full"></audio>` : '';
                 container.innerHTML = `<div class="w-full flex flex-col items-center justify-center"><img src="${mediaData.image}" class="w-full h-auto max-h-[50vh] object-contain rounded-xl">${audioHtml}</div>`;
