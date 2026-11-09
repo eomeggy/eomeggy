@@ -79,9 +79,7 @@
 
             <!-- Video Frame Container -->
             <div id="intro-video-container" class="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-[#fcebeb] flex items-center justify-center relative">
-                <div id="intro-video-wrapper" class="w-full h-full flex items-center justify-center">
-                    <video id="intro-main-video" class="w-full h-full object-cover" controls autoplay loop playsinline src="intro-video.mp4"></video>
-                </div>
+                <div id="intro-video-wrapper" class="w-full h-full flex items-center justify-center"></div>
                 <div id="intro-placeholder-text" class="absolute inset-0 flex items-center justify-center text-[#5d223c] font-bold text-base sm:text-lg bg-[#fff0f0] p-4 text-center rounded-2xl font-vietnamese hidden">
                     (No Intro Video Loaded. Press F2 or click Admin Upload to configure media)
                 </div>
@@ -113,8 +111,8 @@
                 <!-- EASY -->
                 <div onclick="startGame(1)" onmouseenter="playLevelHover(1)" onmouseleave="stopLevelHover(1)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center shadow-2xl cursor-pointer transform hover:-translate-y-2 transition duration-300 relative group overflow-hidden">
                     <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
-                        <img id="level-img-1" src="stage1-easy-img.jpg" class="w-full h-full object-cover rounded-xl">
-                        <video id="level-vid-1" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="stage1-easy-video.mp4"></video>
+                        <img id="level-img-1" src="blob:null/86bc53a4-fc3d-4898-9f7e-c96dd80f052a" class="w-full h-full object-cover rounded-xl">
+                        <video id="level-vid-1" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="blob:null/b5ca68bb-2cd3-42a8-a4e8-788754f8d269"></video>
                     </div>
                     <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">EASY</span>
                 </div>
@@ -122,8 +120,8 @@
                 <!-- MEDIUM -->
                 <div onclick="startGame(2)" onmouseenter="playLevelHover(2)" onmouseleave="stopLevelHover(2)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center shadow-2xl cursor-pointer transform hover:-translate-y-2 transition duration-300 relative group overflow-hidden">
                     <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
-                        <img id="level-img-2" src="stage2-medium-img.jpg" class="w-full h-full object-cover rounded-xl">
-                        <video id="level-vid-2" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="stage2-medium-video.mp4"></video>
+                        <img id="level-img-2" src="blob:null/4cbda631-fdab-45cc-9bde-94d99456120b" class="w-full h-full object-cover rounded-xl">
+                        <video id="level-vid-2" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="blob:null/2911086a-d40b-40e6-b482-d3089980344a"></video>
                     </div>
                     <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">MEDIUM</span>
                 </div>
@@ -131,8 +129,8 @@
                 <!-- HARD -->
                 <div onclick="startGame(3)" onmouseenter="playLevelHover(3)" onmouseleave="stopLevelHover(3)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center shadow-2xl cursor-pointer transform hover:-translate-y-2 transition duration-300 relative group overflow-hidden">
                     <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
-                        <img id="level-img-3" src="stage3-hard-img.jpg" class="w-full h-full object-cover rounded-xl">
-                        <video id="level-vid-3" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="stage3-hard-video.mp4"></video>
+                        <img id="level-img-3" src="blob:null/15aa53b2-6ae1-4c51-8546-551922c7c1eb" class="w-full h-full object-cover rounded-xl">
+                        <video id="level-vid-3" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="blob:null/adb6270d-db55-461c-955f-888fa369b68f"></video>
                     </div>
                     <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">HARD</span>
                 </div>
@@ -152,6 +150,1706 @@
         <button onclick="goToStageSelect()" class="px-3.5 py-1.5 bg-[#5d223c] text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-[#461a2d] transition flex items-center gap-1.5 shadow">
             <i class="fa-solid fa-house"></i> SELECT STAGE
         </button>
+
+        <div id="stage-indicator" class="font-extrabold text-sm sm:text-xl font-bubble-title stage-title-bubbly tracking-wide text-center">STAGE BONUS: UNSHAKABLE</div>
+
+        <div class="flex items-center gap-3 sm:gap-5 text-xs sm:text-sm font-extrabold text-[#5d223c]">
+            <div class="flex items-center gap-1.5">
+                <i class="fa-solid fa-clock"></i>
+                <span id="timer-display">00:40</span>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+                <i class="fa-solid fa-paw"></i>
+                <span id="moves-display">10</span>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+                <button onclick="toggleSound()" class="w-8 h-8 rounded-xl bg-white flex items-center justify-center text-[#5d223c] shadow hover:bg-gray-50 transition border border-pink-100">
+                    <i id="sound-icon" class="fa-solid fa-volume-high"></i>
+                </button>
+            </div>
+        </div>
     </header>
-</body>
-</html>
+
+    <main id="game-main-area" class="w-full max-w-4xl flex-1 flex flex-col items-center justify-center relative my-auto hidden">
+        <div id="preview-countdown-box" class="mb-5 sm:mb-8 px-5 py-2 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border-2 border-[#5d223c]/20 flex items-center gap-2 text-[#5d223c] font-black text-sm sm:text-base font-vietnamese hidden">
+            <span>Thời gian xem trước: </span>
+            <span id="preview-countdown" class="text-rose-600 text-lg font-black font-bubble-title">0s</span>
+        </div>
+
+        <div id="game-board" class="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 w-full max-w-2xl mx-auto p-3"><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="0">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/a40c9c67-9dd2-4f09-9bd2-4bb67ca055e9" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="1">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/29092d78-3650-4de5-a813-52bac55c1b16" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="2">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/6cee87d7-7b09-4f49-b55b-c671ed69a29c" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="3">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/55059a56-4a3d-4d8c-8364-b60766de4ce0" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="4">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/98b117b9-d57d-4873-9192-8c4258e393f8" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="3">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/10985175-53d2-47e2-a0b2-595bf553d2e3" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="5">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/43f74a4c-a27e-407d-a474-7b6daf93b06f" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="6">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/7fb318b5-c5a6-41c9-97a5-5448f61347d8" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="7">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/afdee6fe-8ffa-4b3b-90c6-3dc3e60c671e" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="1">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/409c7a31-3afc-4f2e-bf2c-55eca068d281" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="8">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/4e6e80c8-387e-491f-be49-831479d30464" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="7">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/2ba470a0-f092-425a-9cee-4cb38e7e920b" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="9">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/49c058fc-6ba5-427c-a610-a63e4be13153" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="5">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/fcc9928c-b62d-44fb-a30e-5cb96b07ffb7" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="4">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/b314c3c2-e620-4e32-887d-48228d1b22ec" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="2">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/b0d19676-6721-4618-932b-a31923d75053" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="0">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/5311cc47-8315-4efa-b166-06d3d176b9ce" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="8">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/01f9e271-5c74-4897-9772-ce339de8e8d2" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="9">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/653f5330-b4a3-48e3-90fb-9d91bce0d47c" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div><div class="perspective-1000 aspect-square w-full cursor-pointer select-none" data-id="6">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="blob:null/38d4f75e-9520-4c27-bb5d-55f05a8ba7bc" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div></div>
+    </main>
+
+    <!-- STAGE TRANSITION & VICTORY MODAL -->
+    <div id="victory-modal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#fff7e6] rounded-3xl p-6 sm:p-8 max-w-lg w-full text-center shadow-2xl border-4 border-white flex flex-col items-center">
+            <div class="text-yellow-500 text-4xl mb-2">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <div class="text-xs font-bold text-emerald-600 tracking-widest uppercase mb-2 font-vietnamese">
+                Stage Cleared!
+            </div>
+            
+            <h2 id="victory-question" class="text-2xl sm:text-3xl font-black text-[#5d223c] mb-4 leading-snug px-2 font-bubble-title">IS SEONGHYEON A CAT?</h2>
+
+            <div id="victory-image-container" class="w-full max-h-52 my-3 flex items-center justify-center overflow-hidden">
+                <img id="victory-stage-img" src="blob:null/072b4a11-041b-4c1d-b557-848a764c2e14" class="max-h-48 object-contain drop-shadow-lg" alt="Stage Victory Image">
+            </div>
+
+            <button id="victory-action-btn" onclick="handleVictoryNext()" class="w-full py-4 bg-[#5d223c] text-white font-black text-lg rounded-2xl shadow-lg hover:bg-[#461a2d] transition transform hover:scale-105 cursor-pointer mt-2 font-bubble-title hidden">ABSOLUTELY ➔</button>
+
+            <div id="bonus-choice-buttons" class="w-full flex items-center justify-center gap-4 mt-4">
+                <button onclick="handleBonusChoice('NO')" class="flex-1 py-4 bg-rose-500 hover:bg-rose-600 text-white font-black text-xl rounded-2xl shadow-lg transition transform hover:scale-105 border-2 border-white font-bubble-title">
+                    NO
+                </button>
+                <button onclick="handleBonusChoice('YES')" class="flex-1 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xl rounded-2xl shadow-lg transition transform hover:scale-105 border-2 border-white font-bubble-title">
+                    YES
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Result Media Display Modal with Comment Section -->
+    <div id="media-display-modal" class="fixed inset-0 bg-[#ba6085]/95 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="relative bg-[#fcebeb] p-4 sm:p-6 rounded-3xl max-w-lg w-full flex flex-col items-center justify-between border-4 border-white shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar transition-all duration-300">
+            <button onclick="closeMediaDisplayModal()" class="absolute top-3 right-3 w-9 h-9 bg-[#5d223c] text-white font-black rounded-full shadow-lg flex items-center justify-center hover:bg-[#461a2d] transition text-lg z-20">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Video / Media Frame -->
+            <div id="media-display-content" class="w-full flex items-center justify-center overflow-hidden rounded-2xl bg-black border-2 border-white shadow-xl transition-all duration-300"></div>
+            
+            <!-- Interactive Comment Section Container (Hidden Initially) -->
+            <div id="comment-section-box" class="w-full bg-white/95 rounded-2xl p-4 border-2 border-[#5d223c]/20 shadow-inner flex flex-col space-y-3 my-4 transition-all duration-300">
+                <h4 class="font-black text-sm text-[#5d223c] flex items-center gap-2 font-vietnamese">
+                    <i class="fa-solid fa-comments"></i> LIVE YOUR COMMENTS
+                </h4>
+                
+                <div class="flex flex-col gap-2 font-vietnamese">
+                    <input type="text" id="comment-name" placeholder="Your name..." class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-[#5d223c] font-bold focus:outline-none focus:ring-2 focus:ring-[#5d223c]">
+                    <div class="flex gap-2">
+                        <input type="text" id="comment-text" placeholder="Write a comment..." class="flex-1 px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-[#5d223c] focus:outline-none focus:ring-2 focus:ring-[#5d223c]">
+                        <button onclick="postUserComment()" class="px-4 py-2 bg-[#5d223c] text-white text-xs font-bold rounded-xl hover:bg-[#461a2d] transition shadow">
+                            Send
+                        </button>
+                    </div>
+                </div>
+
+                <div id="comments-list" class="max-h-36 overflow-y-auto custom-scrollbar flex flex-col gap-2 text-left pt-2 border-t border-pink-100 font-vietnamese">
+                <div class="bg-pink-50/70 p-2 rounded-xl border border-pink-100">
+                    <div class="font-bold text-xs text-[#5d223c]">eom_eggy</div>
+                    <div class="text-xs text-gray-700 mt-0.5">Ờ, em Chíp cảm ơn!</div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Dynamic Action Button (WHY NOT ME!? / EM CHIP CAM ON) -->
+            <button id="result-action-button" onclick="handleResultActionButtonClick()" class="px-6.5 py-3.5 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-sm rounded-2xl transition shadow-md font-bubble-title transform hover:scale-105 border-2 border-white/40 w-auto px-6 mt-2">WHY NOT ME!?</button>
+        </div>
+    </div>
+
+    <!-- CONFIGURATION & UPLOAD MODAL -->
+    <div id="upload-config-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 hidden">
+        <div class="bg-[#18111e] text-white rounded-3xl max-w-4xl w-full h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-purple-900/50 font-vietnamese">
+            <div class="p-4 bg-[#23182d] border-b border-purple-900/40 flex items-center justify-between">
+                <h3 class="font-extrabold text-base sm:text-lg text-teal-300 flex items-center gap-2 tracking-wide">
+                    <i class="fa-solid fa-sliders"></i> TÙY CHỈNH GAME &amp; UPLOAD MEDIA
+                </h3>
+                <div class="flex items-center gap-3">
+                    <button onclick="closeUploadModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex border-b border-purple-900/40 bg-[#1e1525] p-2 gap-2 overflow-x-auto custom-scrollbar">
+                <button id="tab-btn-intro" onclick="setUploadTab('intro')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/10 whitespace-nowrap">
+                    Intro Video &amp; Level Hover
+                </button>
+                <button id="tab-btn-s1" onclick="setUploadTab('s1')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/10 whitespace-nowrap">
+                    Stage 1 (EASY)
+                </button>
+                <button id="tab-btn-s2" onclick="setUploadTab('s2')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/10 whitespace-nowrap">
+                    Stage 2 (MEDIUM)
+                </button>
+                <button id="tab-btn-s3" onclick="setUploadTab('s3')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/10 whitespace-nowrap">
+                    Stage 3 (HARD)
+                </button>
+                <button id="tab-btn-s4" onclick="setUploadTab('s4')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/10 whitespace-nowrap">
+                    Stage Bonus (BONUS)
+                </button>
+                <button id="tab-btn-result" onclick="setUploadTab('result')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-teal-400 text-stone-900 whitespace-nowrap shadow">
+                    Result (YES / NO)
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar space-y-6">
+                <div id="tab-sec-intro" class="space-y-5 hidden">
+                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
+                        <div class="space-y-2 flex-1">
+                            <span class="font-extrabold text-sm text-teal-300 block">1. Video Intro Ban Đầu</span>
+                            <input type="file" accept="video/*" onchange="uploadIntroVideo(event)" class="text-xs text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                        </div>
+                        <button onclick="testRunSlide('intro')" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
+                            <i class="fa-solid fa-play"></i> Test Run Intro
+                        </button>
+                    </div>
+
+                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 space-y-4">
+                        <div class="flex items-center justify-between border-b border-purple-900/40 pb-2">
+                            <span class="font-extrabold text-sm text-teal-300 block">2. Select Stage Hover Media (Levels 1, 2, 3)</span>
+                            <button onclick="testRunSlide('stage-select')" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
+                                <i class="fa-solid fa-play"></i> Test Run Stage Select
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="p-3 bg-[#18111e] rounded-xl border border-purple-900/60 space-y-2">
+                                <span class="font-bold text-xs text-pink-300 block">EASY (Stage 1)</span>
+                                <div class="text-[11px] text-gray-400">Static Cover Image:
+                                    <input type="file" accept="image/*" onchange="uploadLevelHoverMedia(event, 1, 'img')" class="w-full text-[10px] mt-1">
+                                </div>
+                                <div class="text-[11px] text-gray-400">Hover Video (with sound):
+                                    <input type="file" accept="video/*" onchange="uploadLevelHoverMedia(event, 1, 'vid')" class="w-full text-[10px] mt-1">
+                                </div>
+                            </div>
+                            <div class="p-3 bg-[#18111e] rounded-xl border border-purple-900/60 space-y-2">
+                                <span class="font-bold text-xs text-pink-300 block">MEDIUM (Stage 2)</span>
+                                <div class="text-[11px] text-gray-400">Static Cover Image:
+                                    <input type="file" accept="image/*" onchange="uploadLevelHoverMedia(event, 2, 'img')" class="w-full text-[10px] mt-1">
+                                </div>
+                                <div class="text-[11px] text-gray-400">Hover Video (with sound):
+                                    <input type="file" accept="video/*" onchange="uploadLevelHoverMedia(event, 2, 'vid')" class="w-full text-[10px] mt-1">
+                                </div>
+                            </div>
+                            <div class="p-3 bg-[#18111e] rounded-xl border border-purple-900/60 space-y-2">
+                                <span class="font-bold text-xs text-pink-300 block">HARD (Stage 3)</span>
+                                <div class="text-[11px] text-gray-400">Static Cover Image:
+                                    <input type="file" accept="image/*" onchange="uploadLevelHoverMedia(event, 3, 'img')" class="w-full text-[10px] mt-1">
+                                </div>
+                                <div class="text-[11px] text-gray-400">Hover Video (with sound):
+                                    <input type="file" accept="video/*" onchange="uploadLevelHoverMedia(event, 3, 'vid')" class="w-full text-[10px] mt-1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-sec-s1" class="space-y-4 hidden">
+                    <div class="flex items-center justify-between">
+                        <div class="font-black text-teal-300 text-sm">STAGE 1: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
+                        <button onclick="testRunSlide('stage', 1)" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
+                            <i class="fa-solid fa-play"></i> Test Run Stage 1
+                        </button>
+                    </div>
+                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
+                        <div>
+                            <span class="font-bold text-xs text-teal-300 block">🎵 Stage 1 Background Music (BGM)</span>
+                            <span class="text-[11px] text-gray-400" id="bgm-label-1">Audio track loaded successfully ✅</span>
+                        </div>
+                        <input type="file" accept="audio/*" onchange="uploadStageBGM(event, 1)" class="text-xs text-gray-300 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                    </div>
+                    <div id="cards-grid-s1" class="grid grid-cols-2 sm:grid-cols-4 gap-3"><div class="p-3 bg-[#23182d] rounded-2xl border-2 border-teal-400 flex flex-col items-center justify-between gap-2 shadow-lg">
+                    <div class="text-[11px] font-extrabold text-teal-300">🖼️ Level Cover Image</div>
+                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                        <img src="blob:null/4b08f0e0-8ed6-4b3d-ad1b-631dc8255cc7" class="w-full h-full object-cover">
+                    </div>
+                    <input type="file" id="input-cover-1" accept="image/*" onchange="uploadCoverPhoto(event, 1)" class="hidden">
+                    <button onclick="document.getElementById('input-cover-1').click()" class="w-full py-1.5 bg-teal-400 text-stone-900 font-extrabold text-xs rounded-xl shadow">Change Cover</button>
+                </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #1</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/90fa3561-9b53-4663-809d-146e4fd3e42b" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-1-0" accept="image/*" onchange="uploadCardPhoto(event, 1, 0)" class="hidden">
+                        <button onclick="document.getElementById('input-card-1-0').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #2</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/0fa27f35-f480-476c-aefd-a30288bad82b" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-1-1" accept="image/*" onchange="uploadCardPhoto(event, 1, 1)" class="hidden">
+                        <button onclick="document.getElementById('input-card-1-1').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #3</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/90915366-5d7e-4a3e-9c77-a77116245c20" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-1-2" accept="image/*" onchange="uploadCardPhoto(event, 1, 2)" class="hidden">
+                        <button onclick="document.getElementById('input-card-1-2').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #4</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/a927bd95-a125-4aeb-a631-59a535600ca5" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-1-3" accept="image/*" onchange="uploadCardPhoto(event, 1, 3)" class="hidden">
+                        <button onclick="document.getElementById('input-card-1-3').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-amber-400/50 flex flex-col items-center justify-between gap-2 shadow">
+                    <div class="text-[11px] font-extrabold text-amber-300">🏆 Victory Image</div>
+                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center p-1">
+                        <img src="blob:null/a3c63dbd-c4f9-4d3a-b9fd-d0fb9a47fecf" class="w-full h-full object-contain">
+                    </div>
+                    <input type="file" id="input-vic-1" accept="image/*" onchange="uploadVictoryPhoto(event, 1)" class="hidden">
+                    <button onclick="document.getElementById('input-vic-1').click()" class="w-full py-1.5 bg-amber-500 text-stone-900 font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                </div></div>
+                </div>
+
+                <div id="tab-sec-s2" class="space-y-4 hidden">
+                    <div class="flex items-center justify-between">
+                        <div class="font-black text-teal-300 text-sm">STAGE 2: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
+                        <button onclick="testRunSlide('stage', 2)" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
+                            <i class="fa-solid fa-play"></i> Test Run Stage 2
+                        </button>
+                    </div>
+                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
+                        <div>
+                            <span class="font-bold text-xs text-teal-300 block">🎵 Stage 2 Background Music (BGM)</span>
+                            <span class="text-[11px] text-gray-400" id="bgm-label-2">Audio track loaded successfully ✅</span>
+                        </div>
+                        <input type="file" accept="audio/*" onchange="uploadStageBGM(event, 2)" class="text-xs text-gray-300 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                    </div>
+                    <div id="cards-grid-s2" class="grid grid-cols-2 sm:grid-cols-4 gap-3"><div class="p-3 bg-[#23182d] rounded-2xl border-2 border-teal-400 flex flex-col items-center justify-between gap-2 shadow-lg">
+                    <div class="text-[11px] font-extrabold text-teal-300">🖼️ Level Cover Image</div>
+                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                        <img src="blob:null/87fc57b5-687f-44f6-bf0f-2738f6963731" class="w-full h-full object-cover">
+                    </div>
+                    <input type="file" id="input-cover-2" accept="image/*" onchange="uploadCoverPhoto(event, 2)" class="hidden">
+                    <button onclick="document.getElementById('input-cover-2').click()" class="w-full py-1.5 bg-teal-400 text-stone-900 font-extrabold text-xs rounded-xl shadow">Change Cover</button>
+                </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #1</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/e9b3c3b1-d5d1-4422-80ec-89444c3e736e" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-2-0" accept="image/*" onchange="uploadCardPhoto(event, 2, 0)" class="hidden">
+                        <button onclick="document.getElementById('input-card-2-0').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #2</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/27e37ed0-cd17-4502-8484-242045e718b7" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-2-1" accept="image/*" onchange="uploadCardPhoto(event, 2, 1)" class="hidden">
+                        <button onclick="document.getElementById('input-card-2-1').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #3</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/d9c15832-5d2b-4f38-a02b-7ec6fd142975" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-2-2" accept="image/*" onchange="uploadCardPhoto(event, 2, 2)" class="hidden">
+                        <button onclick="document.getElementById('input-card-2-2').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #4</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/2b922746-06b6-40cc-a0da-af111fed79c7" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-2-3" accept="image/*" onchange="uploadCardPhoto(event, 2, 3)" class="hidden">
+                        <button onclick="document.getElementById('input-card-2-3').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #5</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/5975a985-5f37-4a6f-8f46-0150d75c9efc" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-2-4" accept="image/*" onchange="uploadCardPhoto(event, 2, 4)" class="hidden">
+                        <button onclick="document.getElementById('input-card-2-4').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #6</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/dae377a8-1f2a-4012-9afd-d19c664235d0" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-2-5" accept="image/*" onchange="uploadCardPhoto(event, 2, 5)" class="hidden">
+                        <button onclick="document.getElementById('input-card-2-5').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #7</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/396d2040-0644-49c9-a3ec-eed4654580b3" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-2-6" accept="image/*" onchange="uploadCardPhoto(event, 2, 6)" class="hidden">
+                        <button onclick="document.getElementById('input-card-2-6').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #8</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/b8a64f4d-f6be-4e58-8ae2-53e09f65e6d4" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-2-7" accept="image/*" onchange="uploadCardPhoto(event, 2, 7)" class="hidden">
+                        <button onclick="document.getElementById('input-card-2-7').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-amber-400/50 flex flex-col items-center justify-between gap-2 shadow">
+                    <div class="text-[11px] font-extrabold text-amber-300">🏆 Victory Image</div>
+                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center p-1">
+                        <img src="blob:null/a3a67569-8a4a-4fed-ac46-2e6b2e8e9678" class="w-full h-full object-contain">
+                    </div>
+                    <input type="file" id="input-vic-2" accept="image/*" onchange="uploadVictoryPhoto(event, 2)" class="hidden">
+                    <button onclick="document.getElementById('input-vic-2').click()" class="w-full py-1.5 bg-amber-500 text-stone-900 font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                </div></div>
+                </div>
+
+                <div id="tab-sec-s3" class="space-y-4 hidden">
+                    <div class="flex items-center justify-between">
+                        <div class="font-black text-teal-300 text-sm">STAGE 3: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
+                        <button onclick="testRunSlide('stage', 3)" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
+                            <i class="fa-solid fa-play"></i> Test Run Stage 3
+                        </button>
+                    </div>
+                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
+                        <div>
+                            <span class="font-bold text-xs text-teal-300 block">🎵 Stage 3 Background Music (BGM)</span>
+                            <span class="text-[11px] text-gray-400" id="bgm-label-3">Audio track loaded successfully ✅</span>
+                        </div>
+                        <input type="file" accept="audio/*" onchange="uploadStageBGM(event, 3)" class="text-xs text-gray-300 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                    </div>
+                    <div id="cards-grid-s3" class="grid grid-cols-2 sm:grid-cols-4 gap-3"><div class="p-3 bg-[#23182d] rounded-2xl border-2 border-teal-400 flex flex-col items-center justify-between gap-2 shadow-lg">
+                    <div class="text-[11px] font-extrabold text-teal-300">🖼️ Level Cover Image</div>
+                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                        <img src="blob:null/cc225c67-4f3d-498b-92f8-ffd90ff7b6a2" class="w-full h-full object-cover">
+                    </div>
+                    <input type="file" id="input-cover-3" accept="image/*" onchange="uploadCoverPhoto(event, 3)" class="hidden">
+                    <button onclick="document.getElementById('input-cover-3').click()" class="w-full py-1.5 bg-teal-400 text-stone-900 font-extrabold text-xs rounded-xl shadow">Change Cover</button>
+                </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #1</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/cd8293f8-3956-4d63-93ca-83de44966c99" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-3-0" accept="image/*" onchange="uploadCardPhoto(event, 3, 0)" class="hidden">
+                        <button onclick="document.getElementById('input-card-3-0').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #2</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/1218857a-adfe-46d5-87e7-9c27a48f21ee" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-3-1" accept="image/*" onchange="uploadCardPhoto(event, 3, 1)" class="hidden">
+                        <button onclick="document.getElementById('input-card-3-1').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #3</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/5cc3ecac-e106-44e8-9080-fe01ba728a5a" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-3-2" accept="image/*" onchange="uploadCardPhoto(event, 3, 2)" class="hidden">
+                        <button onclick="document.getElementById('input-card-3-2').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #4</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/eda837a5-f975-4bf1-8106-1b1990e38955" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-3-3" accept="image/*" onchange="uploadCardPhoto(event, 3, 3)" class="hidden">
+                        <button onclick="document.getElementById('input-card-3-3').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #5</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/a64e5ad0-95e7-436f-914a-4c5e6d571f07" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-3-4" accept="image/*" onchange="uploadCardPhoto(event, 3, 4)" class="hidden">
+                        <button onclick="document.getElementById('input-card-3-4').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #6</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/8b5a72e4-7d7a-435f-9653-3205cfa4a99f" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-3-5" accept="image/*" onchange="uploadCardPhoto(event, 3, 5)" class="hidden">
+                        <button onclick="document.getElementById('input-card-3-5').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #7</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/c4e9aeb7-7b5f-4aad-91f3-38219297c7d2" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-3-6" accept="image/*" onchange="uploadCardPhoto(event, 3, 6)" class="hidden">
+                        <button onclick="document.getElementById('input-card-3-6').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #8</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/84a7679c-1b33-4eec-9b16-a45bacd9c3fa" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-3-7" accept="image/*" onchange="uploadCardPhoto(event, 3, 7)" class="hidden">
+                        <button onclick="document.getElementById('input-card-3-7').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #9</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/015ca1f1-ea3e-415c-b082-26bced669b2a" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-3-8" accept="image/*" onchange="uploadCardPhoto(event, 3, 8)" class="hidden">
+                        <button onclick="document.getElementById('input-card-3-8').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #10</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/fcecd3d4-b71b-4ebe-9c5d-e74ff14ee3db" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-3-9" accept="image/*" onchange="uploadCardPhoto(event, 3, 9)" class="hidden">
+                        <button onclick="document.getElementById('input-card-3-9').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #11</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/6194886f-ab00-41f3-8e69-e81be4c8b133" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-3-10" accept="image/*" onchange="uploadCardPhoto(event, 3, 10)" class="hidden">
+                        <button onclick="document.getElementById('input-card-3-10').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #12</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/f9b28aa4-9452-403a-9f99-277620748567" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-3-11" accept="image/*" onchange="uploadCardPhoto(event, 3, 11)" class="hidden">
+                        <button onclick="document.getElementById('input-card-3-11').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-amber-400/50 flex flex-col items-center justify-between gap-2 shadow">
+                    <div class="text-[11px] font-extrabold text-amber-300">🏆 Victory Image</div>
+                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center p-1">
+                        <img src="blob:null/ea9ffa08-40ff-4765-a9d7-305e17ca3a4e" class="w-full h-full object-contain">
+                    </div>
+                    <input type="file" id="input-vic-3" accept="image/*" onchange="uploadVictoryPhoto(event, 3)" class="hidden">
+                    <button onclick="document.getElementById('input-vic-3').click()" class="w-full py-1.5 bg-amber-500 text-stone-900 font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                </div></div>
+                </div>
+
+                <div id="tab-sec-s4" class="space-y-4 hidden">
+                    <div class="flex items-center justify-between">
+                        <div class="font-black text-teal-300 text-sm">STAGE BONUS: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
+                        <button onclick="testRunSlide('stage', 4)" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
+                            <i class="fa-solid fa-play"></i> Test Run Stage Bonus
+                        </button>
+                    </div>
+                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
+                        <div>
+                            <span class="font-bold text-xs text-teal-300 block">🎵 Stage Bonus Background Music (BGM)</span>
+                            <span class="text-[11px] text-gray-400" id="bgm-label-4">Audio track loaded successfully ✅</span>
+                        </div>
+                        <input type="file" accept="audio/*" onchange="uploadStageBGM(event, 4)" class="text-xs text-gray-300 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                    </div>
+                    <div id="cards-grid-s4" class="grid grid-cols-2 sm:grid-cols-4 gap-3"><div class="p-3 bg-[#23182d] rounded-2xl border-2 border-teal-400 flex flex-col items-center justify-between gap-2 shadow-lg">
+                    <div class="text-[11px] font-extrabold text-teal-300">🖼️ Level Cover Image</div>
+                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                        <img src="blob:null/48ba86ee-bd1f-487b-a81e-9e5bb2331e20" class="w-full h-full object-cover">
+                    </div>
+                    <input type="file" id="input-cover-4" accept="image/*" onchange="uploadCoverPhoto(event, 4)" class="hidden">
+                    <button onclick="document.getElementById('input-cover-4').click()" class="w-full py-1.5 bg-teal-400 text-stone-900 font-extrabold text-xs rounded-xl shadow">Change Cover</button>
+                </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #1</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/a40c9c67-9dd2-4f09-9bd2-4bb67ca055e9" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-0" accept="image/*" onchange="uploadCardPhoto(event, 4, 0)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-0').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #2</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/29092d78-3650-4de5-a813-52bac55c1b16" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-1" accept="image/*" onchange="uploadCardPhoto(event, 4, 1)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-1').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #3</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/6cee87d7-7b09-4f49-b55b-c671ed69a29c" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-2" accept="image/*" onchange="uploadCardPhoto(event, 4, 2)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-2').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #4</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/55059a56-4a3d-4d8c-8364-b60766de4ce0" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-3" accept="image/*" onchange="uploadCardPhoto(event, 4, 3)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-3').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #5</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/98b117b9-d57d-4873-9192-8c4258e393f8" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-4" accept="image/*" onchange="uploadCardPhoto(event, 4, 4)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-4').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #6</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/10985175-53d2-47e2-a0b2-595bf553d2e3" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-5" accept="image/*" onchange="uploadCardPhoto(event, 4, 5)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-5').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #7</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/43f74a4c-a27e-407d-a474-7b6daf93b06f" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-6" accept="image/*" onchange="uploadCardPhoto(event, 4, 6)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-6').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #8</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/7fb318b5-c5a6-41c9-97a5-5448f61347d8" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-7" accept="image/*" onchange="uploadCardPhoto(event, 4, 7)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-7').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #9</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/afdee6fe-8ffa-4b3b-90c6-3dc3e60c671e" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-8" accept="image/*" onchange="uploadCardPhoto(event, 4, 8)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-8').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #10</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/409c7a31-3afc-4f2e-bf2c-55eca068d281" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-9" accept="image/*" onchange="uploadCardPhoto(event, 4, 9)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-9').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #11</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/4e6e80c8-387e-491f-be49-831479d30464" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-10" accept="image/*" onchange="uploadCardPhoto(event, 4, 10)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-10').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #12</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/2ba470a0-f092-425a-9cee-4cb38e7e920b" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-11" accept="image/*" onchange="uploadCardPhoto(event, 4, 11)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-11').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #13</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/49c058fc-6ba5-427c-a610-a63e4be13153" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-12" accept="image/*" onchange="uploadCardPhoto(event, 4, 12)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-12').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #14</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/fcc9928c-b62d-44fb-a30e-5cb96b07ffb7" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-13" accept="image/*" onchange="uploadCardPhoto(event, 4, 13)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-13').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #15</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/b314c3c2-e620-4e32-887d-48228d1b22ec" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-14" accept="image/*" onchange="uploadCardPhoto(event, 4, 14)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-14').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #16</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/b0d19676-6721-4618-932b-a31923d75053" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-15" accept="image/*" onchange="uploadCardPhoto(event, 4, 15)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-15').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #17</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/5311cc47-8315-4efa-b166-06d3d176b9ce" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-16" accept="image/*" onchange="uploadCardPhoto(event, 4, 16)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-16').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #18</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/01f9e271-5c74-4897-9772-ce339de8e8d2" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-17" accept="image/*" onchange="uploadCardPhoto(event, 4, 17)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-17').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #19</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/653f5330-b4a3-48e3-90fb-9d91bce0d47c" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-18" accept="image/*" onchange="uploadCardPhoto(event, 4, 18)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-18').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow">
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #20</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="blob:null/38d4f75e-9520-4c27-bb5d-55f05a8ba7bc" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-4-19" accept="image/*" onchange="uploadCardPhoto(event, 4, 19)" class="hidden">
+                        <button onclick="document.getElementById('input-card-4-19').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    </div><div class="p-3 bg-[#23182d] rounded-2xl border border-amber-400/50 flex flex-col items-center justify-between gap-2 shadow">
+                    <div class="text-[11px] font-extrabold text-amber-300">🏆 Victory Image</div>
+                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center p-1">
+                        <img src="blob:null/072b4a11-041b-4c1d-b557-848a764c2e14" class="w-full h-full object-contain">
+                    </div>
+                    <input type="file" id="input-vic-4" accept="image/*" onchange="uploadVictoryPhoto(event, 4)" class="hidden">
+                    <button onclick="document.getElementById('input-vic-4').click()" class="w-full py-1.5 bg-amber-500 text-stone-900 font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                </div></div>
+                </div>
+
+                <div id="tab-sec-result" class="space-y-5">
+                    <div class="font-black text-teal-300 text-sm mb-2">RESULT CHOICE MEDIA CONFIGURATION (YES / NO)</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <!-- YES CONFIG -->
+                        <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 space-y-3">
+                            <div class="flex items-center justify-between border-b border-purple-900/40 pb-2">
+                                <span class="font-extrabold text-sm text-emerald-400 block">YES Button Media ("EM CHIP CAM ON")</span>
+                                <button onclick="testRunSlide('result-yes')" class="px-3 py-1 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-bold text-xs rounded-lg shadow">
+                                    Test YES Slide
+                                </button>
+                            </div>
+                            
+                            <div class="space-y-1">
+                                <label class="text-[11px] font-bold text-gray-300">Media Type:</label>
+                                <select id="result-type-yes" onchange="toggleResultMediaType('YES')" class="w-full bg-[#18111e] text-white text-xs p-2 rounded-xl border border-purple-900">
+                                    <option value="video">Video</option>
+                                    <option value="image">Image + Audio</option>
+                                </select>
+                            </div>
+
+                            <div id="result-vid-box-yes" class="space-y-1">
+                                <label class="text-[11px] font-bold text-gray-300">Upload Video:</label>
+                                <input type="file" accept="video/*" onchange="uploadResultMedia(event, 'YES', 'video')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-emerald-500 file:text-stone-900 file:font-bold">
+                            </div>
+
+                            <div id="result-img-box-yes" class="space-y-3 hidden">
+                                <div>
+                                    <label class="text-[11px] font-bold text-gray-300">Upload Image:</label>
+                                    <input type="file" accept="image/*" onchange="uploadResultMedia(event, 'YES', 'image')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-emerald-500 file:text-stone-900 file:font-bold">
+                                </div>
+                                <div>
+                                    <label class="text-[11px] font-bold text-gray-300">Upload Audio (BGM/Sound):</label>
+                                    <input type="file" accept="audio/*" onchange="uploadResultMedia(event, 'YES', 'audio')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NO CONFIG -->
+                        <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 space-y-3">
+                            <div class="flex items-center justify-between border-b border-purple-900/40 pb-2">
+                                <span class="font-extrabold text-sm text-rose-400 block">NO Button Media ("WHY NOT ME!?")</span>
+                                <button onclick="testRunSlide('result-no')" class="px-3 py-1 bg-rose-500 hover:bg-rose-400 text-white font-bold text-xs rounded-lg shadow">
+                                    Test NO Slide
+                                </button>
+                            </div>
+                            
+                            <div class="space-y-1">
+                                <label class="text-[11px] font-bold text-gray-300">Media Type:</label>
+                                <select id="result-type-no" onchange="toggleResultMediaType('NO')" class="w-full bg-[#18111e] text-white text-xs p-2 rounded-xl border border-purple-900">
+                                    <option value="video">Video</option>
+                                    <option value="image">Image + Audio</option>
+                                </select>
+                            </div>
+
+                            <div id="result-vid-box-no" class="space-y-1">
+                                <label class="text-[11px] font-bold text-gray-300">Upload Video:</label>
+                                <input type="file" accept="video/*" onchange="uploadResultMedia(event, 'NO', 'video')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-rose-500 file:text-stone-900 file:font-bold">
+                            </div>
+
+                            <div id="result-img-box-no" class="space-y-3 hidden">
+                                <div>
+                                    <label class="text-[11px] font-bold text-gray-300">Upload Image:</label>
+                                    <input type="file" accept="image/*" onchange="uploadResultMedia(event, 'NO', 'image')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-rose-500 file:text-stone-900 file:font-bold">
+                                </div>
+                                <div>
+                                    <label class="text-[11px] font-bold text-gray-300">Upload Audio (BGM/Sound):</label>
+                                    <input type="file" accept="audio/*" onchange="uploadResultMedia(event, 'NO', 'audio')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 bg-[#18111e] border-t border-purple-900/40 flex justify-end">
+                <button onclick="closeUploadModal()" class="px-6 py-2.5 bg-teal-400 text-stone-900 font-extrabold text-xs rounded-xl shadow hover:bg-teal-300">
+                    Lưu &amp; Đóng (Done)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Stage Audio Element -->
+    <audio id="stage-bgm-audio" loop="" src="blob:null/f35361c3-bda2-41e5-b80e-2157b90d5c3e"></audio>
+
+    <script>
+        let currentStage = 1;
+        let activeTabStage = 1;
+        let secondsElapsed = 0;
+        let movesCount = 0;
+        let timerInterval = null;
+        let previewInterval = null;
+        let soundEnabled = true;
+        let flippedCards = [];
+        let matchedPairsCount = 0;
+        let isProcessing = false;
+        let totalPairsInStage = 2;
+
+        let introVideoUrl = "";
+        let levelHoverMedia = {
+            1: { img: 'https://placehold.co/400x400/fff7e6/5d223c?text=EASY', vid: '' },
+            2: { img: 'https://placehold.co/400x400/fff7e6/5d223c?text=MEDIUM', vid: '' },
+            3: { img: 'https://placehold.co/400x400/fff7e6/5d223c?text=HARD', vid: '' }
+        };
+
+        let stageCovers = {
+            1: 'https://placehold.co/300x300/fdeded/5d223c?text=Cover',
+            2: 'https://placehold.co/300x300/fdeded/5d223c?text=Cover',
+            3: 'https://placehold.co/300x300/fdeded/5d223c?text=Cover',
+            4: 'https://placehold.co/300x300/fdeded/5d223c?text=Cover'
+        };
+
+        let stageVictoryImages = { 1: '', 2: '', 3: '', 4: '' };
+        let stageBGMTracks = { 1: '', 2: '', 3: '', 4: '' };
+
+        let stageCardPhotos = {
+            1: Array.from({length: 4}, (_, i) => `https://placehold.co/300x300/fff7e6/5d223c?text=S1-${i+1}`),
+            2: Array.from({length: 8}, (_, i) => `https://placehold.co/300x300/fff7e6/5d223c?text=S2-${i+1}`),
+            3: Array.from({length: 12}, (_, i) => `https://placehold.co/300x300/fff7e6/5d223c?text=S3-${i+1}`),
+            4: Array.from({length: 20}, (_, i) => `https://placehold.co/300x300/fff7e6/5d223c?text=S4-${i+1}`)
+        };
+
+        let resultChoiceMedia = {
+            YES: { type: 'video', video: '', image: '', audio: '' },
+            NO: { type: 'video', video: '', image: '', audio: '' }
+        };
+
+        let resultActionState = 0; // 0: initial click reveals comments, 1: second click returns to stage select
+
+        const stageTitles = {
+            1: 'STAGE 1: SKEPTICAL',
+            2: 'STAGE 2: TENTATIVE',
+            3: 'STAGE 3: CONVINCED',
+            4: 'STAGE BONUS: UNSHAKABLE'
+        };
+
+        const victoryQuestions = {
+            1: 'ARE YOU STILL SKEPTICAL?',
+            2: 'HAVE YOU STARTING TO BELIEVING?',
+            3: 'ARE YOU FULLY CONVINCED NOW?',
+            4: 'IS SEONGHYEON A CAT?'
+        };
+
+        const victoryBtnLabels = {
+            1: 'NOT SURE ➔',
+            2: 'A LITTLE ➔',
+            3: 'ABSOLUTELY ➔'
+        };
+
+        let userCommentsList = [];
+
+        function stopAllGlobalMedia() {
+            stopBGM();
+            stopIntroVideoCompletely();
+            [1, 2, 3].forEach(lvl => stopLevelHover(lvl));
+            closeMediaDisplayModal();
+        }
+
+        function stopIntroVideoCompletely() {
+            const wrapper = document.getElementById('intro-video-wrapper');
+            if (wrapper) wrapper.innerHTML = '';
+        }
+
+        function recreateIntroVideoElement() {
+            const wrapper = document.getElementById('intro-video-wrapper');
+            if (wrapper && !wrapper.querySelector('video')) {
+                const vid = document.createElement('video');
+                vid.id = 'main-intro-video';
+                vid.className = "w-full h-full object-cover rounded-2xl";
+                vid.controls = true;
+                vid.autoplay = true;
+                vid.loop = true;
+                vid.playsInline = true;
+                if (introVideoUrl) vid.src = introVideoUrl;
+                wrapper.appendChild(vid);
+            }
+        }
+
+        let audioCtx = null;
+        function getAudioContext() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playCardFlipSound() {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(450, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(700, ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.1);
+            } catch (e) {}
+        }
+
+        function playMatchSuccessSound() {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                    gain.gain.setValueAtTime(0.2, now + idx * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + idx * 0.08);
+                    osc.stop(now + idx * 0.08 + 0.25);
+                });
+            } catch (e) {}
+        }
+
+        function playMatchFailSound() {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.setValueAtTime(160, now + 0.12);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            } catch (e) {}
+        }
+
+        function playVictoryFanfareSound() {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                const notes = [
+                    { f: 523.25, t: 0.0, d: 0.2 },
+                    { f: 659.25, t: 0.18, d: 0.2 },
+                    { f: 783.99, t: 0.36, d: 0.2 },
+                    { f: 1046.50, t: 0.54, d: 0.5 }
+                ];
+                notes.forEach(n => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(n.f, now + n.t);
+                    gain.gain.setValueAtTime(0.25, now + n.t);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + n.t + n.d);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + n.t);
+                    osc.stop(now + n.t + n.d);
+                });
+            } catch (e) {}
+        }
+
+        function playTickSound() {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, ctx.currentTime);
+                gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.15);
+            } catch (e) {}
+        }
+
+        function renderCommentsList() {
+            const listContainer = document.getElementById('comments-list');
+            if (!listContainer) return;
+            if (userCommentsList.length === 0) {
+                listContainer.innerHTML = '<div class="text-[11px] text-gray-500 italic text-center py-2">Chưa có bình luận nào. Hãy là người đầu tiên!</div>';
+                return;
+            }
+            listContainer.innerHTML = userCommentsList.map(c => `
+                <div class="bg-pink-50/70 p-2 rounded-xl border border-pink-100">
+                    <div class="font-bold text-xs text-[#5d223c]">${c.name || 'Ẩn danh'}</div>
+                    <div class="text-xs text-gray-700 mt-0.5">${c.text}</div>
+                </div>
+            `).join('');
+        }
+
+        function postUserComment() {
+            const nameEl = document.getElementById('comment-name');
+            const textEl = document.getElementById('comment-text');
+            if (!textEl || !textEl.value.trim()) return;
+
+            const newComment = {
+                name: nameEl && nameEl.value.trim() ? nameEl.value.trim() : 'Ẩn danh',
+                text: textEl.value.trim()
+            };
+
+            userCommentsList.unshift(newComment);
+            textEl.value = '';
+            renderCommentsList();
+        }
+
+        function testRunSlide(slideType, stageNum) {
+            closeUploadModal();
+            stopAllGlobalMedia();
+
+            if (slideType === 'intro') {
+                showIntroScreen();
+            } else if (slideType === 'stage-select') {
+                skipIntroToStageSelect();
+            } else if (slideType === 'stage') {
+                startGame(stageNum || 1);
+           } else if (slideType === 'result-yes') {
+        window.lastUserChoice = 'YES';
+        handleBonusChoice('YES');
+    } else if (slideType === 'result-no') {
+        window.lastUserChoice = 'NO';
+        handleBonusChoice('NO');
+    }
+        }
+
+        function showIntroScreen() {
+            stopAllGlobalMedia();
+            recreateIntroVideoElement();
+            document.getElementById('intro-screen').classList.remove('hidden');
+            document.getElementById('stage-select-screen').classList.add('hidden');
+            document.getElementById('game-header').classList.add('hidden');
+            document.getElementById('game-main-area').classList.add('hidden');
+        }
+
+        function skipIntroToStageSelect() {
+            stopAllGlobalMedia();
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('stage-select-screen').classList.remove('hidden');
+            document.getElementById('game-header').classList.add('hidden');
+            document.getElementById('game-main-area').classList.add('hidden');
+        }
+
+        function replayIntroMainVideo() {
+            recreateIntroVideoElement();
+            const vid = document.getElementById('main-intro-video');
+            if (vid && introVideoUrl) {
+                vid.src = introVideoUrl;
+                vid.currentTime = 0;
+                vid.play().catch(()=>{});
+            }
+        }
+
+        function goToStageSelect() {
+            stopTimer();
+            stopAllGlobalMedia();
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('stage-select-screen').classList.remove('hidden');
+            document.getElementById('game-header').classList.add('hidden');
+            document.getElementById('game-main-area').classList.add('hidden');
+            document.getElementById('victory-modal').classList.add('hidden');
+            document.getElementById('media-display-modal').classList.add('hidden');
+        }
+
+        function openUploadModal() {
+            renderUploadModalGrids();
+            document.getElementById('upload-config-modal').classList.remove('hidden');
+        }
+
+        function closeUploadModal() {
+            document.getElementById('upload-config-modal').classList.add('hidden');
+        }
+
+        function closeMediaDisplayModal() {
+            const container = document.getElementById('media-display-content');
+            if (container) {
+                const vid = container.querySelector('video');
+                if (vid) {
+                    vid.pause();
+                    vid.src = '';
+                }
+                const aud = container.querySelector('audio');
+                if (aud) {
+                    aud.pause();
+                    aud.src = '';
+                }
+                container.innerHTML = '';
+            }
+            document.getElementById('media-display-modal').classList.add('hidden');
+        }
+
+        function playLevelHover(lvl) {
+            const vidEl = document.getElementById(`level-vid-${lvl}`);
+            if (vidEl && levelHoverMedia[lvl].vid) {
+                vidEl.classList.remove('hidden');
+                vidEl.muted = !soundEnabled;
+                vidEl.currentTime = 0;
+                vidEl.play().catch(()=>{});
+            }
+        }
+
+        function stopLevelHover(lvl) {
+            const vidEl = document.getElementById(`level-vid-${lvl}`);
+            if (vidEl) {
+                vidEl.pause();
+                vidEl.classList.add('hidden');
+            }
+        }
+
+        function updateLevelHoverElements() {
+            [1, 2, 3].forEach(lvl => {
+                const imgEl = document.getElementById(`level-img-${lvl}`);
+                const vidEl = document.getElementById(`level-vid-${lvl}`);
+                if (imgEl && levelHoverMedia[lvl].img) imgEl.src = levelHoverMedia[lvl].img;
+                if (vidEl && levelHoverMedia[lvl].vid) vidEl.src = levelHoverMedia[lvl].vid;
+            });
+        }
+
+        function startGame(stage) {
+            currentStage = stage;
+            stopAllGlobalMedia();
+
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('stage-select-screen').classList.add('hidden');
+            document.getElementById('game-header').classList.remove('hidden');
+            document.getElementById('game-main-area').classList.remove('hidden');
+            document.getElementById('victory-modal').classList.add('hidden');
+            document.getElementById('media-display-modal').classList.add('hidden');
+
+            document.getElementById('stage-indicator').innerText = stageTitles[stage];
+            
+            secondsElapsed = 0;
+            movesCount = 0;
+            updateHeaderStats();
+            stopTimer();
+            playBGM(stage);
+            setupBoard(stage);
+        }
+
+        function playBGM(stage) {
+            const bgm = document.getElementById('stage-bgm-audio');
+            if (bgm && stageBGMTracks[stage] && soundEnabled) {
+                bgm.src = stageBGMTracks[stage];
+                bgm.currentTime = 0;
+                bgm.play().catch(()=>{});
+            } else if (bgm) {
+                bgm.pause();
+            }
+        }
+
+        function stopBGM() {
+            const bgm = document.getElementById('stage-bgm-audio');
+            if (bgm) bgm.pause();
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high";
+                playBGM(currentStage);
+            } else {
+                icon.className = "fa-solid fa-volume-xmark";
+                stopBGM();
+            }
+        }
+
+        function startTimer() {
+            stopTimer();
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                updateHeaderStats();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            if (previewInterval) clearInterval(previewInterval);
+        }
+
+        function updateHeaderStats() {
+            const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+            const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+            document.getElementById('timer-display').innerText = `${mins}:${secs}`;
+            document.getElementById('moves-display').innerText = movesCount;
+        }
+
+        function setupBoard(stage) {
+            const board = document.getElementById('game-board');
+            if (!board) return;
+            board.innerHTML = '';
+
+            let deck = [];
+            const photos = stageCardPhotos[stage];
+
+            if (stage === 1) {
+                totalPairsInStage = 2;
+                deck = [
+                    { id: 0, img: photos[0] }, { id: 1, img: photos[1] },
+                    { id: 1, img: photos[2] }, { id: 0, img: photos[3] }
+                ];
+                board.className = "grid grid-cols-2 gap-6 w-full max-w-xl mx-auto p-4";
+            } else if (stage === 2) {
+                totalPairsInStage = 4;
+                deck = [
+                    { id: 0, img: photos[0] }, { id: 1, img: photos[1] },
+                    { id: 2, img: photos[2] }, { id: 3, img: photos[3] },
+                    { id: 3, img: photos[4] }, { id: 2, img: photos[5] },
+                    { id: 0, img: photos[6] }, { id: 1, img: photos[7] }
+                ];
+                board.className = "grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 w-full max-w-3xl mx-auto p-6";
+            } else if (stage === 3) {
+                totalPairsInStage = 6;
+                deck = [
+                    { id: 0, img: photos[0] }, { id: 1, img: photos[1] },
+                    { id: 2, img: photos[2] }, { id: 3, img: photos[3] },
+                    { id: 3, img: photos[4] }, { id: 4, img: photos[5] },
+                    { id: 0, img: photos[6] }, { id: 5, img: photos[7] },
+                    { id: 1, img: photos[8] }, { id: 5, img: photos[9] },
+                    { id: 4, img: photos[10] }, { id: 2, img: photos[11] }
+                ];
+                board.className = "grid grid-cols-3 sm:grid-cols-4 gap-5 sm:gap-6 w-full max-w-2xl mx-auto p-5";
+            } else if (stage === 4) {
+                totalPairsInStage = 10;
+                deck = [
+                    { id: 0, img: photos[0] }, { id: 1, img: photos[1] },
+                    { id: 2, img: photos[2] }, { id: 3, img: photos[3] },
+                    { id: 4, img: photos[4] }, { id: 3, img: photos[5] },
+                    { id: 5, img: photos[6] }, { id: 6, img: photos[7] },
+                    { id: 7, img: photos[8] }, { id: 1, img: photos[9] },
+                    { id: 8, img: photos[10] }, { id: 7, img: photos[11] },
+                    { id: 9, img: photos[12] }, { id: 5, img: photos[13] },
+                    { id: 4, img: photos[14] }, { id: 2, img: photos[15] },
+                    { id: 0, img: photos[16] }, { id: 8, img: photos[17] },
+                    { id: 9, img: photos[18] }, { id: 6, img: photos[19] }
+                ];
+                board.className = "grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 w-full max-w-2xl mx-auto p-3";
+            }
+
+            flippedCards = [];
+            matchedPairsCount = 0;
+            isProcessing = true;
+
+            const coverImage = stageCovers[stage] || stageCovers[1];
+
+            deck.forEach((cardData) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = "perspective-1000 aspect-square w-full cursor-pointer select-none";
+                cardEl.dataset.id = cardData.id;
+
+                cardEl.innerHTML = `
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="${cardData.img}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="${coverImage}" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                `;
+
+                cardEl.onclick = () => handleCardClick(cardEl);
+                board.appendChild(cardEl);
+            });
+
+            let previewSeconds = stage === 4 ? 5 : 3;
+            const previewEl = document.getElementById('preview-countdown');
+            const previewBox = document.getElementById('preview-countdown-box');
+            if (previewBox) previewBox.classList.remove('hidden');
+            if (previewEl) previewEl.innerText = `${previewSeconds}s`;
+
+            playTickSound();
+
+            clearInterval(previewInterval);
+            previewInterval = setInterval(() => {
+                previewSeconds--;
+                if (previewEl) previewEl.innerText = `${previewSeconds}s`;
+                if (previewSeconds > 0) {
+                    playTickSound();
+                }
+                if (previewSeconds <= 0) {
+                    clearInterval(previewInterval);
+                    if (previewBox) previewBox.classList.add('hidden');
+                    const allCards = board.querySelectorAll('.card-inner');
+                    allCards.forEach(c => c.classList.add('rotate-y-180'));
+                    isProcessing = false;
+                    startTimer();
+                }
+            }, 1200);
+        }
+
+        function handleCardClick(cardEl) {
+            if (isProcessing) return;
+            const inner = cardEl.querySelector('.card-inner');
+            if (!inner.classList.contains('rotate-y-180')) return;
+
+            inner.classList.remove('rotate-y-180');
+            playCardFlipSound();
+            flippedCards.push(cardEl);
+
+            if (flippedCards.length === 2) {
+                movesCount++;
+                updateHeaderStats();
+                isProcessing = true;
+
+                const c1 = flippedCards[0];
+                const c2 = flippedCards[1];
+
+                if (c1.dataset.id === c2.dataset.id) {
+                    matchedPairsCount++;
+                    playMatchSuccessSound();
+                    flippedCards = [];
+                    isProcessing = false;
+
+                    if (matchedPairsCount === totalPairsInStage) {
+                        setTimeout(() => handleStageVictory(), 600);
+                    }
+                } else {
+                    playMatchFailSound();
+                    setTimeout(() => {
+                        c1.querySelector('.card-inner').classList.add('rotate-y-180');
+                        c2.querySelector('.card-inner').classList.add('rotate-y-180');
+                        flippedCards = [];
+                        isProcessing = false;
+                    }, 800);
+                }
+            }
+        }
+
+        function handleStageVictory() {
+            stopTimer();
+            stopBGM();
+            playVictoryFanfareSound();
+
+            const modal = document.getElementById('victory-modal');
+            const questionEl = document.getElementById('victory-question');
+            const victoryImg = document.getElementById('victory-stage-img');
+            const actionBtn = document.getElementById('victory-action-btn');
+            const bonusBtns = document.getElementById('bonus-choice-buttons');
+
+            questionEl.innerText = victoryQuestions[currentStage] || victoryQuestions[1];
+
+            if (stageVictoryImages[currentStage] && stageVictoryImages[currentStage].trim() !== '') {
+                victoryImg.src = stageVictoryImages[currentStage];
+                victoryImg.classList.remove('hidden');
+            } else {
+                victoryImg.classList.add('hidden');
+            }
+
+            if (currentStage === 4) {
+                actionBtn.classList.add('hidden');
+                bonusBtns.classList.remove('hidden');
+            } else {
+                actionBtn.classList.remove('hidden');
+                bonusBtns.classList.add('hidden');
+                actionBtn.innerText = victoryBtnLabels[currentStage] || 'NEXT STAGE ➔';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function handleVictoryNext() {
+            document.getElementById('victory-modal').classList.add('hidden');
+            if (currentStage === 1) startGame(2);
+            else if (currentStage === 2) startGame(3);
+            else if (currentStage === 3) startGame(4);
+        }
+
+        function handleBonusChoice(choice) {
+            document.getElementById('victory-modal').classList.add('hidden');
+            const modal = document.getElementById('media-display-modal');
+            const container = document.getElementById('media-display-content');
+            const actionBtn = document.getElementById('result-action-button');
+            const commentBox = document.getElementById('comment-section-box');
+            
+            container.innerHTML = '';
+            if (commentBox) commentBox.classList.add('hidden');
+            resultActionState = 0; // Reset toggle state
+
+            const key = choice.toUpperCase();
+            const mediaData = resultChoiceMedia[key];
+
+            // Set action button text and consistent primary theme color (matching "NOT SURE" button style)
+            if (actionBtn) {
+                actionBtn.classList.remove('hidden');
+                if (key === 'NO') {
+                    actionBtn.innerText = "WHY NOT ME!?";
+                    actionBtn.className = "mt-4 px-6.5 py-3.5 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-sm rounded-2xl transition shadow-md font-bubble-title transform hover:scale-105 border-2 border-white/40 w-auto px-6";
+                } else {
+                    actionBtn.innerText = "EM CHIP CAM ON";
+                    actionBtn.className = "mt-4 px-6.5 py-3.5 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-sm rounded-2xl transition shadow-md font-bubble-title transform hover:scale-105 border-2 border-white/40 w-auto px-6";
+                }
+            }
+
+            if (mediaData && mediaData.type === 'video' && mediaData.video) {
+                container.innerHTML = `<video id="result-active-video" src="${mediaData.video}" class="w-full h-auto max-h-[50vh] object-contain rounded-xl" controls autoplay loop playsinline></video>`;
+            } else if (mediaData && mediaData.image) {
+                let audioHtml = mediaData.audio ? `<audio id="result-active-audio" src="${mediaData.audio}" autoplay controls class="mt-2 w-full"></audio>` : '';
+                container.innerHTML = `<div class="w-full flex flex-col items-center justify-center"><img src="${mediaData.image}" class="w-full h-auto max-h-[50vh] object-contain rounded-xl">${audioHtml}</div>`;
+            } else {
+                container.innerHTML = `<div class="p-6 text-center text-[#5d223c] font-bold text-sm font-vietnamese">Chưa có media được upload cho lựa chọn ${choice}.<br>Vào Admin Upload để cài đặt!</div>`;
+            }
+
+            renderCommentsList();
+            modal.classList.remove('hidden');
+        }
+
+        function handleResultActionButtonClick() {
+            if (resultActionState === 0) {
+                // First click: reveal the comment section
+                resultActionState = 1;
+                const commentBox = document.getElementById('comment-section-box');
+                const commentInput = document.getElementById('comment-text');
+                const actionBtn = document.getElementById('result-action-button');
+
+                if (commentBox) {
+                    commentBox.classList.remove('hidden');
+                    commentBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                if (actionBtn) {
+                    actionBtn.classList.remove('mt-4');
+                    actionBtn.classList.add('mt-2');
+                }
+                if (commentInput) {
+                    commentInput.focus();
+                }
+            } else {
+                // Second click: return to stage select screen
+                closeMediaDisplayModal();
+                goToStageSelect();
+            }
+        }
+
+        function setUploadTab(tabKey) {
+            const tabs = ['intro', 's1', 's2', 's3', 's4', 'result'];
+            if (tabKey === 's1') activeTabStage = 1;
+            else if (tabKey === 's2') activeTabStage = 2;
+            else if (tabKey === 's3') activeTabStage = 3;
+            else if (tabKey === 's4') activeTabStage = 4;
+
+            tabs.forEach(t => {
+                const sec = document.getElementById(`tab-sec-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (sec) sec.classList.add('hidden');
+                if (btn) btn.className = "px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/10 whitespace-nowrap";
+            });
+
+            const activeSec = document.getElementById(`tab-sec-${tabKey}`);
+            const activeBtn = document.getElementById(`tab-btn-${tabKey}`);
+            if (activeSec) activeSec.classList.remove('hidden');
+            if (activeBtn) activeBtn.className = "px-4 py-2 text-xs font-extrabold rounded-xl bg-teal-400 text-stone-900 whitespace-nowrap shadow";
+        }
+
+        function renderUploadModalGrids() {
+            [1, 2, 3, 4].forEach(s => {
+                const bgmLabel = document.getElementById(`bgm-label-${s}`);
+                if (bgmLabel && stageBGMTracks[s]) {
+                    bgmLabel.innerText = "Audio track loaded successfully ✅";
+                }
+
+                const grid = document.getElementById(`cards-grid-s${s}`);
+                if (!grid) return;
+                grid.innerHTML = '';
+
+                const coverCard = document.createElement('div');
+                coverCard.className = "p-3 bg-[#23182d] rounded-2xl border-2 border-teal-400 flex flex-col items-center justify-between gap-2 shadow-lg";
+                coverCard.innerHTML = `
+                    <div class="text-[11px] font-extrabold text-teal-300">🖼️ Level Cover Image</div>
+                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                        <img src="${stageCovers[s]}" class="w-full h-full object-cover">
+                    </div>
+                    <input type="file" id="input-cover-${s}" accept="image/*" onchange="uploadCoverPhoto(event, ${s})" class="hidden">
+                    <button onclick="document.getElementById('input-cover-${s}').click()" class="w-full py-1.5 bg-teal-400 text-stone-900 font-extrabold text-xs rounded-xl shadow">Change Cover</button>
+                `;
+                grid.appendChild(coverCard);
+
+                stageCardPhotos[s].forEach((photoUrl, i) => {
+                    const card = document.createElement('div');
+                    card.className = "p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow";
+                    card.innerHTML = `
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #${i + 1}</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="${photoUrl}" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-${s}-${i}" accept="image/*" onchange="uploadCardPhoto(event, ${s}, ${i})" class="hidden">
+                        <button onclick="document.getElementById('input-card-${s}-${i}').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                const vicCard = document.createElement('div');
+                vicCard.className = "p-3 bg-[#23182d] rounded-2xl border border-amber-400/50 flex flex-col items-center justify-between gap-2 shadow";
+                vicCard.innerHTML = `
+                    <div class="text-[11px] font-extrabold text-amber-300">🏆 Victory Image</div>
+                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center p-1">
+                        <img src="${stageVictoryImages[s] || 'https://placehold.co/300x300/18111e/amber?text=Victory+PNG'}" class="w-full h-full object-contain">
+                    </div>
+                    <input type="file" id="input-vic-${s}" accept="image/*" onchange="uploadVictoryPhoto(event, ${s})" class="hidden">
+                    <button onclick="document.getElementById('input-vic-${s}').click()" class="w-full py-1.5 bg-amber-500 text-stone-900 font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                `;
+                grid.appendChild(vicCard);
+            });
+        }
+
+        function uploadIntroVideo(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            introVideoUrl = URL.createObjectURL(file);
+            const msg = document.getElementById('intro-placeholder-text');
+            if (msg) msg.classList.add('hidden');
+            recreateIntroVideoElement();
+        }
+
+        function uploadLevelHoverMedia(e, lvl, type) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
+            if (type === 'img') levelHoverMedia[lvl].img = url;
+            if (type === 'vid') levelHoverMedia[lvl].vid = url;
+            updateLevelHoverElements();
+        }
+
+        function uploadStageBGM(e, stage) {
+            const file = e.target.files[0];
+            if (!file) return;
+            stageBGMTracks[stage] = URL.createObjectURL(file);
+            const label = document.getElementById(`bgm-label-${stage}`);
+            if (label) label.innerText = `Loaded: ${file.name} ✅`;
+            if (currentStage === stage && soundEnabled) {
+                playBGM(stage);
+            }
+        }
+
+        function uploadCoverPhoto(e, stage) {
+            const file = e.target.files[0];
+            if (!file) return;
+            stageCovers[stage] = URL.createObjectURL(file);
+            renderUploadModalGrids();
+        }
+
+        function uploadCardPhoto(e, stage, idx) {
+            const file = e.target.files[0];
+            if (!file) return;
+            stageCardPhotos[stage][idx] = URL.createObjectURL(file);
+            renderUploadModalGrids();
+        }
+
+        function uploadVictoryPhoto(e, stage) {
+            const file = e.target.files[0];
+            if (!file) return;
+            stageVictoryImages[stage] = URL.createObjectURL(file);
+            renderUploadModalGrids();
+        }
+
+        function toggleResultMediaType(choiceKey) {
+            const key = choiceKey.toUpperCase();
+            const selectEl = document.getElementById(`result-type-${choiceKey.toLowerCase()}`);
+            if (!selectEl) return;
+            resultChoiceMedia[key].type = selectEl.value;
+
+            const vidBox = document.getElementById(`result-vid-box-${choiceKey.toLowerCase()}`);
+            const imgBox = document.getElementById(`result-img-box-${choiceKey.toLowerCase()}`);
+
+            if (selectEl.value === 'video') {
+                if (vidBox) vidBox.classList.remove('hidden');
+                if (imgBox) imgBox.classList.add('hidden');
+            } else {
+                if (vidBox) vidBox.classList.add('hidden');
+                if (imgBox) imgBox.classList.remove('hidden');
+            }
+        }
+
+        function uploadResultMedia(e, choiceKey, fileType) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const key = choiceKey.toUpperCase();
+            const url = URL.createObjectURL(file);
+
+            if (fileType === 'video') resultChoiceMedia[key].video = url;
+            if (fileType === 'image') resultChoiceMedia[key].image = url;
+            if (fileType === 'audio') resultChoiceMedia[key].audio = url;
+        }
+
+        window.onload = function() {
+            showIntroScreen();
+        };
+
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'F2') {
+                const btn = document.getElementById('admin-floating-btn');
+                if (btn) btn.classList.toggle('hidden');
+            } else if (e.shiftKey && e.key.toUpperCase() === 'U') {
+                openUploadModal();
+            }
+        });
+    </script>
+
+</body></html>
