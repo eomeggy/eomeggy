@@ -1865,27 +1865,43 @@ function fixStage1Images() {
     // 1. Set global card back image
     const cardBacks = document.querySelectorAll('.card-back img');
     cardBacks.forEach(img => {
-        img.src = 'card-back-1-2-3-bonus.jpg';
+        if (!img.src.includes('card-back-1-2-3-bonus.jpg')) {
+            img.src = 'card-back-1-2-3-bonus.jpg';
+        }
     });
 
-    // 2. Set front card images for Stage 1
-    const stage1FrontImages = [
-        'stage1-card-1.jpg',
-        'stage1-card-2.jpg',
-        'stage1-card-3.png',
-        'stage1-card-4.jpg'
-    ];
-    
+    // 2. Set front card images for Stage 1 (if there are 8 cards for easy level)
     const cardFronts = document.querySelectorAll('.card-front img');
-    cardFronts.forEach((img, index) => {
-        const assetIndex = Math.floor((index % 8) / 2);
-        img.src = stage1FrontImages[assetIndex] || 'stage1-card-1.jpg';
-    });
+    if (cardFronts.length === 8) {
+        const stage1FrontImages = [
+            'stage1-card-1.jpg',
+            'stage1-card-2.jpg',
+            'stage1-card-3.png',
+            'stage1-card-4.jpg'
+        ];
+        
+        cardFronts.forEach((img, index) => {
+            const assetIndex = Math.floor((index % 8) / 2);
+            const targetSrc = stage1FrontImages[assetIndex] || 'stage1-card-1.jpg';
+            if (!img.src.includes(targetSrc)) {
+                img.src = targetSrc;
+            }
+        });
 
-    // 3. Play Stage 1 audio
-    stage1Audio.currentTime = 0;
-    stage1Audio.play().catch(e => console.log("Audio play blocked:", e));
+        // 3. Play Stage 1 audio if not already playing
+        if (stage1Audio.paused) {
+            stage1Audio.currentTime = 0;
+            stage1Audio.play().catch(e => console.log("Audio play blocked:", e));
+        }
+    }
 }
+
+// Automatically trigger fix whenever cards are rendered on screen
+const stage1Observer = new MutationObserver(() => {
+    fixStage1Images();
+});
+
+stage1Observer.observe(document.body, { childList: true, subtree: true });
 window.onload = function() {
     showIntroScreen();
 };
