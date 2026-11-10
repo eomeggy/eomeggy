@@ -15,6 +15,7 @@
             color: #fff;
             cursor: url('custom-cursor.png'), auto !important;
             overflow-x: hidden;
+            touch-action: manipulation;
         }
         button, div[onclick], input, select, a {
             cursor: url('custom-cursor.png'), pointer !important;
@@ -52,6 +53,13 @@
         .rotate-y-180 {
             transform: rotateY(180deg);
         }
+        /* Ép video tuyệt đối nằm trong khung, không bật fullscreen player trên điện thoại */
+        video {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            pointer-events: auto;
+        }
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -82,7 +90,7 @@
             <!-- Video Frame Container -->
             <div id="intro-video-container" class="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-black flex items-center justify-center relative">
                 <div id="intro-video-wrapper" class="w-full h-full flex items-center justify-center">
-                    <video id="main-intro-video" class="w-full h-full object-cover" autoplay loop muted playsinline webkit-playsinline preload="auto" src="intro-video.mp4"></video>
+                    <video id="main-intro-video" autoplay loop muted playsinline webkit-playsinline x5-playsinline preload="auto" src="intro-video.mp4"></video>
                 </div>
             </div>
             <!-- Intro Buttons Bar -->
@@ -109,7 +117,7 @@
                 <div onclick="startGame(1)" onmouseenter="playLevelHover(1)" onmouseleave="stopLevelHover(1)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
                     <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
                         <img id="level-img-1" src="stage1-easy-img.jpg" class="w-full h-full object-cover rounded-xl">
-                        <video id="level-vid-1" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop muted playsinline webkit-playsinline src="stage1-easy-video.mp4"></video>
+                        <video id="level-vid-1" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop muted playsinline webkit-playsinline x5-playsinline src="stage1-easy-video.mp4"></video>
                     </div>
                     <span class="font-extrabold text-xl sm:text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">EASY</span>
                 </div>
@@ -117,7 +125,7 @@
                 <div onclick="startGame(2)" onmouseenter="playLevelHover(2)" onmouseleave="stopLevelHover(2)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
                     <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
                         <img id="level-img-2" src="stage2-medium-img.jpg" class="w-full h-full object-cover rounded-xl">
-                        <video id="level-vid-2" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop muted playsinline webkit-playsinline src="stage2-medium-video.mp4"></video>
+                        <video id="level-vid-2" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop muted playsinline webkit-playsinline x5-playsinline src="stage2-medium-video.mp4"></video>
                     </div>
                     <span class="font-extrabold text-xl sm:text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">MEDIUM</span>
                 </div>
@@ -125,7 +133,7 @@
                 <div onclick="startGame(3)" onmouseenter="playLevelHover(3)" onmouseleave="stopLevelHover(3)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
                     <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
                         <img id="level-img-3" src="stage3-hard-img.jpg" class="w-full h-full object-cover rounded-xl">
-                        <video id="level-vid-3" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop muted playsinline webkit-playsinline src="stage3-hard-video.mp4"></video>
+                        <video id="level-vid-3" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop muted playsinline webkit-playsinline x5-playsinline src="stage3-hard-video.mp4"></video>
                     </div>
                     <span class="font-extrabold text-xl sm:text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">HARD</span>
                 </div>
@@ -161,13 +169,13 @@
         </div>
     </header>
 
-    <!-- MAIN GAMEPLAY AREA -->
-    <main id="game-main-area" class="w-full max-w-4xl flex-1 flex flex-col items-center justify-center relative my-auto hidden py-2 overflow-y-auto">
+    <!-- MAIN GAMEPLAY AREA (ĐÃ FIX KHUNG HIỂN THỊ CARD CHUẨN TRÊN MỌI THIẾT BỊ) -->
+    <main id="game-main-area" class="w-full max-w-4xl flex-1 flex flex-col items-center justify-center relative my-auto hidden py-2 overflow-y-auto min-h-[75vh]">
         <div id="preview-countdown-box" class="mb-3 px-4 py-1.5 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border-2 border-[#5d223c]/20 flex items-center gap-2 text-[#5d223c] font-black text-xs sm:text-base font-vietnamese hidden">
             <span>Preview Time: </span>
             <span id="preview-countdown" class="text-rose-600 text-base sm:text-lg font-black font-bubble-title">0s</span>
         </div>
-        <div id="game-board" class="w-full max-w-2xl mx-auto p-2 sm:p-3 min-h-[350px]"></div>
+        <div id="game-board" class="w-full max-w-md sm:max-w-2xl mx-auto p-2 sm:p-3 my-auto"></div>
     </main>
 
     <!-- STAGE TRANSITION & VICTORY MODAL -->
@@ -201,6 +209,7 @@
             <button onclick="closeMediaDisplayModal()" class="absolute top-3 right-3 w-9 h-9 bg-[#5d223c] text-white font-black rounded-full shadow-lg flex items-center justify-center hover:bg-[#461a2d] transition text-lg z-20">
                 <i class="fa-solid fa-xmark"></i>
             </button>
+            <!-- Ép video kết quả hiển thị nội tuyến tuyệt đối, chống bật ra player ngoài -->
             <div id="media-display-content" class="w-full flex items-center justify-center overflow-hidden rounded-2xl bg-black border-2 border-white shadow-xl transition-all duration-300"></div>
             
             <div id="comment-section-box" class="w-full bg-white/95 rounded-2xl p-4 border-2 border-[#5d223c]/20 shadow-inner flex flex-col space-y-3 my-4 transition-all duration-300 hidden">
@@ -383,7 +392,7 @@
             const wrapper = document.getElementById('intro-video-wrapper');
             if (wrapper) {
                 wrapper.innerHTML = `
-                    <video id="main-intro-video" class="w-full h-full object-cover" autoplay loop muted playsinline webkit-playsinline preload="auto" src="${introVideoUrl}"></video>
+                    <video id="main-intro-video" autoplay loop playsinline webkit-playsinline x5-playsinline preload="auto" src="${introVideoUrl}"></video>
                 `;
                 const vid = document.getElementById('main-intro-video');
                 if (vid) {
@@ -698,7 +707,7 @@
             const vidEl = document.getElementById(`level-vid-${lvl}`);
             if (vidEl && levelHoverMedia[lvl].vid) {
                 vidEl.classList.remove('hidden');
-                vidEl.muted = true;
+                vidEl.muted = false;
                 vidEl.currentTime = 0;
                 vidEl.play().catch(()=>{});
             }
@@ -806,10 +815,10 @@
             
             if (stage === 1) {
                 totalPairsInStage = 2;
-                board.className = "grid grid-cols-2 gap-4 w-full max-w-sm mx-auto p-2";
+                board.className = "grid grid-cols-2 gap-3 w-full max-w-xs mx-auto p-2";
             } else if (stage === 2) {
                 totalPairsInStage = 4;
-                board.className = "grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 w-full max-w-xl mx-auto p-2";
+                board.className = "grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 w-full max-w-lg mx-auto p-2";
             } else if (stage === 3) {
                 totalPairsInStage = 6;
                 board.className = "grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-4 w-full max-w-xl mx-auto p-2";
@@ -956,7 +965,7 @@
                 actionBtn.innerText = choice.toUpperCase() === 'NO' ? "WHY NOT ME!?" : "EM CHIP CAM ON";
             }
             if (mediaData && mediaData.type === 'video' && mediaData.video) {
-                container.innerHTML = `<video src="${mediaData.video}" class="w-full h-auto max-h-[50vh] object-contain rounded-xl" controls autoplay loop playsinline webkit-playsinline preload="auto"></video>`;
+                container.innerHTML = `<video src="${mediaData.video}" controls autoplay loop playsinline webkit-playsinline x5-playsinline preload="auto"></video>`;
             } else if (mediaData && mediaData.image) {
                 container.innerHTML = `<div class="w-full flex flex-col items-center justify-center"><img src="${mediaData.image}" class="w-full h-auto max-h-[50vh] object-contain rounded-xl"></div>`;
             }
