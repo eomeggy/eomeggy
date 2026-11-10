@@ -115,7 +115,15 @@
       object-fit: cover;
       border-radius: inherit;
     }
-    .stage-preview-video { z-index: 2; }
+    .stage-preview-video {
+      z-index: 2;
+      display: block;
+      object-fit: cover;
+      pointer-events: none;
+      background: transparent;
+      -webkit-playsinline: true;
+    }
+    .stage-preview-video.hidden { display: none !important; }
     .stage-card-label {
       color: #6b2d4b;
       font-size: clamp(1.25rem, 2.2vw, 1.8rem);
@@ -137,56 +145,100 @@
       .stage-select-layout {
         display: block;
         padding: 0;
-        --heading-rail: 92px;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+        --heading-rail: 58px;
       }
+
+      /* Anchor the rotated title to the RIGHT edge, not the screen centre. */
       .stage-select-heading {
         position: absolute;
-        z-index: 3;
-        right: 4px;
+        z-index: 5;
+        right: 12px;
         top: 50%;
-        transform: translateY(-50%) rotate(90deg);
-        transform-origin: center;
-        width: min(70vh, 560px);
+        width: max-content;
         margin: 0;
         white-space: nowrap;
-        font-size: clamp(1.9rem, 8vw, 3rem);
+        font-size: clamp(1.45rem, 6vw, 2.25rem);
         letter-spacing: 2px;
+        line-height: 1;
+        transform: translateY(-50%) rotate(90deg);
+        transform-origin: right center;
         pointer-events: none;
       }
+
+      /* Fit three square stage cards into the portrait viewport.
+         The max-height expression also leaves room for labels and gaps. */
       .stage-list {
         position: absolute;
         inset: 0 var(--heading-rail) 0 0;
         width: auto;
+        height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 34px;
+        justify-content: center;
+        gap: clamp(5px, 1.1vh, 10px);
         overflow-y: auto;
         overflow-x: hidden;
-        padding: 12vh 14px;
+        padding: max(8px, env(safe-area-inset-top)) 8px max(8px, env(safe-area-inset-bottom));
         scroll-snap-type: y mandatory;
         overscroll-behavior-y: contain;
         -webkit-overflow-scrolling: touch;
       }
+
       .stage-card {
-        width: min(100%, 620px);
+        width: min(
+          100%,
+          calc((100dvh - 112px) / 3),
+          calc(100vw - var(--heading-rail) - 24px)
+        );
         flex: 0 0 auto;
-        padding: 12px;
-        border-radius: 28px;
+        padding: 6px;
+        border-width: 3px;
+        border-radius: 17px;
         scroll-snap-align: center;
         scroll-snap-stop: always;
+        box-shadow: 0 5px 12px rgba(60,20,40,.14);
       }
-      .stage-card-media { border-radius: 18px; }
-      .stage-card-label { font-size: clamp(1.35rem, 5vw, 2rem); margin-top: 12px; }
+
+      .stage-card:hover { transform: none; }
+      .stage-card-media {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        border-radius: 10px;
+      }
+      .stage-card-label {
+        font-size: clamp(11px, 3.2vw, 16px);
+        margin-top: 5px;
+        line-height: 1.05;
+      }
+
+      .stage-preview-video,
+      .stage-cover {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+      }
+
       .stage-replay-btn {
         position: absolute;
-        z-index: 4;
-        bottom: max(16px, env(safe-area-inset-bottom));
-        left: 14px;
-        padding: 9px 14px;
-        font-size: 11px;
+        z-index: 6;
+        bottom: max(8px, env(safe-area-inset-bottom));
+        left: 8px;
+        margin: 0;
+        padding: 6px 9px;
+        border-radius: 10px;
+        font-size: 9px;
         background: rgba(93,34,60,.82);
       }
+    }
+
+    @media (max-width: 380px) {
+      .stage-select-layout { --heading-rail: 52px; }
+      .stage-select-heading { right: 8px; font-size: 1.35rem; }
+      .stage-card { padding: 5px; }
+      .stage-card-label { font-size: 11px; }
     }
   </style>
 </head>
@@ -233,7 +285,7 @@
       <div class="stage-card" data-stage="1" onclick="startGame(1)" onmouseenter="playLevelHover(1)" onmouseleave="stopLevelHover(1)">
         <div class="stage-card-media">
           <img id="level-img-1" src="stage1-easy-img.jpg" class="stage-cover" alt="Easy stage">
-          <video id="level-vid-1" class="stage-preview-video hidden" loop playsinline webkit-playsinline preload="metadata" muted src="stage1-easy-video.mp4"></video>
+          <video id="level-vid-1" class="stage-preview-video hidden" autoplay muted loop playsinline webkit-playsinline="true" preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload noplaybackrate noremoteplayback" src="stage1-easy-video.mp4"></video>
         </div>
         <span class="stage-card-label font-bubble-title">EASY</span>
       </div>
@@ -242,7 +294,7 @@
       <div class="stage-card" data-stage="2" onclick="startGame(2)" onmouseenter="playLevelHover(2)" onmouseleave="stopLevelHover(2)">
         <div class="stage-card-media">
           <img id="level-img-2" src="stage2-medium-img.jpg" class="stage-cover" alt="Medium stage">
-          <video id="level-vid-2" class="stage-preview-video hidden" loop playsinline webkit-playsinline preload="metadata" muted src="stage2-medium-video.mp4"></video>
+          <video id="level-vid-2" class="stage-preview-video hidden" autoplay muted loop playsinline webkit-playsinline="true" preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload noplaybackrate noremoteplayback" src="stage2-medium-video.mp4"></video>
         </div>
         <span class="stage-card-label font-bubble-title">MEDIUM</span>
       </div>
@@ -251,7 +303,7 @@
       <div class="stage-card" data-stage="3" onclick="startGame(3)" onmouseenter="playLevelHover(3)" onmouseleave="stopLevelHover(3)">
         <div class="stage-card-media">
           <img id="level-img-3" src="stage3-hard-img.jpg" class="stage-cover" alt="Hard stage">
-          <video id="level-vid-3" class="stage-preview-video hidden" loop playsinline webkit-playsinline preload="metadata" muted src="stage3-hard-video.mp4"></video>
+          <video id="level-vid-3" class="stage-preview-video hidden" autoplay muted loop playsinline webkit-playsinline="true" preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload noplaybackrate noremoteplayback" src="stage3-hard-video.mp4"></video>
         </div>
         <span class="stage-card-label font-bubble-title">HARD</span>
       </div>
@@ -1083,16 +1135,38 @@
             [1, 2, 3].forEach(l => {
                 if (l !== lvl) stopLevelHover(l);
             });
+
             const vidEl = document.getElementById(`level-vid-${lvl}`);
-            if (vidEl && levelHoverMedia[lvl].vid) {
-                activePreviewStage = lvl;
-                vidEl.classList.remove('hidden');
-                // Muted inline autoplay is supported more reliably on iOS/Android.
-                // The preview remains inside its own stage card, never in a separate player.
-                vidEl.muted = true;
-                vidEl.playsInline = true;
-                const playPromise = vidEl.play();
-                if (playPromise && playPromise.catch) playPromise.catch(()=>{});
+            if (!vidEl || !levelHoverMedia[lvl].vid) return;
+
+            activePreviewStage = lvl;
+
+            // Force native inline playback attributes before calling play().
+            // Do not add controls: tapping the preview must not open a native player.
+            vidEl.pause();
+            vidEl.controls = false;
+            vidEl.removeAttribute('controls');
+            vidEl.muted = true;
+            vidEl.defaultMuted = true;
+            vidEl.autoplay = true;
+            vidEl.loop = true;
+            vidEl.playsInline = true;
+            vidEl.setAttribute('muted', '');
+            vidEl.setAttribute('autoplay', '');
+            vidEl.setAttribute('playsinline', '');
+            vidEl.setAttribute('webkit-playsinline', 'true');
+            vidEl.setAttribute('disablepictureinpicture', '');
+            vidEl.setAttribute('disableremoteplayback', '');
+            vidEl.disablePictureInPicture = true;
+
+            // Keep the video element inside the selected card.
+            vidEl.classList.remove('hidden');
+            const playPromise = vidEl.play();
+            if (playPromise && playPromise.catch) {
+                playPromise.catch(() => {
+                    // If autoplay is temporarily blocked, the inline element stays
+                    // visible in the card and retries on the next scroll/selection.
+                });
             }
         }
 
@@ -1507,8 +1581,21 @@
             const file = e.target.files[0];
             if (!file) return;
             const url = URL.createObjectURL(file);
-            if (type === 'img') levelHoverMedia[lvl].img = url;
-            if (type === 'vid') levelHoverMedia[lvl].vid = url;
+            if (type === 'img') {
+                levelHoverMedia[lvl].img = url;
+                const imgEl = document.getElementById(`level-img-${lvl}`);
+                if (imgEl) imgEl.src = url;
+            }
+            if (type === 'vid') {
+                levelHoverMedia[lvl].vid = url;
+                const vidEl = document.getElementById(`level-vid-${lvl}`);
+                if (vidEl) {
+                    vidEl.pause();
+                    vidEl.src = url;
+                    vidEl.load();
+                    if (activePreviewStage === lvl) playLevelHover(lvl);
+                }
+            }
         }
 
         function uploadStageBGM(e, stage) {
