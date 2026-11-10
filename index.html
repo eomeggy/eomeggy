@@ -1,6 +1,6 @@
 <html lang="en"><head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IS SEONGHYEON A CAT? - Memory Game</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,8 +14,12 @@
             background-color: #c96b92;
             color: #fff;
             cursor: url('custom-cursor.png'), auto !important;
-            overflow-x: hidden;
+            overflow: hidden;
             touch-action: manipulation;
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
         }
         button, div[onclick], input, select, a {
             cursor: url('custom-cursor.png'), pointer !important;
@@ -53,12 +57,23 @@
         .rotate-y-180 {
             transform: rotateY(180deg);
         }
-        /* Ép video tuyệt đối nằm trong khung, không bật fullscreen player trên điện thoại */
         video {
             object-fit: cover;
             width: 100%;
             height: 100%;
             pointer-events: auto;
+        }
+        /* Ép khung tổng thể luôn dàn trải chuẩn ngang rộng rãi */
+        #game-viewport-wrapper {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            box-sizing: border-box;
+            padding: 10px;
+            overflow-y: auto;
         }
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
@@ -73,110 +88,112 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-between p-2 sm:p-4 select-none bg-[#c96b92]">
-    <!-- ADMIN QUICK ACCESS BUTTON -->
-    <div id="admin-floating-btn" class="fixed top-3 right-3 z-50 flex items-center gap-2">
-        <button onclick="openUploadModal()" class="px-3.5 py-2 bg-[#5d223c] text-white font-extrabold text-xs sm:text-sm rounded-2xl shadow-xl hover:bg-[#461a2d] transition border-2 border-white/40 flex items-center gap-2">
-            <i class="fa-solid fa-gear text-teal-300"></i> Admin Upload (⚙️)
-        </button>
-    </div>
-
-    <!-- INTRO VIDEO SCREEN -->
-    <div id="intro-screen" class="fixed inset-0 bg-[#fcebeb] z-50 flex flex-col items-center justify-center p-3 sm:p-8 overflow-y-auto">
-        <div class="w-full max-w-4xl bg-[#fcebeb] flex flex-col items-center justify-center my-auto py-4">
-            <h1 class="text-2xl sm:text-5xl font-bubble-title title-exact-match mb-3 tracking-wide text-center">
-                IS SEONGHYEON A CAT?
-            </h1>
-            <!-- Video Frame Container -->
-            <div id="intro-video-container" class="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-black flex items-center justify-center relative">
-                <div id="intro-video-wrapper" class="w-full h-full flex items-center justify-center">
-                    <video id="main-intro-video" autoplay loop muted playsinline webkit-playsinline x5-playsinline preload="auto" src="intro-video.mp4"></video>
-                </div>
-            </div>
-            <!-- Intro Buttons Bar -->
-            <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-4 w-full max-w-2xl">
-                <button onclick="replayIntroMainVideo()" class="px-5 sm:px-8 py-2.5 sm:py-3 bg-white hover:bg-gray-50 text-[#5d223c] border-2 border-[#5d223c]/20 font-black rounded-2xl shadow text-xs sm:text-sm transition">
-                    <i class="fa-solid fa-rotate-right"></i> REPLAY INTRO
-                </button>
-               <button onclick="skipIntroToStageSelect()" class="px-5 sm:px-8 py-2.5 sm:py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-xs sm:text-base rounded-2xl shadow-lg transition-all flex items-center gap-2">
-                    Start Game ➔
-                </button>
-            </div>
+<body class="select-none bg-[#c96b92]">
+    <div id="game-viewport-wrapper">
+        <!-- ADMIN QUICK ACCESS BUTTON -->
+        <div id="admin-floating-btn" class="fixed top-3 right-3 z-50 flex items-center gap-2">
+            <button onclick="openUploadModal()" class="px-3.5 py-2 bg-[#5d223c] text-white font-extrabold text-xs sm:text-sm rounded-2xl shadow-xl hover:bg-[#461a2d] transition border-2 border-white/40 flex items-center gap-2">
+                <i class="fa-solid fa-gear text-teal-300"></i> Admin Upload (⚙️)
+            </button>
         </div>
-    </div>
 
-    <!-- STAGE SELECT SCREEN -->
-    <div id="stage-select-screen" class="fixed inset-0 bg-[#c96b92] z-40 flex flex-col items-center justify-center p-4 hidden overflow-y-auto">
-        <div class="w-full max-w-4xl flex flex-col items-center justify-center my-auto py-6">
-            <h2 class="text-3xl sm:text-6xl font-bubble-title title-exact-match mb-6 tracking-wider text-center">
-                SELECT STAGE
-            </h2>
-            <!-- 3 Level Cards Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 w-full max-w-3xl mb-6">
-               <!-- EASY -->
-                <div onclick="startGame(1)" onmouseenter="playLevelHover(1)" onmouseleave="stopLevelHover(1)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
-                    <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
-                        <img id="level-img-1" src="stage1-easy-img.jpg" class="w-full h-full object-cover rounded-xl">
-                        <video id="level-vid-1" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop muted playsinline webkit-playsinline x5-playsinline src="stage1-easy-video.mp4"></video>
+        <!-- INTRO VIDEO SCREEN -->
+        <div id="intro-screen" class="fixed inset-0 bg-[#fcebeb] z-50 flex flex-col items-center justify-center p-3 sm:p-8 overflow-y-auto">
+            <div class="w-full max-w-4xl bg-[#fcebeb] flex flex-col items-center justify-center my-auto py-4">
+                <h1 class="text-2xl sm:text-5xl font-bubble-title title-exact-match mb-3 tracking-wide text-center">
+                    IS SEONGHYEON A CAT?
+                </h1>
+                <!-- Video Frame Container -->
+                <div id="intro-video-container" class="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-black flex items-center justify-center relative">
+                    <div id="intro-video-wrapper" class="w-full h-full flex items-center justify-center">
+                        <video id="main-intro-video" autoplay loop muted playsinline webkit-playsinline x5-playsinline preload="auto" src="intro-video.mp4"></video>
                     </div>
-                    <span class="font-extrabold text-xl sm:text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">EASY</span>
                 </div>
-                <!-- MEDIUM -->
-                <div onclick="startGame(2)" onmouseenter="playLevelHover(2)" onmouseleave="stopLevelHover(2)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
-                    <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
-                        <img id="level-img-2" src="stage2-medium-img.jpg" class="w-full h-full object-cover rounded-xl">
-                        <video id="level-vid-2" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop muted playsinline webkit-playsinline x5-playsinline src="stage2-medium-video.mp4"></video>
-                    </div>
-                    <span class="font-extrabold text-xl sm:text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">MEDIUM</span>
+                <!-- Intro Buttons Bar -->
+                <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-4 w-full max-w-2xl">
+                    <button onclick="replayIntroMainVideo()" class="px-5 sm:px-8 py-2.5 sm:py-3 bg-white hover:bg-gray-50 text-[#5d223c] border-2 border-[#5d223c]/20 font-black rounded-2xl shadow text-xs sm:text-sm transition">
+                        <i class="fa-solid fa-rotate-right"></i> REPLAY INTRO
+                    </button>
+                   <button onclick="skipIntroToStageSelect()" class="px-5 sm:px-8 py-2.5 sm:py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-xs sm:text-base rounded-2xl shadow-lg transition-all flex items-center gap-2">
+                        Start Game ➔
+                    </button>
                 </div>
-                <!-- HARD -->
-                <div onclick="startGame(3)" onmouseenter="playLevelHover(3)" onmouseleave="stopLevelHover(3)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
-                    <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
-                        <img id="level-img-3" src="stage3-hard-img.jpg" class="w-full h-full object-cover rounded-xl">
-                        <video id="level-vid-3" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop muted playsinline webkit-playsinline x5-playsinline src="stage3-hard-video.mp4"></video>
-                    </div>
-                    <span class="font-extrabold text-xl sm:text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">HARD</span>
-                </div>
-            </div>
-            <div class="flex items-center justify-center gap-4 w-full max-w-xl">
-                <button onclick="showIntroScreen()" class="px-6 py-3 bg-white/20 hover:bg-white/30 text-white border-2 border-white font-extrabold text-sm sm:text-base rounded-2xl transition flex items-center gap-2 backdrop-blur-sm font-bubble-title">
-                    <i class="fa-solid fa-play"></i> REPLAY INTRO
-                </button>
             </div>
         </div>
+
+        <!-- STAGE SELECT SCREEN -->
+        <div id="stage-select-screen" class="fixed inset-0 bg-[#c96b92] z-40 flex flex-col items-center justify-center p-4 hidden overflow-y-auto">
+            <div class="w-full max-w-4xl flex flex-col items-center justify-center my-auto py-6">
+                <h2 class="text-3xl sm:text-6xl font-bubble-title title-exact-match mb-6 tracking-wider text-center">
+                    SELECT STAGE
+                </h2>
+                <!-- 3 Level Cards Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 w-full max-w-3xl mb-6">
+                   <!-- EASY -->
+                    <div onclick="startGame(1)" onmouseenter="playLevelHover(1)" onmouseleave="stopLevelHover(1)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
+                        <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
+                            <img id="level-img-1" src="stage1-easy-img.jpg" class="w-full h-full object-cover rounded-xl">
+                            <video id="level-vid-1" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop muted playsinline webkit-playsinline x5-playsinline src="stage1-easy-video.mp4"></video>
+                        </div>
+                        <span class="font-extrabold text-xl sm:text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">EASY</span>
+                    </div>
+                    <!-- MEDIUM -->
+                    <div onclick="startGame(2)" onmouseenter="playLevelHover(2)" onmouseleave="stopLevelHover(2)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
+                        <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
+                            <img id="level-img-2" src="stage2-medium-img.jpg" class="w-full h-full object-cover rounded-xl">
+                            <video id="level-vid-2" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop muted playsinline webkit-playsinline x5-playsinline src="stage2-medium-video.mp4"></video>
+                        </div>
+                        <span class="font-extrabold text-xl sm:text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">MEDIUM</span>
+                    </div>
+                    <!-- HARD -->
+                    <div onclick="startGame(3)" onmouseenter="playLevelHover(3)" onmouseleave="stopLevelHover(3)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
+                        <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
+                            <img id="level-img-3" src="stage3-hard-img.jpg" class="w-full h-full object-cover rounded-xl">
+                            <video id="level-vid-3" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop muted playsinline webkit-playsinline x5-playsinline src="stage3-hard-video.mp4"></video>
+                        </div>
+                        <span class="font-extrabold text-xl sm:text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">HARD</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center gap-4 w-full max-w-xl">
+                    <button onclick="showIntroScreen()" class="px-6 py-3 bg-white/20 hover:bg-white/30 text-white border-2 border-white font-extrabold text-sm sm:text-base rounded-2xl transition flex items-center gap-2 backdrop-blur-sm font-bubble-title">
+                        <i class="fa-solid fa-play"></i> REPLAY INTRO
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN GAMEPLAY HEADER -->
+        <header id="game-header" class="w-full max-w-5xl flex items-center justify-between p-3 bg-white/95 backdrop-blur-md rounded-2xl shadow-md border border-pink-100 mb-2 hidden z-30 shrink-0">
+            <button onclick="goToStageSelect()" class="px-3 py-1.5 bg-[#5d223c] text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-[#461a2d] transition flex items-center gap-1.5 shadow">
+                <i class="fa-solid fa-house"></i> STAGES
+            </button>
+            <div id="stage-indicator" class="font-extrabold text-sm sm:text-xl font-bubble-title stage-title-bubbly tracking-wide text-center">STAGE BONUS</div>
+            <div class="flex items-center gap-3 sm:gap-5 text-xs sm:text-sm font-extrabold text-[#5d223c]">
+                <div class="flex items-center gap-1">
+                    <i class="fa-solid fa-clock"></i>
+                    <span id="timer-display">00:00</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <i class="fa-solid fa-paw"></i>
+                    <span id="moves-display">0</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <button onclick="toggleSound()" class="w-8 h-8 rounded-xl bg-white flex items-center justify-center text-[#5d223c] shadow hover:bg-gray-50 transition border border-pink-100">
+                        <i id="sound-icon" class="fa-solid fa-volume-high"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN GAMEPLAY AREA (Ép lưới card phân bổ rộng ngang hoàn toàn) -->
+        <main id="game-main-area" class="w-full max-w-5xl flex-1 flex flex-col items-center justify-center relative hidden py-1 overflow-y-auto custom-scrollbar">
+            <div id="preview-countdown-box" class="mb-2 px-4 py-1 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border-2 border-[#5d223c]/20 flex items-center gap-2 text-[#5d223c] font-black text-xs sm:text-base font-vietnamese shrink-0 hidden">
+                <span>Preview Time: </span>
+                <span id="preview-countdown" class="text-rose-600 text-base sm:text-lg font-black font-bubble-title">0s</span>
+            </div>
+            <div id="game-board" class="w-full mx-auto p-2"></div>
+        </main>
     </div>
-
-    <!-- MAIN GAMEPLAY HEADER -->
-    <header id="game-header" class="w-full max-w-4xl flex items-center justify-between p-2.5 sm:p-3 bg-white/95 backdrop-blur-md rounded-2xl shadow-md border border-pink-100 mb-2 hidden z-30">
-        <button onclick="goToStageSelect()" class="px-3 py-1.5 bg-[#5d223c] text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-[#461a2d] transition flex items-center gap-1.5 shadow">
-            <i class="fa-solid fa-house"></i> STAGES
-        </button>
-        <div id="stage-indicator" class="font-extrabold text-xs sm:text-xl font-bubble-title stage-title-bubbly tracking-wide text-center">STAGE BONUS</div>
-        <div class="flex items-center gap-2 sm:gap-5 text-xs sm:text-sm font-extrabold text-[#5d223c]">
-            <div class="flex items-center gap-1">
-                <i class="fa-solid fa-clock"></i>
-                <span id="timer-display">00:00</span>
-            </div>
-            <div class="flex items-center gap-1">
-                <i class="fa-solid fa-paw"></i>
-                <span id="moves-display">0</span>
-            </div>
-            <div class="flex items-center gap-1">
-                <button onclick="toggleSound()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white flex items-center justify-center text-[#5d223c] shadow hover:bg-gray-50 transition border border-pink-100">
-                    <i id="sound-icon" class="fa-solid fa-volume-high"></i>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- MAIN GAMEPLAY AREA (ĐÃ FIX KHUNG HIỂN THỊ CARD CHUẨN TRÊN MỌI THIẾT BỊ) -->
-    <main id="game-main-area" class="w-full max-w-4xl flex-1 flex flex-col items-center justify-center relative my-auto hidden py-2 overflow-y-auto min-h-[75vh]">
-        <div id="preview-countdown-box" class="mb-3 px-4 py-1.5 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border-2 border-[#5d223c]/20 flex items-center gap-2 text-[#5d223c] font-black text-xs sm:text-base font-vietnamese hidden">
-            <span>Preview Time: </span>
-            <span id="preview-countdown" class="text-rose-600 text-base sm:text-lg font-black font-bubble-title">0s</span>
-        </div>
-        <div id="game-board" class="w-full max-w-md sm:max-w-2xl mx-auto p-2 sm:p-3 my-auto"></div>
-    </main>
 
     <!-- STAGE TRANSITION & VICTORY MODAL -->
     <div id="victory-modal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
@@ -209,7 +226,6 @@
             <button onclick="closeMediaDisplayModal()" class="absolute top-3 right-3 w-9 h-9 bg-[#5d223c] text-white font-black rounded-full shadow-lg flex items-center justify-center hover:bg-[#461a2d] transition text-lg z-20">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-            <!-- Ép video kết quả hiển thị nội tuyến tuyệt đối, chống bật ra player ngoài -->
             <div id="media-display-content" class="w-full flex items-center justify-center overflow-hidden rounded-2xl bg-black border-2 border-white shadow-xl transition-all duration-300"></div>
             
             <div id="comment-section-box" class="w-full bg-white/95 rounded-2xl p-4 border-2 border-[#5d223c]/20 shadow-inner flex flex-col space-y-3 my-4 transition-all duration-300 hidden">
@@ -813,18 +829,19 @@
             const photos = stageCardPhotos[stage];
             const pairsMap = stageMatchingPairs[stage];
             
+            // Ép dàn trải lưới ngang tối ưu cho màn hình rộng (Landscape mode layout)
             if (stage === 1) {
                 totalPairsInStage = 2;
-                board.className = "grid grid-cols-2 gap-3 w-full max-w-xs mx-auto p-2";
+                board.className = "grid grid-cols-4 gap-3 w-full max-w-lg mx-auto p-2";
             } else if (stage === 2) {
                 totalPairsInStage = 4;
-                board.className = "grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 w-full max-w-lg mx-auto p-2";
+                board.className = "grid grid-cols-4 gap-3 sm:gap-4 w-full max-w-xl mx-auto p-2";
             } else if (stage === 3) {
                 totalPairsInStage = 6;
-                board.className = "grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-4 w-full max-w-xl mx-auto p-2";
+                board.className = "grid grid-cols-6 gap-2 sm:gap-3 w-full max-w-2xl mx-auto p-2";
             } else if (stage === 4) {
                 totalPairsInStage = 10;
-                board.className = "grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 w-full max-w-2xl mx-auto p-2";
+                board.className = "grid grid-cols-5 sm:grid-cols-10 gap-1.5 sm:gap-2 w-full max-w-4xl mx-auto p-2";
             }
 
             deck = photos.map((imgUrl, idx) => ({
@@ -844,11 +861,11 @@
                 cardEl.dataset.index = cardData.index;
                 cardEl.dataset.pair = cardData.pairId;
                 cardEl.innerHTML = `
-                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
-                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
                             <img src="${cardData.img}" class="w-full h-full object-cover">
                         </div>
-                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                        <div class="card-back absolute inset-0 w-full h-full rounded-xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
                             <img src="${coverImage}" class="w-full h-full object-cover">
                         </div>
                     </div>
