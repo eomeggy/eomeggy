@@ -11,13 +11,19 @@
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * {
+            box-sizing: border-box;
+            touch-action: manipulation;
+        }
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f7d6e0;
             color: #4a1525;
             user-select: none;
             -webkit-user-select: none;
-            touch-action: manipulation;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
         }
         .titan-font {
             font-family: 'Titan One', cursive;
@@ -33,23 +39,23 @@
             color: #6b213a;
             text-shadow: 0 0 8px rgba(230, 161, 180, 0.7), 1px 1px 3px rgba(0,0,0,0.15);
         }
-        /* Hide scrollbars completely across all browsers */
+        /* Hide scrollbars completely */
         .hide-scrollbar {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
         .hide-scrollbar::-webkit-scrollbar {
-            display: none; /* Chrome, Safari and Opera */
+            display: none;
         }
 
         /* Vertical text styling without border wrapper */
         .select-stage-vertical-text {
             font-family: 'Titan One', cursive;
             color: #6b213a;
-            text-shadow: 0 0 10px rgba(230, 161, 180, 0.9), 0 0 18px rgba(209, 130, 153, 0.6);
+            text-shadow: 0 0 10px rgba(245, 180, 200, 0.9), 0 0 18px rgba(230, 150, 175, 0.7);
             writing-mode: vertical-rl;
             text-orientation: mixed;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.18em;
         }
 
         /* Card Flip Animation */
@@ -76,20 +82,20 @@
         }
     </style>
 </head>
-<body class="flex justify-center items-center min-h-screen bg-[#f7d6e0] p-0 sm:p-3">
+<body class="flex justify-center items-center h-screen w-screen bg-[#f7d6e0]">
 
-    <!-- Mobile Vertical Container Frame -->
-    <div id="app-container" class="relative w-full max-w-[420px] h-[100vh] sm:h-[860px] bg-[#d37b95] sm:rounded-[36px] shadow-2xl overflow-hidden flex flex-col border-0 sm:border-8 sm:border-[#b85d77]">
+    <!-- Mobile Vertical Frame Container -->
+    <div id="app-container" class="relative w-full max-w-[420px] h-full sm:h-[860px] bg-[#d37b95] sm:rounded-[36px] shadow-2xl overflow-hidden flex flex-col border-0 sm:border-8 sm:border-[#b85d77]">
 
-        <!-- TOP BAR / HEADER (Identical to Reference Image 5) -->
-        <div id="top-bar" class="hidden px-2.5 py-2.5 bg-[#fce7f0]/95 backdrop-blur-md flex justify-between items-center z-30 shadow-sm border-b border-[#d18299]/30">
-            <!-- Left: Home / Select Stage Pill -->
-            <button onclick="goToSelectStage()" class="bg-[#5c1d30] text-white px-2.5 py-1.5 rounded-2xl text-[11px] titan-font shadow flex items-center gap-1.5 hover:bg-[#73253d] transition">
+        <!-- TOP BAR / HEADER -->
+        <div id="top-bar" class="hidden px-3 py-2 bg-[#fce7f0]/95 backdrop-blur-md flex justify-between items-center z-30 shadow-sm border-b border-[#d18299]/30 shrink-0">
+            <!-- Left: Select Stage Pill -->
+            <button id="header-select-btn" class="bg-[#5c1d30] text-white px-3 py-1.5 rounded-2xl text-[11px] titan-font shadow flex items-center gap-1.5 hover:bg-[#73253d] active:scale-95 transition">
                 <i class="fa-solid fa-house text-xs"></i>
-                <span class="leading-none">SELECT<br>STAGE</span>
+                <span class="leading-none text-center">SELECT<br>STAGE</span>
             </button>
 
-            <!-- Center: Current Stage Title -->
+            <!-- Center: Stage Name -->
             <div id="stage-title-header" class="glow-subtitle text-xs sm:text-sm tracking-wide text-center uppercase">
                 STAGE 1: SKEPTICAL
             </div>
@@ -98,89 +104,90 @@
             <div class="flex items-center gap-2 text-[11px] titan-font text-[#5c1d30]">
                 <div class="flex items-center gap-1"><i class="fa-solid fa-clock text-xs"></i> <span id="timer-display">00:00</span></div>
                 <div class="flex items-center gap-1"><i class="fa-solid fa-paw text-xs"></i> <span id="matches-display">0/2</span></div>
-                <button onclick="toggleAudio()" id="audio-toggle-btn" class="bg-white/90 p-1.5 rounded-full shadow hover:bg-white transition flex items-center justify-center w-7 h-7">
+                <button id="audio-toggle-btn" class="bg-white/90 p-1 rounded-full shadow hover:bg-white transition flex items-center justify-center w-7 h-7">
                     <i class="fa-solid fa-volume-high text-[#5c1d30] text-xs"></i>
                 </button>
             </div>
         </div>
 
         <!-- MAIN VIEW SLIDES PORT -->
-        <div id="slides-viewport" class="relative flex-1 overflow-hidden flex flex-col">
+        <div id="slides-viewport" class="relative flex-1 overflow-hidden flex flex-col w-full h-full">
 
             <!------------------------------------------------ -->
             <!-- 1. INTRO SLIDE -->
             <!------------------------------------------------ -->
             <div id="slide-intro" class="absolute inset-0 flex flex-col items-center justify-between p-5 bg-[#f2a8be] z-20 transition-all duration-300 overflow-y-auto">
-                <div></div>
-                <div class="text-center my-auto w-full flex flex-col items-center">
+                <div class="w-full"></div>
+
+                <div class="text-center my-auto w-full flex flex-col items-center z-20">
                     <h1 class="glow-title text-2xl sm:text-3xl mb-4 tracking-wider text-center">IS SEONGHYEON A CAT?</h1>
                     
-                    <!-- Intro Video Container (16:9 inline) -->
                     <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-lg border-4 border-white/70 mb-6">
-                        <video id="intro-video" class="w-full h-full object-cover" autoplay muted playsinline loop onerror="handleVideoError(this)">
+                        <video id="intro-video" class="w-full h-full object-cover" autoplay muted playsinline loop>
                             <source src="intro-video.mp4" type="video/mp4">
                         </video>
                     </div>
 
-                    <!-- Action Buttons -->
-                    <div class="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
-                        <button onclick="replayIntro()" class="flex-1 bg-white hover:bg-white/90 text-[#5c1d30] py-3 px-3 rounded-2xl titan-font text-xs shadow-md flex items-center justify-center gap-2 transition active:scale-95">
+                    <!-- Intro Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3 w-full max-w-xs relative z-30">
+                        <button id="btn-replay-intro" class="flex-1 bg-white hover:bg-white/90 text-[#5c1d30] py-3.5 px-3 rounded-2xl titan-font text-xs shadow-md flex items-center justify-center gap-2 transition active:scale-95 cursor-pointer">
                             <i class="fa-solid fa-rotate-right"></i> REPLAY INTRO
                         </button>
-                        <button onclick="goToSelectStage()" class="flex-1 bg-[#5c1d30] hover:bg-[#73253d] text-white py-3 px-3 rounded-2xl titan-font text-xs shadow-md flex items-center justify-center gap-2 transition active:scale-95">
+                        <button id="btn-start-game" class="flex-1 bg-[#5c1d30] hover:bg-[#73253d] text-white py-3.5 px-3 rounded-2xl titan-font text-xs shadow-md flex items-center justify-center gap-2 transition active:scale-95 cursor-pointer">
                             START GAME <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
                 </div>
-                <div class="text-[10px] text-[#5c1d30]/70 titan-font">Memory Match Game</div>
+
+                <div class="text-[10px] text-[#5c1d30]/70 titan-font z-10">Memory Match Game</div>
             </div>
 
             <!------------------------------------------------ -->
-            <!-- 2. SELECT STAGE SLIDE (Exact Image 2 layout) -->
+            <!-- 2. SELECT STAGE SLIDE -->
             <!------------------------------------------------ -->
-            <div id="slide-select-stage" class="absolute inset-0 flex p-4 bg-[#d37b95] z-10 transition-all duration-300 hidden overflow-hidden">
+            <div id="slide-select-stage" class="absolute inset-0 flex p-3 bg-[#d37b95] z-10 transition-all duration-300 hidden overflow-hidden">
                 
-                <!-- Stage Cards Scrollable Container (Hidden Scrollbar) -->
-                <div id="stages-scroll-container" class="hide-scrollbar flex-1 overflow-y-auto pr-3 space-y-5 flex flex-col items-center py-2 snap-y snap-mandatory">
+                <!-- Scroll Container for Polaroid Cards -->
+                <div id="stages-scroll-container" class="hide-scrollbar flex-1 overflow-y-auto pr-2 space-y-6 flex flex-col items-center py-10 snap-y snap-mandatory">
                     
-                    <!-- EASY -->
-                    <div class="stage-card-wrapper w-full max-w-[290px] bg-[#fff6f8] p-3 rounded-3xl shadow-lg cursor-pointer snap-center flex flex-col items-center border-4 border-white" data-stage="1" onclick="startStage(1)">
-                        <div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-black/10 shadow-inner">
-                            <img src="stage1-easy-img.jpg" alt="Easy" class="stage-img w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300/e6a1b4/5c1d30?text=Easy'">
+                    <!-- EASY (Stage 1) -->
+                    <div class="stage-card-wrapper w-full max-w-[260px] bg-[#fff6f8] p-3 pt-3 pb-2 rounded-3xl shadow-xl cursor-pointer snap-center flex flex-col items-center border-4 border-white active:scale-95 transition" data-stage="1">
+                        <div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-black/10 shadow-inner">
+                            <img src="stage1-easy-img.jpg" alt="Easy" class="stage-img w-full h-full object-cover" onerror="this.src='https://placehold.co/300x300/e6a1b4/5c1d30?text=EASY+IMAGE'">
                             <video class="stage-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300" muted loop playsinline preload="none">
                                 <source src="stage1-easy-video.mp4" type="video/mp4">
                             </video>
                         </div>
-                        <div class="mt-2.5 titan-font text-[#5c1d30] text-base tracking-wider">EASY</div>
+                        <div class="mt-2 text-center titan-font text-[#5c1d30] text-lg tracking-wider">EASY</div>
                     </div>
 
-                    <!-- MEDIUM -->
-                    <div class="stage-card-wrapper w-full max-w-[290px] bg-[#fff6f8] p-3 rounded-3xl shadow-lg cursor-pointer snap-center flex flex-col items-center border-4 border-white" data-stage="2" onclick="startStage(2)">
-                        <div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-black/10 shadow-inner">
-                            <img src="stage2-medium-img.jpg" alt="Medium" class="stage-img w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300/e6a1b4/5c1d30?text=Medium'">
+                    <!-- MEDIUM (Stage 2) -->
+                    <div class="stage-card-wrapper w-full max-w-[260px] bg-[#fff6f8] p-3 pt-3 pb-2 rounded-3xl shadow-xl cursor-pointer snap-center flex flex-col items-center border-4 border-white active:scale-95 transition" data-stage="2">
+                        <div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-black/10 shadow-inner">
+                            <img src="stage2-medium-img.jpg" alt="Medium" class="stage-img w-full h-full object-cover" onerror="this.src='https://placehold.co/300x300/e6a1b4/5c1d30?text=MEDIUM+IMAGE'">
                             <video class="stage-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300" muted loop playsinline preload="none">
                                 <source src="stage2-medium-video.mp4" type="video/mp4">
                             </video>
                         </div>
-                        <div class="mt-2.5 titan-font text-[#5c1d30] text-base tracking-wider">MEDIUM</div>
+                        <div class="mt-2 text-center titan-font text-[#5c1d30] text-lg tracking-wider">MEDIUM</div>
                     </div>
 
-                    <!-- HARD -->
-                    <div class="stage-card-wrapper w-full max-w-[290px] bg-[#fff6f8] p-3 rounded-3xl shadow-lg cursor-pointer snap-center flex flex-col items-center border-4 border-white" data-stage="3" onclick="startStage(3)">
-                        <div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-black/10 shadow-inner">
-                            <img src="stage3-hard-img.jpg" alt="Hard" class="stage-img w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300/e6a1b4/5c1d30?text=Hard'">
+                    <!-- HARD (Stage 3) -->
+                    <div class="stage-card-wrapper w-full max-w-[260px] bg-[#fff6f8] p-3 pt-3 pb-2 rounded-3xl shadow-xl cursor-pointer snap-center flex flex-col items-center border-4 border-white active:scale-95 transition" data-stage="3">
+                        <div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-black/10 shadow-inner">
+                            <img src="stage3-hard-img.jpg" alt="Hard" class="stage-img w-full h-full object-cover" onerror="this.src='https://placehold.co/300x300/e6a1b4/5c1d30?text=HARD+IMAGE'">
                             <video class="stage-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300" muted loop playsinline preload="none">
                                 <source src="stage3-hard-video.mp4" type="video/mp4">
                             </video>
                         </div>
-                        <div class="mt-2.5 titan-font text-[#5c1d30] text-base tracking-wider">HARD</div>
+                        <div class="mt-2 text-center titan-font text-[#5c1d30] text-lg tracking-wider">HARD</div>
                     </div>
 
                 </div>
 
-                <!-- Vertical 'SELECT STAGE' Text on right side without border wrapper -->
-                <div class="w-10 flex items-center justify-center pl-1">
-                    <div class="select-stage-vertical-text text-lg uppercase select-none pointer-events-none">
+                <!-- Vertical Text "SELECT STAGE" -->
+                <div class="w-9 flex items-center justify-center pl-1">
+                    <div class="select-stage-vertical-text text-xl uppercase select-none pointer-events-none">
                         SELECT STAGE
                     </div>
                 </div>
@@ -188,29 +195,29 @@
             </div>
 
             <!------------------------------------------------ -->
-            <!-- 3. GAMEPLAY SLIDE (Auto-scaled for Stage 2 & all stages) -->
+            <!-- 3. GAMEPLAY SLIDE -->
             <!------------------------------------------------ -->
-            <div id="slide-gameplay" class="absolute inset-0 flex flex-col p-3 bg-[#d37b95] z-10 hidden overflow-hidden justify-between">
+            <div id="slide-gameplay" class="absolute inset-0 flex flex-col p-2 bg-[#d37b95] z-10 hidden overflow-hidden justify-between">
                 
                 <!-- Floating Preview Banner -->
-                <div id="preview-banner" class="mx-auto my-1 bg-white/95 text-[#5c1d30] px-5 py-1.5 rounded-full shadow-md text-center titan-font text-xs flex items-center justify-center gap-2 animate-soft-pulse z-20 border border-pink-200">
+                <div id="preview-banner" class="mx-auto my-1 bg-white/95 text-[#5c1d30] px-4 py-1 rounded-full shadow-md text-center titan-font text-xs flex items-center justify-center gap-2 animate-soft-pulse z-20 border border-pink-200 shrink-0">
                     <span>Preview Time:</span> <span id="preview-countdown" class="text-sm text-[#73253d]">3s</span>
                 </div>
 
-                <!-- Responsive Board Grid Container -->
+                <!-- Game Board Grid -->
                 <div class="flex-1 flex items-center justify-center px-1 py-1 w-full overflow-hidden">
-                    <div id="game-board-grid" class="grid w-full h-full max-w-[390px] mx-auto items-center justify-center gap-2">
+                    <div id="game-board-grid" class="grid w-full h-full max-w-[380px] mx-auto items-center justify-center gap-2">
                         <!-- Dynamic Cards generated by JS -->
                     </div>
                 </div>
 
-                <div class="text-center text-[11px] text-white/90 titan-font py-0.5">
+                <div class="text-center text-[10px] text-white/90 titan-font py-0.5 shrink-0">
                     Find matching similar card pairs!
                 </div>
             </div>
 
             <!------------------------------------------------ -->
-            <!-- 4. VICTORY / POST-STAGE SLIDE -->
+            <!-- 4. VICTORY SLIDE -->
             <!------------------------------------------------ -->
             <div id="slide-victory" class="absolute inset-0 flex flex-col items-center justify-center p-6 bg-[#d37b95] z-10 hidden overflow-y-auto">
                 <div class="text-center w-full max-w-sm flex flex-col items-center my-auto">
@@ -225,9 +232,7 @@
                     </p>
 
                     <div id="victory-buttons-container" class="w-full flex gap-3 justify-center mt-2">
-                        <button id="victory-action-btn" onclick="nextStageOrAction()" class="bg-[#5c1d30] text-white px-6 py-3 rounded-2xl titan-font text-xs shadow-lg hover:bg-[#73253d] transition">
-                            NOT SURE ➔
-                        </button>
+                        <!-- Dynamic buttons for standard stage transition / Bonus YES-NO -->
                     </div>
                 </div>
             </div>
@@ -240,12 +245,12 @@
                     
                     <!-- Video Container -->
                     <div id="choice-video-container" class="w-full bg-black rounded-2xl overflow-hidden shadow-xl mb-3 transition-all duration-300">
-                        <video id="choice-result-video" class="w-full max-h-[220px] object-contain" autoplay controls playsinline onerror="handleVideoError(this)">
+                        <video id="choice-result-video" class="w-full max-h-[220px] object-contain" autoplay controls playsinline>
                             <source src="" type="video/mp4">
                         </video>
                     </div>
 
-                    <!-- Comment Section Box (Image 6 layout) -->
+                    <!-- Comment Section Box -->
                     <div id="comment-section-container" class="w-full bg-white/95 backdrop-blur-md rounded-3xl p-4 shadow-lg mb-4 hidden">
                         <h3 class="glow-subtitle text-xs uppercase mb-3 text-center tracking-wider">LEAVE YOUR COMMENTS</h3>
                         
@@ -253,19 +258,19 @@
                         <div class="space-y-2 mb-3">
                             <input type="text" id="comment-name" placeholder="YOUR NAME..." class="w-full px-3 py-2 rounded-xl bg-white border border-[#d18299]/50 text-xs focus:outline-none focus:ring-2 focus:ring-[#5c1d30]">
                             
-                            <!-- Inline Comment Input with SEND button on the right end -->
+                            <!-- Inline Comment Input with SEND button -->
                             <div class="relative flex items-center">
                                 <input type="text" id="comment-text" placeholder="WRITE COMMENTS..." class="w-full pl-3 pr-16 py-2 rounded-xl bg-white border border-[#d18299]/50 text-xs focus:outline-none focus:ring-2 focus:ring-[#5c1d30]">
-                                <button type="button" onclick="submitComment()" class="absolute right-1 bg-[#5c1d30] text-white px-3 py-1 rounded-lg titan-font text-[10px] hover:bg-[#73253d] transition">
+                                <button type="button" id="btn-submit-comment" class="absolute right-1 bg-[#5c1d30] text-white px-3 py-1 rounded-lg titan-font text-[10px] hover:bg-[#73253d] transition">
                                     SEND
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Active Reply Indicator Pill -->
+                        <!-- Active Reply Indicator -->
                         <div id="reply-indicator" class="hidden items-center justify-between bg-pink-100 text-[#5c1d30] text-[10px] px-2.5 py-1 rounded-lg mb-2">
                             <span>Replying to <strong id="reply-target-name">User</strong></span>
-                            <button onclick="cancelReply()" class="text-red-500 font-bold ml-2"><i class="fa-solid fa-xmark"></i></button>
+                            <button id="btn-cancel-reply" class="text-red-500 font-bold ml-2"><i class="fa-solid fa-xmark"></i></button>
                         </div>
 
                         <!-- Comments Feed -->
@@ -274,8 +279,8 @@
                         </div>
                     </div>
 
-                    <!-- Primary Stage Button moved BELOW comment container -->
-                    <button id="choice-bottom-btn" onclick="handleChoiceButtonAction()" class="w-full bg-[#5c1d30] text-white py-3 rounded-2xl titan-font text-xs shadow-md hover:bg-[#73253d] transition active:scale-95">
+                    <!-- Primary Action Button -->
+                    <button id="choice-bottom-btn" class="w-full bg-[#5c1d30] text-white py-3 rounded-2xl titan-font text-xs shadow-md hover:bg-[#73253d] transition active:scale-95">
                         EM CHIP CAM ON
                     </button>
 
@@ -284,8 +289,8 @@
 
         </div>
 
-        <!-- Hidden Admin Gear (Press F2 to summon passcode dialog) -->
-        <div id="admin-gear-btn" onclick="openAdminModal()" class="absolute top-3 right-3 bg-[#5c1d30] text-white w-8 h-8 rounded-full shadow-lg flex items-center justify-center cursor-pointer z-50 hidden hover:scale-110 transition">
+        <!-- Hidden Admin Gear (Press F2) -->
+        <div id="admin-gear-btn" class="absolute top-3 right-3 bg-[#5c1d30] text-white w-8 h-8 rounded-full shadow-lg flex items-center justify-center cursor-pointer z-50 hidden hover:scale-110 transition">
             <i class="fa-solid fa-gear text-xs"></i>
         </div>
 
@@ -299,8 +304,8 @@
             <input type="password" id="admin-pass-input" maxlength="6" placeholder="******" class="w-full text-center tracking-widest text-base px-3 py-2 border border-gray-300 rounded-xl mb-3 focus:outline-none focus:ring-2 focus:ring-[#5c1d30]">
             <div id="pass-error-msg" class="text-[11px] text-red-500 mb-2 hidden">Incorrect passcode!</div>
             <div class="flex gap-2">
-                <button onclick="closePasscodeModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-xs titan-font">CANCEL</button>
-                <button onclick="verifyAdminPasscode()" class="flex-1 bg-[#5c1d30] text-white py-2 rounded-xl text-xs titan-font">ENTER</button>
+                <button id="btn-cancel-passcode" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-xs titan-font">CANCEL</button>
+                <button id="btn-verify-passcode" class="flex-1 bg-[#5c1d30] text-white py-2 rounded-xl text-xs titan-font">ENTER</button>
             </div>
         </div>
     </div>
@@ -310,7 +315,7 @@
         <div class="bg-white rounded-3xl p-5 w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col hide-scrollbar">
             <div class="flex justify-between items-center mb-3 border-b pb-2">
                 <h3 class="titan-font text-xs text-[#5c1d30]"><i class="fa-solid fa-screwdriver-wrench"></i> ADMIN CONTROL PANEL</h3>
-                <button onclick="closeAdminDashboard()" class="text-gray-500 hover:text-black"><i class="fa-solid fa-xmark text-base"></i></button>
+                <button id="btn-close-admin-dash" class="text-gray-500 hover:text-black"><i class="fa-solid fa-xmark text-base"></i></button>
             </div>
             
             <div class="space-y-3 text-xs">
@@ -337,6 +342,58 @@
 
     <!-- JAVASCRIPT ENGINE -->
     <script>
+        // Audio Synthesizer Fallback Engine for Sound Effects
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSynthesizedSound(type) {
+            if (isAudioMuted) return;
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                const now = audioCtx.currentTime;
+                if (type === 'tap') {
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'correct') {
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.setValueAtTime(659.25, now + 0.1);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'incorrect') {
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.setValueAtTime(200, now + 0.1);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'countdown') {
+                    osc.frequency.setValueAtTime(600, now);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'win') {
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(554.37, now + 0.1);
+                    osc.frequency.setValueAtTime(659.25, now + 0.2);
+                    gain.gain.setValueAtTime(0.4, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                }
+            } catch(e) {}
+        }
+
         /* ========================================================
          * GAME STATE & CONFIGURATION
          * ======================================================== */
@@ -345,7 +402,6 @@
         let isAudioMuted = false;
         let bgAudio = null;
 
-        // Timer & Stats
         let gameTimerInterval = null;
         let secondsElapsed = 0;
         let matchesFound = 0;
@@ -353,12 +409,10 @@
         let firstSelectedCard = null;
         let canInteractWithCards = false;
 
-        // Choice & Reply state
         let currentChoiceType = 'yes';
         let choiceButtonClickCount = 0;
         let replyingToCommentId = null;
 
-        // Admin Lockout State
         let wrongPassCount = 0;
         let adminLockoutUntil = 0;
 
@@ -384,7 +438,7 @@
                 name: "STAGE 2: TENTATIVE",
                 levelName: "MEDIUM",
                 previewTime: 3,
-                cols: 2, rows: 4, // 2 cols x 4 rows fits without scroll (Image 4)
+                cols: 2, rows: 4,
                 pairs: [[1, 7], [2, 8], [3, 6], [4, 5]],
                 cards: [
                     { id: 1, file: "stage2-card-1.jpg" },
@@ -461,102 +515,61 @@
             }
         };
 
-        // Shared LocalStorage comments
         let commentsData = JSON.parse(localStorage.getItem('seonghyeon_comments') || '[]');
 
         /* ========================================================
-         * SOUND FX SYNTHESIS
+         * INITIALIZATION & EVENT BINDINGS
          * ======================================================== */
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        window.addEventListener('DOMContentLoaded', () => {
+            // Bind Intro Buttons
+            document.getElementById('btn-replay-intro').addEventListener('click', replayIntro);
+            document.getElementById('btn-start-game').addEventListener('click', goToSelectStage);
+            
+            // Header buttons
+            document.getElementById('header-select-btn').addEventListener('click', goToSelectStage);
+            document.getElementById('audio-toggle-btn').addEventListener('click', toggleAudio);
 
-        function playSoundEffect(type) {
-            if (isAudioMuted) return;
-            try {
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                const now = audioCtx.currentTime;
+            // Choice slide & comment controls
+            document.getElementById('choice-bottom-btn').addEventListener('click', handleChoiceButtonAction);
+            document.getElementById('btn-submit-comment').addEventListener('click', submitComment);
+            document.getElementById('btn-cancel-reply').addEventListener('click', cancelReply);
 
-                if (type === 'tap') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(420, now);
-                    osc.frequency.exponentialRampToValueAtTime(620, now + 0.07);
-                    gain.gain.setValueAtTime(0.15, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.07);
-                    osc.start(now);
-                    osc.stop(now + 0.07);
-                } else if (type === 'countdown') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(320, now);
-                    gain.gain.setValueAtTime(0.18, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
-                    osc.start(now);
-                    osc.stop(now + 0.12);
-                } else if (type === 'correct') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(523, now);
-                    osc.frequency.setValueAtTime(659, now + 0.1);
-                    osc.frequency.setValueAtTime(784, now + 0.2);
-                    gain.gain.setValueAtTime(0.2, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
-                    osc.start(now);
-                    osc.stop(now + 0.35);
-                } else if (type === 'incorrect') {
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(240, now);
-                    osc.frequency.setValueAtTime(180, now + 0.12);
-                    gain.gain.setValueAtTime(0.18, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-                    osc.start(now);
-                    osc.stop(now + 0.25);
-                } else if (type === 'win') {
-                    [440, 554, 659, 880].forEach((f, i) => {
-                        setTimeout(() => {
-                            if (isAudioMuted) return;
-                            const o = audioCtx.createOscillator();
-                            const g = audioCtx.createGain();
-                            o.connect(g);
-                            g.connect(audioCtx.destination);
-                            o.frequency.value = f;
-                            g.gain.setValueAtTime(0.18, audioCtx.currentTime);
-                            g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
-                            o.start();
-                            o.stop(audioCtx.currentTime + 0.25);
-                        }, i * 100);
-                    });
-                }
-            } catch (e) {}
-        }
+            // Admin buttons
+            document.getElementById('btn-cancel-passcode').addEventListener('click', closePasscodeModal);
+            document.getElementById('btn-verify-passcode').addEventListener('click', verifyAdminPasscode);
+            document.getElementById('btn-close-admin-dash').addEventListener('click', closeAdminDashboard);
+            document.getElementById('admin-gear-btn').addEventListener('click', openAdminModal);
 
-        function playStageAudio(audioSrc) {
-            if (bgAudio) {
-                bgAudio.pause();
-                bgAudio = null;
-            }
-            bgAudio = new Audio(audioSrc);
-            bgAudio.loop = true;
-            bgAudio.muted = isAudioMuted;
-            bgAudio.play().catch(err => console.log("Audio autoplay restricted:", err));
-        }
+            // Bind Stage Polaroid Clicks
+            document.querySelectorAll('.stage-card-wrapper').forEach(wrapper => {
+                wrapper.addEventListener('click', () => {
+                    const stg = parseInt(wrapper.dataset.stage);
+                    startStage(stg);
+                });
+            });
 
-        function toggleAudio() {
-            isAudioMuted = !isAudioMuted;
-            if (bgAudio) bgAudio.muted = isAudioMuted;
-            const btn = document.getElementById('audio-toggle-btn');
-            btn.innerHTML = isAudioMuted ? 
-                '<i class="fa-solid fa-volume-xmark text-[#5c1d30] text-xs"></i>' : 
-                '<i class="fa-solid fa-volume-high text-[#5c1d30] text-xs"></i>';
-        }
+            // Play intro video safely
+            const introVid = document.getElementById('intro-video');
+            introVid.play().catch(e => {});
+
+            initStageScrollObserver();
+        });
 
         /* ========================================================
          * NAVIGATION & SLIDE SWITCHING
          * ======================================================== */
         function switchSlide(slideId) {
-            document.querySelectorAll('#slides-viewport > div').forEach(div => div.classList.add('hidden'));
-            document.getElementById(slideId).classList.remove('hidden');
             currentSlideId = slideId;
+            const slides = ['slide-intro', 'slide-select-stage', 'slide-gameplay', 'slide-victory', 'slide-choice-result'];
+            
+            slides.forEach(id => {
+                const el = document.getElementById(id);
+                if (id === slideId) {
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
 
             const topBar = document.getElementById('top-bar');
             if (slideId === 'slide-gameplay') {
@@ -565,38 +578,35 @@
                 topBar.classList.add('hidden');
             }
 
-            if (slideId !== 'slide-gameplay' && bgAudio) {
-                bgAudio.pause();
+            const introVid = document.getElementById('intro-video');
+            if (slideId !== 'slide-intro') {
+                introVid.pause();
             }
         }
 
-        function goToIntro() {
-            switchSlide('slide-intro');
-            const video = document.getElementById('intro-video');
-            video.currentTime = 0;
-            video.play().catch(e => console.log(e));
-        }
-
         function replayIntro() {
-            const video = document.getElementById('intro-video');
-            video.currentTime = 0;
-            video.play().catch(e => console.log(e));
+            const introVid = document.getElementById('intro-video');
+            introVid.currentTime = 0;
+            introVid.play().catch(e => {});
         }
 
         function goToSelectStage() {
+            if (bgAudio) { bgAudio.pause(); }
+            if (gameTimerInterval) clearInterval(gameTimerInterval);
             switchSlide('slide-select-stage');
-            initStageScrollObserver();
         }
 
-        function handleVideoError(v) {
-            console.log("Video missing or error:", v.src);
+        function goToIntro() {
+            if (bgAudio) { bgAudio.pause(); }
+            if (gameTimerInterval) clearInterval(gameTimerInterval);
+            switchSlide('slide-intro');
+            replayIntro();
         }
 
         /* ========================================================
          * STAGE SCROLL PREVIEW OBSERVER
          * ======================================================== */
         let scrollObserver = null;
-
         function initStageScrollObserver() {
             const container = document.getElementById('stages-scroll-container');
             const wrappers = container.querySelectorAll('.stage-card-wrapper');
@@ -605,22 +615,25 @@
 
             const options = {
                 root: container,
-                rootMargin: '-30% 0px -30% 0px',
-                threshold: 0.5
+                rootMargin: '-35% 0px -35% 0px',
+                threshold: 0.6
             };
 
             scrollObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     const video = entry.target.querySelector('.stage-video');
+                    const img = entry.target.querySelector('.stage-img');
                     if (entry.isIntersecting) {
                         video.classList.remove('opacity-0');
                         video.classList.add('opacity-100');
+                        img.classList.add('opacity-0');
                         video.play().catch(e => {});
                     } else {
                         video.pause();
                         video.currentTime = 0;
                         video.classList.remove('opacity-100');
                         video.classList.add('opacity-0');
+                        img.classList.remove('opacity-0');
                     }
                 });
             }, options);
@@ -629,7 +642,7 @@
         }
 
         /* ========================================================
-         * GAMEPLAY & SEQUENTIAL CARD GRID SYSTEM (Requirement 2 & 4)
+         * GAMEPLAY & 1:1 SQUARE CARD GRID SYSTEM
          * ======================================================== */
         function startStage(stageNum) {
             currentStage = stageNum;
@@ -643,6 +656,14 @@
             grid.style.gridTemplateColumns = `repeat(${config.cols}, minmax(0, 1fr))`;
             grid.style.gridTemplateRows = `repeat(${config.rows}, minmax(0, 1fr))`;
 
+            if (stageNum === 2) {
+                grid.className = "grid w-full h-full max-w-[320px] max-h-[85vh] mx-auto items-center justify-center gap-1.5 p-1";
+            } else if (stageNum === 4) {
+                grid.className = "grid w-full h-full max-w-[390px] max-h-[88vh] mx-auto items-center justify-center gap-1.5 p-1";
+            } else {
+                grid.className = "grid w-full h-full max-w-[360px] max-h-[85vh] mx-auto items-center justify-center gap-2 p-1";
+            }
+
             matchesFound = 0;
             secondsElapsed = 0;
             totalPairsNeeded = config.pairs.length;
@@ -650,19 +671,17 @@
 
             if (gameTimerInterval) clearInterval(gameTimerInterval);
 
-            // STRICT SEQUENTIAL CARD ORDERING (1 to N, left-to-right, top-to-bottom)
-            // No random shuffling so cards 1..N match exact slot index!
             let cardDeck = config.cards.map(c => ({ cardId: c.id, file: c.file }));
 
             grid.innerHTML = '';
             cardDeck.forEach((card, index) => {
                 const cardEl = document.createElement('div');
-                cardEl.className = `perspective-1000 w-full h-full cursor-pointer flex items-center justify-center`;
+                cardEl.className = `perspective-1000 w-full aspect-square cursor-pointer flex items-center justify-center max-h-full`;
                 cardEl.dataset.cardId = card.cardId;
                 cardEl.dataset.index = index;
 
                 cardEl.innerHTML = `
-                    <div class="transform-style-3d relative w-full h-full rounded-2xl shadow-md border-2 border-white/80 overflow-hidden">
+                    <div class="transform-style-3d relative w-full h-full rounded-2xl shadow-md border-2 border-white/80 overflow-hidden bg-white">
                         <div class="backface-hidden absolute inset-0 rounded-xl overflow-hidden bg-white">
                             <img src="card-back-1-2-3-bonus.jpg" alt="Back" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200/e6a1b4/5c1d30?text=🐾'">
                         </div>
@@ -676,7 +695,6 @@
                 grid.appendChild(cardEl);
             });
 
-            // Preview timer setup
             canInteractWithCards = false;
             const banner = document.getElementById('preview-banner');
             const countdownEl = document.getElementById('preview-countdown');
@@ -687,13 +705,13 @@
 
             let previewTimeLeft = config.previewTime;
             countdownEl.innerText = `${previewTimeLeft}s`;
-            playSoundEffect('countdown');
+            playSynthesizedSound('countdown');
 
             const previewInterval = setInterval(() => {
                 previewTimeLeft--;
                 if (previewTimeLeft > 0) {
                     countdownEl.innerText = `${previewTimeLeft}s`;
-                    playSoundEffect('countdown');
+                    playSynthesizedSound('countdown');
                 } else {
                     clearInterval(previewInterval);
                     cardElements.forEach(el => el.classList.remove('rotate-y-180'));
@@ -726,7 +744,7 @@
             const innerCard = cardElement.querySelector('.transform-style-3d');
             if (innerCard.classList.contains('rotate-y-180') || cardElement.classList.contains('matched')) return;
 
-            playSoundEffect('tap');
+            playSynthesizedSound('tap');
             innerCard.classList.add('rotate-y-180');
 
             if (!firstSelectedCard) {
@@ -748,7 +766,7 @@
                 });
 
                 if (isMatch) {
-                    playSoundEffect('correct');
+                    playSynthesizedSound('correct');
                     firstEl.classList.add('matched');
                     secondEl.classList.add('matched');
                     firstSelectedCard = null;
@@ -761,7 +779,7 @@
                         setTimeout(triggerVictory, 600);
                     }
                 } else {
-                    playSoundEffect('incorrect');
+                    playSynthesizedSound('incorrect');
                     setTimeout(() => {
                         firstEl.querySelector('.transform-style-3d').classList.remove('rotate-y-180');
                         secondEl.querySelector('.transform-style-3d').classList.remove('rotate-y-180');
@@ -773,10 +791,27 @@
         }
 
         /* ========================================================
-         * VICTORY SLIDE & BONUS ROUTING
+         * VICTORY SLIDE & AUDIO
          * ======================================================== */
+        function playStageAudio(src) {
+            if (bgAudio) { bgAudio.pause(); }
+            bgAudio = new Audio(src);
+            bgAudio.loop = true;
+            bgAudio.muted = isAudioMuted;
+            bgAudio.play().catch(e => {});
+        }
+
+        function toggleAudio() {
+            isAudioMuted = !isAudioMuted;
+            if (bgAudio) bgAudio.muted = isAudioMuted;
+            const btn = document.getElementById('audio-toggle-btn');
+            btn.innerHTML = isAudioMuted ? 
+                '<i class="fa-solid fa-volume-xmark text-[#5c1d30] text-xs"></i>' : 
+                '<i class="fa-solid fa-volume-high text-[#5c1d30] text-xs"></i>';
+        }
+
         function triggerVictory() {
-            playSoundEffect('win');
+            playSynthesizedSound('win');
             if (bgAudio) bgAudio.pause();
 
             const config = STAGE_CONFIGS[currentStage];
@@ -813,7 +848,7 @@
         }
 
         /* ========================================================
-         * BONUS CHOICE & REFINED COMMENTS SYSTEM (Requirement 5 & 6)
+         * BONUS CHOICE YES/NO & COMMENTS
          * ======================================================== */
         function handleBonusChoice(choice) {
             currentChoiceType = choice;
@@ -834,7 +869,7 @@
                 videoEl.src = "no-button-video.mp4";
                 bottomBtn.innerText = "WHY NOT ME!?";
             }
-            videoEl.play().catch(e => console.log(e));
+            videoEl.play().catch(e => {});
         }
 
         function handleChoiceButtonAction() {
@@ -843,12 +878,10 @@
             const videoContainer = document.getElementById('choice-video-container');
 
             if (choiceButtonClickCount === 1) {
-                // 1st click: show comment section & shift layout
                 commentContainer.classList.remove('hidden');
                 videoContainer.classList.add('scale-95');
                 renderCommentsFeed();
             } else {
-                // 2nd click: reset back to intro
                 goToIntro();
             }
         }
@@ -984,7 +1017,7 @@
         }
 
         /* ========================================================
-         * ADMIN LOCKOUT & SECURITY (Requirement 10)
+         * ADMIN SECURITY & PANELS
          * ======================================================== */
         window.addEventListener('keydown', (e) => {
             if (e.key === 'F2') {
@@ -1015,6 +1048,7 @@
             if (val === '140199') {
                 closePasscodeModal();
                 wrongPassCount = 0;
+                document.getElementById('admin-gear-btn').classList.remove('hidden');
                 openAdminDashboard();
             } else {
                 wrongPassCount++;
