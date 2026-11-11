@@ -1,4 +1,31 @@
 <html lang="en"><head>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCY640ZkYMIA9t8TAFwuznAPA-liPYBYrU",
+            authDomain: "seonghyeon-cat-game.firebaseapp.com",
+            projectId: "seonghyeon-cat-game",
+            storageBucket: "seonghyeon-cat-game.appspot.com",
+            messagingSenderId: "126426060136",
+            appId: "1:126426060136:web:bf0d19b46871b6d9a5f2dd",
+            measurementId: "G-2D9C0R6GL0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        window.db = db;
+        window.dbRef = ref;
+        window.dbPush = push;
+        window.dbSet = set;
+        window.dbOnValue = onValue;
+
+        if (typeof window.initFirebaseComments === 'function') {
+            window.initFirebaseComments();
+        }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IS SEONGHYEON A CAT? - Memory Game</title>
