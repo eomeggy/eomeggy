@@ -1220,27 +1220,42 @@
         }
     }
 
-    function postComment() {
-        const nameInput = document.getElementById('user-name-input');
-        const commentInput = document.getElementById('user-comment-input');
-
-        if(!nameInput.value.trim() || !commentInput.value.trim()) return;
-
-        const newComment = {
-            id: Date.now(),
-            name: nameInput.value.trim(),
-            text: commentInput.value.trim(),
-            vote: currentVoteChoice,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            likes: 0,
-            liked: false,
-            replies: []
-        };
-
-        commentsData.unshift(newComment);
-        commentInput.value = '';
+    // Lắng nghe dữ liệu realtime và hàm gửi bình luận cho bản Phone
+function initFirebaseComments() {
+    if (!window.db) return;
+    const commentsRef = window.dbRef(window.db, 'comments');
+    window.dbOnValue(commentsRef, (snapshot) => {
+        const data = snapshot.val();
+        commentsData = [];
+        if (data) {
+            Object.keys(data).forEach(key => {
+                commentsData.unshift({ id: key, ...data[key] });
+            });
+        }
         renderComments();
-    }
+    });
+}
+window.initFirebaseComments = initFirebaseComments;
+
+function postComment() {
+    const nameInput = document.getElementById('user-name-input');
+    const commentInput = document.getElementById('user-comment-input');
+    if (!nameInput.value.trim() || !commentInput.value.trim()) return;
+
+    if (!window.db) return;
+
+    const newCommentRef = window.dbPush(window.dbRef(window.db, 'comments'));
+    window.dbSet(newCommentRef, {
+        name: nameInput.value.trim(),
+        text: commentInput.value.trim(),
+        vote: currentVoteChoice,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        likes: 0,
+        liked: false,
+        replies: []
+    });
+    commentInput.value = '';
+}
 
     function renderComments() {
         const listContainer = document.getElementById('comments-list-container');
