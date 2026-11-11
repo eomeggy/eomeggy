@@ -28,7 +28,6 @@
         .titan-font {
             font-family: 'Titan One', cursive;
         }
-        /* Glow titles */
         .glow-title {
             font-family: 'Titan One', cursive;
             color: #5c1d30;
@@ -39,7 +38,6 @@
             color: #6b213a;
             text-shadow: 0 0 8px rgba(230, 161, 180, 0.7), 1px 1px 3px rgba(0,0,0,0.15);
         }
-        /* Scrollbars hidden */
         .hide-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -47,8 +45,6 @@
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
         }
-
-        /* Vertical text styling */
         .select-stage-vertical-text {
             font-family: 'Titan One', cursive;
             color: #6b213a;
@@ -57,8 +53,6 @@
             text-orientation: mixed;
             letter-spacing: 0.18em;
         }
-
-        /* Card Flip 3D */
         .perspective-1000 {
             perspective: 1000px;
         }
@@ -80,17 +74,14 @@
         .animate-soft-pulse {
             animation: soft-pulse 1.5s infinite ease-in-out;
         }
-
-        /* Strict inline video playback styles */
         video {
-            object-fit: cover;
+            object-fit: cover !important;
             -webkit-transform: translateZ(0);
         }
     </style>
 </head>
 <body class="flex justify-center items-center h-screen w-screen bg-[#f7d6e0]">
 
-    <!-- Mobile Vertical Container -->
     <div id="app-container" class="relative w-full max-w-[420px] h-full sm:h-[860px] bg-[#d37b95] sm:rounded-[36px] shadow-2xl overflow-hidden flex flex-col border-0 sm:border-8 sm:border-[#b85d77]">
 
         <!-- TOP BAR / HEADER -->
@@ -116,23 +107,18 @@
         <!-- MAIN VIEW PORT -->
         <div id="slides-viewport" class="relative flex-1 overflow-hidden flex flex-col w-full h-full">
 
-            <!------------------------------------------------ -->
             <!-- 1. INTRO SLIDE -->
-            <!------------------------------------------------ -->
             <div id="slide-intro" class="absolute inset-0 flex flex-col items-center justify-between p-5 bg-[#f2a8be] z-20 transition-all duration-300 overflow-y-auto">
                 <div class="w-full"></div>
-
                 <div class="text-center my-auto w-full flex flex-col items-center z-20">
                     <h1 class="glow-title text-2xl sm:text-3xl mb-4 tracking-wider text-center">IS SEONGHYEON A CAT?</h1>
                     
-                    <!-- Intro Video Frame -->
                     <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-lg border-4 border-white/70 mb-6 pointer-events-auto">
-                        <video id="intro-video" class="w-full h-full object-cover" autoplay muted playsinline webkit-playsinline disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" loop>
+                        <video id="intro-video" class="w-full h-full object-cover" autoplay muted playsinline webkit-playsinline x5-playsinline disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" loop>
                             <source src="intro-video.mp4" type="video/mp4">
                         </video>
                     </div>
 
-                    <!-- Intro Buttons -->
                     <div class="flex flex-col sm:flex-row gap-3 w-full max-w-xs relative z-30">
                         <button id="btn-replay-intro" class="flex-1 bg-white hover:bg-white/90 text-[#5c1d30] py-3.5 px-3 rounded-2xl titan-font text-xs shadow-md flex items-center justify-center gap-2 transition active:scale-95 cursor-pointer">
                             <i class="fa-solid fa-rotate-right"></i> REPLAY INTRO
@@ -142,44 +128,37 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="text-[10px] text-[#5c1d30]/70 titan-font z-10">Memory Match Game</div>
             </div>
 
-            <!------------------------------------------------ -->
             <!-- 2. SELECT STAGE SLIDE -->
-            <!------------------------------------------------ -->
             <div id="slide-select-stage" class="absolute inset-0 flex p-3 bg-[#d37b95] z-10 transition-all duration-300 hidden overflow-hidden">
-                
                 <div id="stages-scroll-container" class="hide-scrollbar flex-1 overflow-y-auto pr-2 space-y-6 flex flex-col items-center py-10 snap-y snap-mandatory">
                     
-                    <!-- EASY -->
                     <div class="stage-card-wrapper w-full max-w-[260px] bg-[#fff6f8] p-3 pt-3 pb-2 rounded-3xl shadow-xl cursor-pointer snap-center flex flex-col items-center border-4 border-white active:scale-95 transition" data-stage="1">
                         <div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-black/10 shadow-inner">
                             <img src="stage1-easy-img.jpg" alt="Easy" class="stage-img w-full h-full object-cover" onerror="this.src='https://placehold.co/300x300/e6a1b4/5c1d30?text=EASY+IMAGE'">
-                            <video class="stage-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300" muted loop playsinline webkit-playsinline disablePictureInPicture preload="none">
+                            <video class="stage-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300" muted loop playsinline webkit-playsinline x5-playsinline disablePictureInPicture preload="none">
                                 <source src="stage1-easy-video.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="mt-2 text-center titan-font text-[#5c1d30] text-lg tracking-wider">EASY</div>
                     </div>
 
-                    <!-- MEDIUM -->
                     <div class="stage-card-wrapper w-full max-w-[260px] bg-[#fff6f8] p-3 pt-3 pb-2 rounded-3xl shadow-xl cursor-pointer snap-center flex flex-col items-center border-4 border-white active:scale-95 transition" data-stage="2">
                         <div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-black/10 shadow-inner">
                             <img src="stage2-medium-img.jpg" alt="Medium" class="stage-img w-full h-full object-cover" onerror="this.src='https://placehold.co/300x300/e6a1b4/5c1d30?text=MEDIUM+IMAGE'">
-                            <video class="stage-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300" muted loop playsinline webkit-playsinline disablePictureInPicture preload="none">
+                            <video class="stage-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300" muted loop playsinline webkit-playsinline x5-playsinline disablePictureInPicture preload="none">
                                 <source src="stage2-medium-video.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="mt-2 text-center titan-font text-[#5c1d30] text-lg tracking-wider">MEDIUM</div>
                     </div>
 
-                    <!-- HARD -->
                     <div class="stage-card-wrapper w-full max-w-[260px] bg-[#fff6f8] p-3 pt-3 pb-2 rounded-3xl shadow-xl cursor-pointer snap-center flex flex-col items-center border-4 border-white active:scale-95 transition" data-stage="3">
                         <div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-black/10 shadow-inner">
                             <img src="stage3-hard-img.jpg" alt="Hard" class="stage-img w-full h-full object-cover" onerror="this.src='https://placehold.co/300x300/e6a1b4/5c1d30?text=HARD+IMAGE'">
-                            <video class="stage-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300" muted loop playsinline webkit-playsinline disablePictureInPicture preload="none">
+                            <video class="stage-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300" muted loop playsinline webkit-playsinline x5-playsinline disablePictureInPicture preload="none">
                                 <source src="stage3-hard-video.mp4" type="video/mp4">
                             </video>
                         </div>
@@ -193,14 +172,10 @@
                         SELECT STAGE
                     </div>
                 </div>
-
             </div>
 
-            <!------------------------------------------------ -->
             <!-- 3. GAMEPLAY SLIDE -->
-            <!------------------------------------------------ -->
             <div id="slide-gameplay" class="absolute inset-0 flex flex-col p-2 bg-[#d37b95] z-10 hidden overflow-hidden justify-between">
-                
                 <div id="preview-banner" class="mx-auto my-1 bg-white/95 text-[#5c1d30] px-4 py-1 rounded-full shadow-md text-center titan-font text-xs flex items-center justify-center gap-2 animate-soft-pulse z-20 border border-pink-200 shrink-0">
                     <span>Preview Time:</span> <span id="preview-countdown" class="text-sm text-[#73253d]">3s</span>
                 </div>
@@ -215,9 +190,7 @@
                 </div>
             </div>
 
-            <!------------------------------------------------ -->
             <!-- 4. VICTORY SLIDE -->
-            <!------------------------------------------------ -->
             <div id="slide-victory" class="absolute inset-0 flex flex-col items-center justify-center p-6 bg-[#d37b95] z-10 hidden overflow-y-auto">
                 <div class="text-center w-full max-w-sm flex flex-col items-center my-auto">
                     <h2 class="glow-title text-xl sm:text-2xl mb-2" id="victory-congrats-title">CONGRATULATIONS!</h2>
@@ -235,20 +208,16 @@
                 </div>
             </div>
 
-            <!------------------------------------------------ -->
             <!-- 5. BONUS CHOICE YES/NO VIDEO & COMMENTS SLIDE -->
-            <!------------------------------------------------ -->
             <div id="slide-choice-result" class="absolute inset-0 flex flex-col p-4 bg-[#d37b95] z-10 hidden overflow-y-auto hide-scrollbar">
                 <div class="my-auto flex flex-col items-center w-full max-w-sm mx-auto transition-all duration-300" id="choice-slide-content">
                     
-                    <!-- Result Video Frame -->
                     <div id="choice-video-container" class="w-full bg-black rounded-2xl overflow-hidden shadow-xl mb-3 transition-all duration-300">
-                        <video id="choice-result-video" class="w-full max-h-[220px] object-contain" autoplay playsinline webkit-playsinline disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" controls>
+                        <video id="choice-result-video" class="w-full max-h-[220px] object-cover" autoplay playsinline webkit-playsinline x5-playsinline disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" controls>
                             <source src="" type="video/mp4">
                         </video>
                     </div>
 
-                    <!-- Comment Section Container -->
                     <div id="comment-section-container" class="w-full bg-white/95 backdrop-blur-md rounded-3xl p-4 shadow-lg mb-4 hidden">
                         <h3 class="glow-subtitle text-xs uppercase mb-3 text-center tracking-wider">LEAVE YOUR COMMENTS</h3>
                         
@@ -263,18 +232,15 @@
                             </div>
                         </div>
 
-                        <!-- Active Reply Indicator Bar -->
                         <div id="reply-indicator" class="hidden items-center justify-between bg-pink-100 text-[#5c1d30] text-[10px] px-2.5 py-1 rounded-lg mb-2">
                             <span>Replying to <strong id="reply-target-name">User</strong></span>
                             <button id="btn-cancel-reply" class="text-red-500 font-bold ml-2"><i class="fa-solid fa-xmark"></i></button>
                         </div>
 
-                        <!-- Nested & Sorted Comments Feed -->
                         <div id="comments-feed" class="space-y-3 max-h-[220px] overflow-y-auto pr-1 hide-scrollbar">
                         </div>
                     </div>
 
-                    <!-- Action Button -->
                     <button id="choice-bottom-btn" class="w-full bg-[#5c1d30] text-white py-3 rounded-2xl titan-font text-xs shadow-md hover:bg-[#73253d] transition active:scale-95">
                         EM CHIP CAM ON
                     </button>
@@ -284,7 +250,6 @@
 
         </div>
 
-        <!-- Hidden Admin Gear Icon -->
         <div id="admin-gear-btn" class="absolute top-3 right-3 bg-[#5c1d30] text-white w-8 h-8 rounded-full shadow-lg flex items-center justify-center cursor-pointer z-50 hidden hover:scale-110 transition">
             <i class="fa-solid fa-gear text-xs"></i>
         </div>
@@ -337,7 +302,6 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Web Audio Synthesizer Engine
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         function playSynthesizedSound(type) {
@@ -389,9 +353,6 @@
             } catch(e) {}
         }
 
-        /* ========================================================
-         * STAGE CONFIGURATIONS & EXACT CARD FILE NAMES
-         * ======================================================== */
         let currentSlideId = 'slide-intro';
         let currentStage = 1;
         let isAudioMuted = false;
@@ -510,12 +471,8 @@
             }
         };
 
-        // Comments Store (Hierarchical)
         let commentsData = JSON.parse(localStorage.getItem('seonghyeon_comments_v2') || '[]');
 
-        /* ========================================================
-         * INITIALIZATION & EVENT LISTENERS
-         * ======================================================== */
         window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('btn-replay-intro').addEventListener('click', replayIntro);
             document.getElementById('btn-start-game').addEventListener('click', goToSelectStage);
@@ -590,9 +547,6 @@
             replayIntro();
         }
 
-        /* ========================================================
-         * SELECT STAGE SCROLL PREVIEW OBSERVER
-         * ======================================================== */
         let scrollObserver = null;
         function initStageScrollObserver() {
             const container = document.getElementById('stages-scroll-container');
@@ -628,9 +582,6 @@
             wrappers.forEach(wrap => scrollObserver.observe(wrap));
         }
 
-        /* ========================================================
-         * GAMEPLAY & CARDS LOGIC
-         * ======================================================== */
         function startStage(stageNum) {
             currentStage = stageNum;
             const config = STAGE_CONFIGS[stageNum];
@@ -658,7 +609,6 @@
 
             if (gameTimerInterval) clearInterval(gameTimerInterval);
 
-            // Sequential order from top-left to bottom-right
             let cardDeck = config.cards.map(c => ({ cardId: c.id, file: c.file }));
 
             grid.innerHTML = '';
@@ -688,7 +638,6 @@
             const countdownEl = document.getElementById('preview-countdown');
             banner.classList.remove('hidden');
             
-            // Show cards during preview
             const cardElements = grid.querySelectorAll('.perspective-1000 > div');
             cardElements.forEach(el => el.classList.add('rotate-y-180'));
 
@@ -779,9 +728,6 @@
             }
         }
 
-        /* ========================================================
-         * VICTORY SLIDE & AUDIO
-         * ======================================================== */
         function playStageAudio(src) {
             if (bgAudio) { bgAudio.pause(); }
             bgAudio = new Audio(src);
@@ -836,9 +782,6 @@
             }
         }
 
-        /* ========================================================
-         * BONUS CHOICE & NESTED SORTED COMMENTS
-         * ======================================================== */
         function handleBonusChoice(choice) {
             currentChoiceType = choice;
             choiceButtonClickCount = 0;
@@ -917,7 +860,6 @@
             renderCommentsFeed();
         }
 
-        // Sorting helper: Highest Likes first, then Newest Timestamp first
         function sortComments(list) {
             return list.sort((a, b) => {
                 if (b.likes !== a.likes) {
@@ -936,14 +878,12 @@
                 return;
             }
 
-            // Top level comments
             const topLevel = sortComments(commentsData.filter(c => !c.parentId));
 
             topLevel.forEach(cmt => {
                 const cmtNode = createCommentElement(cmt, false);
                 feed.appendChild(cmtNode);
 
-                // Nested Replies for this comment
                 const replies = sortComments(commentsData.filter(c => c.parentId === cmt.id));
                 if (replies.length > 0) {
                     const repliesContainer = document.createElement('div');
@@ -1009,7 +949,6 @@
         }
 
         function deleteComment(id) {
-            // Delete comment and any replies referencing it
             commentsData = commentsData.filter(c => c.id !== id && c.parentId !== id);
             localStorage.setItem('seonghyeon_comments_v2', JSON.stringify(commentsData));
             renderCommentsFeed();
@@ -1034,9 +973,6 @@
             );
         }
 
-        /* ========================================================
-         * ADMIN CONTROLS
-         * ======================================================== */
         window.addEventListener('keydown', (e) => {
             if (e.key === 'F2') {
                 e.preventDefault();
