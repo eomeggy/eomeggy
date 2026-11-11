@@ -14,7 +14,6 @@
             --dark-burgundy: #592233;
             --card-pink: #ffc0cb;
         }
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -22,7 +21,6 @@
             user-select: none;
             font-family: 'Be Vietnam Pro', sans-serif;
         }
-
         body {
             background-color: var(--bg-pink);
             display: flex;
@@ -31,7 +29,6 @@
             min-height: 100vh;
             overflow: hidden;
         }
-
         /* Mobile Container Frame */
         #game-container {
             width: 100%;
@@ -45,14 +42,12 @@
             flex-direction: column;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
-
         @media (min-width: 423px) {
             #game-container {
                 border-radius: 30px;
                 border: 8px solid #c25e79;
             }
         }
-
         .screen {
             position: absolute;
             top: 0;
@@ -68,12 +63,10 @@
             display: none;
             z-index: 1;
         }
-
         .screen.active {
             display: flex;
             z-index: 10;
         }
-
         /* Titan One Font & Exact Title Shadow Matching Intro */
         .title-exact-match {
             font-family: 'Titan One', cursive;
@@ -84,18 +77,33 @@
                 2px 2px 4px rgba(0, 0, 0, 0.15);
             text-align: center;
         }
-
         /* INTRO SCREEN */
         #intro-screen {
             justify-content: center;
             gap: 20px;
         }
-
         #intro-screen h1 {
             font-size: 1.5rem;
             margin-bottom: 5px;
         }
-
+        /* Khung video Intro chuẩn tỷ lệ 16:9 */
+        .video-box-intro {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            border: 4px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .video-box-intro video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
         .video-box {
             width: 90%;
             background: #000;
@@ -107,21 +115,18 @@
             align-items: center;
             justify-content: center;
         }
-
         .video-box video {
             width: 100%;
             height: auto;
             max-height: 45vh;
             object-fit: contain;
         }
-
         .btn-group {
             display: flex;
             gap: 12px;
             width: 90%;
             justify-content: center;
         }
-
         .custom-btn {
             font-family: 'Titan One', cursive;
             background-color: #fff;
@@ -138,28 +143,24 @@
             justify-content: center;
             gap: 8px;
         }
-
         .custom-btn:active {
             transform: scale(0.96);
         }
-
         .custom-btn.primary {
             background-color: var(--dark-burgundy);
             color: #fff;
         }
-
         /* SELECT STAGE SCREEN */
         #select-screen {
-            padding: 15px 15px 15px 0.4cm;
+            padding: 15px 10px 15px 10px;
             overflow-y: auto;
             position: relative;
             align-items: flex-start;
         }
-
-        /* Chữ SELECT STAGE sát lề phải của khung điện thoại, phóng to 1.3 lần */
+        /* Đã di chuyển chữ SELECT STAGE sang sát lề phải của khung di động */
         .vertical-title {
             position: absolute;
-            right: 8px;
+            right: 2px;
             top: 50%;
             transform: translateY(-50%) rotate(90deg);
             font-family: 'Titan One', cursive;
@@ -169,17 +170,15 @@
             pointer-events: none;
             white-space: nowrap;
         }
-
         .stages-scroll-area {
-            width: calc(100% - 2rem);
+            width: calc(100% - 2.2rem);
             display: flex;
             flex-direction: column;
             gap: 30px;
-            padding-top: 40px;
+            padding-top: 20px;
             padding-bottom: 150px;
             align-items: flex-start;
         }
-
         .stage-card-item {
             width: 100%;
             background: #fff;
@@ -188,7 +187,6 @@
             box-shadow: 0 6px 15px rgba(0,0,0,0.15);
             text-align: center;
         }
-
         .stage-media-wrapper {
             width: 100%;
             aspect-ratio: 1/1;
@@ -198,7 +196,6 @@
             background: #000;
             cursor: pointer;
         }
-
         .stage-media-wrapper img, .stage-media-wrapper video {
             width: 100%;
             height: 100%;
@@ -207,7 +204,6 @@
             top: 0;
             left: 0;
         }
-
         .stage-card-item h3 {
             font-family: 'Titan One', cursive;
             color: var(--dark-burgundy);
@@ -215,12 +211,10 @@
             font-size: 1.1rem;
             cursor: pointer;
         }
-
         /* GAMEPLAY SCREEN */
         #gameplay-screen {
             padding: 12px;
         }
-
         .game-top-bar {
             width: 100%;
             background: #fff;
@@ -232,7 +226,6 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             margin-bottom: 10px;
         }
-
         .top-btn {
             background: var(--dark-burgundy);
             color: #fff;
@@ -243,13 +236,11 @@
             font-size: 0.7rem;
             cursor: pointer;
         }
-
         .stage-info-title {
             font-family: 'Titan One', cursive;
             font-size: 0.75rem;
             color: var(--dark-burgundy);
         }
-
         .game-stats {
             display: flex;
             gap: 8px;
@@ -257,7 +248,6 @@
             font-weight: 700;
             color: var(--dark-burgundy);
         }
-
         .preview-banner {
             background: #fff;
             padding: 6px 16px;
@@ -268,7 +258,6 @@
             font-size: 0.85rem;
             box-shadow: 0 3px 8px rgba(0,0,0,0.1);
         }
-
         /* GRID CARDS LAYOUT */
         .cards-grid {
             display: grid;
@@ -280,18 +269,15 @@
             flex-grow: 1;
             padding-bottom: 15px;
         }
-
         .grid-stage-1 { grid-template-columns: repeat(2, 1fr); }
         .grid-stage-2 { grid-template-columns: repeat(2, 1fr); }
         .grid-stage-3 { grid-template-columns: repeat(3, 1fr); }
         .grid-stage-bonus { grid-template-columns: repeat(4, 1fr); }
-
         .card {
             aspect-ratio: 1/1;
             perspective: 1000px;
             cursor: pointer;
         }
-
         .card-inner {
             position: relative;
             width: 100%;
@@ -302,11 +288,9 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
-
         .card.flipped .card-inner {
             transform: rotateY(180deg);
         }
-
         .card-front, .card-back {
             position: absolute;
             width: 100%;
@@ -316,31 +300,26 @@
             overflow: hidden;
             border: 2px solid #fff;
         }
-
         .card-front {
             background-color: #ffc0cb;
             transform: rotateY(180deg);
         }
-
         .card-front img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
         .card-back {
             background-color: var(--card-pink);
             display: flex;
             justify-content: center;
             align-items: center;
         }
-
         .card-back img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
         /* VICTORY SCREEN */
         #victory-screen {
             justify-content: center;
@@ -349,13 +328,11 @@
             gap: 15px;
             padding: 30px;
         }
-
         #victory-screen h2 {
             font-family: 'Titan One', cursive;
             font-size: 1.4rem;
             color: var(--dark-burgundy);
         }
-
         .victory-img-box {
             width: 170px;
             height: 170px;
@@ -363,20 +340,17 @@
             justify-content: center;
             align-items: center;
         }
-
         .victory-img-box img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
         }
-
         .victory-buttons {
             display: flex;
             gap: 12px;
             width: 100%;
             justify-content: center;
         }
-
         .btn-yes {
             background-color: #2ecc71 !important;
             color: white !important;
@@ -387,7 +361,6 @@
             border: none;
             cursor: pointer;
         }
-
         .btn-no {
             background-color: #e74c3c !important;
             color: white !important;
@@ -398,7 +371,6 @@
             border: none;
             cursor: pointer;
         }
-
         /* RESULT MEDIA & COMMENTS */
         #result-media-screen {
             padding: 15px;
@@ -409,7 +381,6 @@
             gap: 12px;
             transition: all 0.3s ease;
         }
-
         .comment-section-box {
             width: 100%;
             background: #fff;
@@ -420,14 +391,12 @@
             flex-direction: column;
             gap: 10px;
         }
-
         .comment-section-box h3 {
             font-family: 'Titan One', cursive;
             color: var(--dark-burgundy);
             font-size: 0.95rem;
             text-align: center;
         }
-
         .comment-input, .name-input {
             width: 100%;
             padding: 8px 12px;
@@ -437,12 +406,10 @@
             font-size: 0.85rem;
             color: #333;
         }
-
         .comment-row-action {
             display: flex;
             gap: 8px;
         }
-
         .send-btn {
             background-color: var(--dark-burgundy);
             color: #fff;
@@ -453,7 +420,6 @@
             cursor: pointer;
             font-size: 0.8rem;
         }
-
         .comments-list {
             display: flex;
             flex-direction: column;
@@ -461,7 +427,6 @@
             max-height: 220px;
             overflow-y: auto;
         }
-
         .comment-item {
             background: #fff9fa;
             border: 1px solid #f5e1e5;
@@ -472,7 +437,6 @@
             gap: 4px;
             position: relative;
         }
-
         .comment-header {
             display: flex;
             align-items: center;
@@ -481,7 +445,6 @@
             font-weight: 700;
             color: var(--dark-burgundy);
         }
-
         .voted-badge {
             background-color: #2ecc71;
             color: white;
@@ -490,22 +453,13 @@
             border-radius: 5px;
             font-family: 'Titan One', cursive;
         }
-
         .voted-badge.no {
             background-color: #e74c3c;
         }
-
-        .comment-time {
-            font-size: 0.65rem;
-            color: #888;
-            margin-left: auto;
-        }
-
         .comment-body {
             font-size: 0.85rem;
             color: #444;
         }
-
         .comment-footer-actions {
             display: flex;
             align-items: center;
@@ -513,15 +467,12 @@
             font-size: 0.75rem;
             color: #666;
         }
-
         .action-like, .action-reply {
             cursor: pointer;
         }
-
         .action-like.liked {
             color: #e74c3c;
         }
-
         .comment-menu-btn {
             position: absolute;
             right: 8px;
@@ -533,7 +484,6 @@
             color: #666;
             font-size: 0.9rem;
         }
-
         .comment-dropdown {
             position: absolute;
             right: 8px;
@@ -546,7 +496,6 @@
             flex-direction: column;
             z-index: 5;
         }
-
         .comment-dropdown button {
             background: none;
             border: none;
@@ -555,11 +504,9 @@
             cursor: pointer;
             font-size: 0.75rem;
         }
-
         .comment-dropdown button:hover {
             background: #f0f0f0;
         }
-
         .reply-container {
             margin-top: 6px;
             padding-left: 10px;
@@ -568,7 +515,6 @@
             flex-direction: column;
             gap: 4px;
         }
-
         .reply-item {
             font-size: 0.75rem;
             color: #555;
@@ -579,7 +525,6 @@
             justify-content: space-between;
             align-items: center;
         }
-
         /* ADMIN MODAL */
         #admin-modal {
             position: fixed;
@@ -594,7 +539,6 @@
             align-items: center;
             padding: 15px;
         }
-
         .admin-content {
             background: #2b131c;
             width: 100%;
@@ -609,20 +553,17 @@
             overflow-y: auto;
             border: 3px solid var(--main-pink);
         }
-
         .admin-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         .admin-tabs {
             display: flex;
             gap: 6px;
             overflow-x: auto;
             padding-bottom: 4px;
         }
-
         .admin-tab-btn {
             background: #4a2533;
             color: #fff;
@@ -633,39 +574,34 @@
             font-size: 0.7rem;
             white-space: nowrap;
         }
-
         .admin-tab-btn.active {
             background: var(--main-pink);
             font-weight: bold;
         }
-
         .admin-section {
             display: none;
             flex-direction: column;
             gap: 10px;
         }
-
         .admin-section.active {
             display: flex;
         }
     </style>
 </head>
 <body>
-
 <div id="game-container">
-
     <!-- 1. INTRO SCREEN -->
     <div id="intro-screen" class="screen active">
         <h1 class="title-exact-match">IS SEONGHYEON A CAT?</h1>
-        <div class="video-box">
-            <video id="intro-video" src="intro-video.mp4" autoplay muted playsinline controls></video>
+        <div class="video-box-intro">
+            <!-- Đảm bảo video intro tự động lặp lại liên tục loop và autoplay -->
+            <video id="intro-video" src="intro-video.mp4" autoplay loop muted playsinline controls></video>
         </div>
         <div class="btn-group">
             <button class="custom-btn" onclick="replayIntro()">REPLAY INTRO</button>
             <button class="custom-btn primary" onclick="goToSelectStage()">Start Game ➔</button>
         </div>
     </div>
-
     <!-- 2. SELECT STAGE SCREEN -->
     <div id="select-screen" class="screen" onclick="handleScreenClick(event)">
         <div class="vertical-title title-exact-match">SELECT STAGE</div>
@@ -696,7 +632,6 @@
             </div>
         </div>
     </div>
-
     <!-- 3. GAMEPLAY SCREEN -->
     <div id="gameplay-screen" class="screen">
         <div class="game-top-bar">
@@ -711,7 +646,6 @@
         <div class="preview-banner" id="preview-banner-box">Preview Time: <span id="preview-sec">3</span>s</div>
         <div class="cards-grid" id="cards-grid-container"></div>
     </div>
-
     <!-- 4. VICTORY SCREEN -->
     <div id="victory-screen" class="screen">
         <h2 class="title-exact-match" id="victory-title-text" style="font-size: 1.4rem;">STAGE 1 CLEARED!</h2>
@@ -719,16 +653,16 @@
             <img id="victory-img-elem" src="victory1-img.png" alt="Victory">
         </div>
         <h2 id="victory-question-text" style="font-size: 1rem; color: var(--dark-burgundy);">ARE YOU STILL SKEPTICAL?</h2>
-        <!-- Đã bổ sung lại thẻ chứa nút bấm victory -->
         <div class="victory-buttons" id="victory-buttons-container"></div>
     </div>
-
     <!-- 5. RESULT MEDIA & COMMENT SCREEN (YES/NO) -->
     <div id="result-media-screen" class="screen">
         <div class="video-box" id="result-video-box" style="width: 100%;">
-            <video id="result-video-player" controls autoplay playsinline></video>
+            <!-- Video YES/NO tự động lặp lại liên tục loop -->
+            <video id="result-video-player" controls autoplay loop playsinline></video>
         </div>
-        <div class="comment-section-box" id="comment-box-elem">
+        <!-- Khung bình luận mặc định ẩn, bấm nút hành động lần 1 mới hiện -->
+        <div class="comment-section-box" id="comment-box-elem" style="display: none;">
             <h3 class="title-exact-match" style="font-size: 0.95rem;">LEAVE YOUR COMMENTS</h3>
             <input type="text" id="user-name-input" class="name-input font-vietnamese" placeholder="YOUR NAME">
             <div class="comment-row-action">
@@ -739,9 +673,7 @@
         </div>
         <button class="custom-btn primary" id="bottom-action-btn" onclick="handleBottomAction()" style="width: 100%; margin-bottom: 15px; flex-shrink: 0;">EM CHIP CAM ON</button>
     </div>
-
 </div>
-
 <!-- ADMIN CONFIGURATION MODAL -->
 <div id="admin-modal">
     <div class="admin-content">
@@ -750,12 +682,12 @@
             <button onclick="closeAdmin()" style="background:none; border:none; color:#fff; font-size:1.1rem; cursor:pointer;">✕</button>
         </div>
         <div class="admin-tabs">
-            <button class="admin-tab-btn active" onclick="switchAdminTab(0)">Intro Video & Level Hover</button>
+            <button class="admin-tab-btn active" onclick="switchAdminTab(0)">Intro & Level Hover</button>
             <button class="admin-tab-btn" onclick="switchAdminTab(1)">Stage 1(EASY)</button>
             <button class="admin-tab-btn" onclick="switchAdminTab(2)">Stage 2(MEDIUM)</button>
             <button class="admin-tab-btn" onclick="switchAdminTab(3)">Stage 3(HARD)</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab(4)">Stage Bonus(BONUS)</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab(5)">Result (YES/NO)</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(4)">Stage Bonus</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(5)">Comments Manager</button>
         </div>
         <div class="admin-section active">
             <div style="background:#23182d; padding:10px; border-radius:12px;">
@@ -782,15 +714,11 @@
             <button class="custom-btn primary" onclick="startStage(4)">Test Run Stage Bonus</button>
         </div>
         <div class="admin-section">
-            <p style="font-size:0.8rem;">Result Choice Media (YES / NO)</p>
-            <div style="display:flex; gap:10px;">
-                <button class="custom-btn primary" onclick="showResultScreen('yes')">Test YES Slide</button>
-                <button class="custom-btn primary" onclick="showResultScreen('no')">Test NO Slide</button>
-            </div>
+            <p style="font-size:0.8rem;">Quản lý và Xóa riêng lẻ bình luận người chơi:</p>
+            <div id="admin-comments-manage-list" style="display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto;"></div>
         </div>
     </div>
 </div>
-
 <script>
     const stagesData = {
         1: {
@@ -876,7 +804,6 @@
             pairs: [[1, 14], [2, 8], [3, 18], [4, 5], [6, 16], [7, 10], [9, 20], [11, 17], [12, 15], [13, 19]]
         }
     };
-
     let currentStageId = 1;
     let gameTimer = null;
     let secondsElapsed = 0;
@@ -889,8 +816,23 @@
     let commentsData = [];
     let activeStageVideoId = null;
     let actionClickCount = 0;
-
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // LocalStorage quản lý bình luận vĩnh viễn không mất khi F5
+    function loadComments() {
+        const saved = localStorage.getItem('seonghyeon_comments_v5');
+        if (saved) {
+            try { commentsData = JSON.parse(saved); } catch(e) { commentsData = []; }
+        } else {
+            commentsData = [
+                { id: 1, name: "Chửng", text: "Hi", vote: "yes", likes: 0, liked: false, replies: [] },
+                { id: 2, name: "Chửng", text: "Ble", vote: "yes", likes: 1, liked: true, replies: [] }
+            ];
+        }
+    }
+    function saveComments() {
+        localStorage.setItem('seonghyeon_comments_v5', JSON.stringify(commentsData));
+    }
 
     function playSoundEffect(type) {
         if (isAudioMuted) return;
@@ -901,9 +843,7 @@
         const gainNode = audioCtx.createGain();
         osc.connect(gainNode);
         gainNode.connect(audioCtx.destination);
-
         const now = audioCtx.currentTime;
-
         if (type === 'click') {
             osc.type = 'sine';
             osc.frequency.setValueAtTime(400, now);
@@ -945,6 +885,13 @@
     }
 
     function goToScreen(screenId) {
+        // Tắt toàn bộ video intro nếu rời khỏi intro
+        const introVid = document.getElementById('intro-video');
+        if (screenId !== 'intro-screen') {
+            introVid.pause();
+        } else {
+            introVid.play().catch(e => {});
+        }
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
         if(screenId !== 'gameplay-screen' && currentBgmAudio) {
@@ -967,11 +914,9 @@
         event.stopPropagation();
         const img = document.getElementById(`stage-img-${stageId}`);
         const video = document.getElementById(`stage-vid-${stageId}`);
-
         if (activeStageVideoId && activeStageVideoId !== stageId) {
             stopAllStageVideos();
         }
-
         if (video.paused && video.style.display !== 'block') {
             img.style.display = 'none';
             video.style.display = 'block';
@@ -1019,20 +964,17 @@
         currentStageId = stageId;
         const stage = stagesData[stageId];
         goToScreen('gameplay-screen');
-
         document.getElementById('game-stage-title').innerText = stage.name;
         document.getElementById('matches-display').innerText = `🐾 0`;
         matchesCount = 0;
         secondsElapsed = 0;
         canInteract = false;
-
         if(currentBgmAudio) currentBgmAudio.pause();
         currentBgmAudio = new Audio(stage.audio);
         currentBgmAudio.volume = 0.8;
         currentBgmAudio.loop = true;
         currentBgmAudio.muted = isAudioMuted;
         currentBgmAudio.play().catch(e => {});
-
         if(gameTimer) clearInterval(gameTimer);
         gameTimer = setInterval(() => {
             secondsElapsed++;
@@ -1040,16 +982,13 @@
             let secs = String(secondsElapsed % 60).padStart(2, '0');
             document.getElementById('timer-display').innerText = `⏱️ ${mins}:${secs}`;
         }, 1000);
-
         const gridContainer = document.getElementById('cards-grid-container');
         gridContainer.className = `cards-grid grid-stage-${stageId === 4 ? 'bonus' : stageId}`;
         gridContainer.innerHTML = '';
-
         stage.cards.forEach((card) => {
             const cardElem = document.createElement('div');
             cardElem.className = 'card flipped'; 
             cardElem.dataset.id = card.id;
-
             cardElem.innerHTML = `
                 <div class="card-inner">
                     <div class="card-front">
@@ -1063,11 +1002,9 @@
             cardElem.addEventListener('click', () => onCardClick(cardElem));
             gridContainer.appendChild(cardElem);
         });
-
         let previewSec = stage.previewTime;
         document.getElementById('preview-banner-box').style.display = 'block';
         document.getElementById('preview-sec').innerText = previewSec;
-
         let previewInterval = setInterval(() => {
             previewSec--;
             document.getElementById('preview-sec').innerText = previewSec;
@@ -1082,10 +1019,8 @@
 
     function onCardClick(cardElem) {
         if(!canInteract || cardElem.classList.contains('flipped') || cardElem.classList.contains('matched')) return;
-
         playSoundEffect('click');
         cardElem.classList.add('flipped');
-
         if(!firstSelectedCard) {
             firstSelectedCard = cardElem;
         } else {
@@ -1093,9 +1028,7 @@
             let id1 = parseInt(firstSelectedCard.dataset.id);
             let id2 = parseInt(cardElem.dataset.id);
             let stage = stagesData[currentStageId];
-
             let isMatch = stage.pairs.some(pair => (pair[0] === id1 && pair[1] === id2) || (pair[0] === id2 && pair[1] === id1));
-
             if(isMatch) {
                 playSoundEffect('match');
                 setTimeout(() => {
@@ -1105,7 +1038,6 @@
                     matchesCount++;
                     document.getElementById('matches-display').innerText = `🐾 ${matchesCount}`;
                     canInteract = true;
-
                     if(matchesCount === stage.pairs.length) {
                         clearInterval(gameTimer);
                         if(currentBgmAudio) currentBgmAudio.pause();
@@ -1128,14 +1060,11 @@
     function showVictoryScreen() {
         const stage = stagesData[currentStageId];
         goToScreen('victory-screen');
-
         document.getElementById('victory-title-text').innerText = (currentStageId === 4) ? "STAGE BONUS CLEARED!" : `STAGE ${currentStageId} CLEARED!`;
         document.getElementById('victory-img-elem').src = stage.victoryImg;
         document.getElementById('victory-question-text').innerText = stage.question;
-
         const btnContainer = document.getElementById('victory-buttons-container');
         
-        // Vẽ nút bấm chính xác theo từng stage (Stage Bonus có 2 nút NO/YES, Stage 1-3 có nút riêng)
         if (currentStageId === 4) {
             btnContainer.innerHTML = `
                 <button class="custom-btn btn-no" onclick="showResultScreen('no')">NO</button>
@@ -1160,23 +1089,26 @@
         }
     }
 
+    // Kết quả YES/NO: Video tự lặp lại (loop), ẩn khung cmt ban đầu
     function showResultScreen(choice) {
         currentVoteChoice = choice;
         actionClickCount = 0;
         goToScreen('result-media-screen');
-
         const vidPlayer = document.getElementById('result-video-player');
         vidPlayer.src = choice === 'yes' ? 'yes-button-video.mp4' : 'no-button-video.mp4';
+        vidPlayer.loop = true;
         vidPlayer.play().catch(e => {});
 
         const screen = document.getElementById('result-media-screen');
         screen.style.justifyContent = 'flex-start';
         const vidBox = document.getElementById('result-video-box');
         vidBox.style.display = 'flex';
+        
+        // Ẩn khung bình luận ở lần đầu xuất hiện slide
+        document.getElementById('comment-box-elem').style.display = 'none';
 
         const bottomBtn = document.getElementById('bottom-action-btn');
         bottomBtn.innerText = choice === 'yes' ? 'EM CHIP CAM ON' : 'WHY NOT ME!?';
-
         renderComments();
     }
 
@@ -1190,37 +1122,44 @@
             vidBox.style.display = 'none';
             const screen = document.getElementById('result-media-screen');
             screen.style.justifyContent = 'center';
-            document.getElementById('comment-box-elem').scrollIntoView({ behavior: 'smooth' });
+            
+            // Bấm lần 1 hiện khung bình luận
+            const commentBox = document.getElementById('comment-box-elem');
+            commentBox.style.display = 'flex';
+            commentBox.scrollIntoView({ behavior: 'smooth' });
         }
     }
 
     function postComment() {
         const nameInput = document.getElementById('user-name-input');
         const commentInput = document.getElementById('user-comment-input');
-
         if(!nameInput.value.trim() || !commentInput.value.trim()) return;
-
         const newComment = {
             id: Date.now(),
             name: nameInput.value.trim(),
             text: commentInput.value.trim(),
             vote: currentVoteChoice,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             likes: 0,
             liked: false,
             replies: []
         };
-
         commentsData.unshift(newComment);
         commentInput.value = '';
+        saveComments();
         renderComments();
+    }
+
+    // Sắp xếp bình luận: Nhiều tym nhất lên đầu
+    function getSortedComments() {
+        return [...commentsData].sort((a, b) => (b.likes || 0) - (a.likes || 0));
     }
 
     function renderComments() {
         const listContainer = document.getElementById('comments-list-container');
         listContainer.innerHTML = '';
+        const sortedComments = getSortedComments();
 
-        commentsData.forEach(c => {
+        sortedComments.forEach(c => {
             const item = document.createElement('div');
             item.className = 'comment-item';
             
@@ -1230,19 +1169,17 @@
                 c.replies.forEach((rep, rIndex) => {
                     repliesHtml += `
                         <div class="reply-item">
-                            <span><b>${rep.name}:</b> ${rep.text}</span>
+                            <span><b>@${rep.replyTo || 'Admin'}:</b> ${rep.text}</span>
                             <button onclick="deleteReply(${c.id}, ${rIndex})" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-weight:bold;">✕</button>
                         </div>
                     `;
                 });
                 repliesHtml += '</div>';
             }
-
             item.innerHTML = `
                 <div class="comment-header">
                     <span>${c.name}</span>
                     <span class="voted-badge ${c.vote === 'no' ? 'no' : ''}">voted ${c.vote.toUpperCase()}</span>
-                    <span class="comment-time">${c.time}</span>
                     <button class="comment-menu-btn" onclick="toggleCommentMenu(${c.id})">⋮</button>
                     <div class="comment-dropdown" id="dropdown-${c.id}">
                         <button onclick="editComment(${c.id})">Edit</button>
@@ -1252,8 +1189,8 @@
                 <div class="comment-body">${c.text}</div>
                 ${repliesHtml}
                 <div class="comment-footer-actions">
-                    <span class="action-like ${c.liked ? 'liked' : ''}" onclick="likeComment(${c.id})">❤️ ${c.likes}</span>
-                    <span class="action-reply" onclick="promptReply(${c.id})">Reply</span>
+                    <span class="action-like ${c.liked ? 'liked' : ''}" onclick="likeComment(${c.id})"><i class="${c.liked ? 'fa-solid text-rose-500' : 'fa-regular'} fa-heart"></i> ${c.likes}</span>
+                    <span class="action-reply" onclick="promptReply(${c.id}, '${c.name}')">Reply</span>
                 </div>
             `;
             listContainer.appendChild(item);
@@ -1268,7 +1205,9 @@
 
     function deleteComment(id) {
         commentsData = commentsData.filter(c => c.id !== id);
+        saveComments();
         renderComments();
+        renderAdminCommentsList();
     }
 
     function editComment(id) {
@@ -1276,31 +1215,36 @@
         const newText = prompt("Edit your comment:", comment.text);
         if(newText !== null && newText.trim() !== '') {
             comment.text = newText.trim();
+            saveComments();
             renderComments();
+            renderAdminCommentsList();
         }
     }
 
     function likeComment(id) {
         const comment = commentsData.find(c => c.id === id);
         if(comment.liked) {
-            comment.likes--;
+            comment.likes = Math.max(0, comment.likes - 1);
             comment.liked = false;
         } else {
             comment.likes++;
             comment.liked = true;
         }
+        saveComments();
         renderComments();
     }
 
-    function promptReply(id) {
-        const replyText = prompt("Write a reply:");
+    function promptReply(id, targetName) {
+        const replyText = prompt(`Reply to @${targetName}:`);
         if(replyText && replyText.trim() !== '') {
             const comment = commentsData.find(c => c.id === id);
             if(!comment.replies) comment.replies = [];
             comment.replies.push({
                 name: document.getElementById('user-name-input').value.trim() || "Guest",
+                replyTo: targetName,
                 text: replyText.trim()
             });
+            saveComments();
             renderComments();
         }
     }
@@ -1309,13 +1253,38 @@
         const comment = commentsData.find(c => c.id === commentId);
         if(comment && comment.replies) {
             comment.replies.splice(replyIndex, 1);
+            saveComments();
             renderComments();
         }
+    }
+
+    // Quản lý Admin xóa bình luận riêng lẻ
+    function renderAdminCommentsList() {
+        const container = document.getElementById('admin-comments-manage-list');
+        if(!container) return;
+        if(commentsData.length === 0) {
+            container.innerHTML = '<span style="font-size:0.75rem; color:#aaa;">Chưa có bình luận nào.</span>';
+            return;
+        }
+        container.innerHTML = commentsData.map((c, index) => `
+            <div style="background:#2b131c; padding:8px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; font-size:0.75rem;">
+                <div><b>${c.name}</b> (${c.vote}): ${c.text}</div>
+                <button onclick="adminDeleteComment(${index})" style="background:#e74c3c; color:#fff; border:none; padding:4px 8px; border-radius:6px; cursor:pointer;">Xóa</button>
+            </div>
+        `).join('');
+    }
+
+    function adminDeleteComment(index) {
+        commentsData.splice(index, 1);
+        saveComments();
+        renderAdminCommentsList();
+        renderComments();
     }
 
     window.addEventListener('keydown', (e) => {
         if(e.shiftKey && e.key.toLowerCase() === 'u') {
             document.getElementById('admin-modal').style.display = 'flex';
+            renderAdminCommentsList();
         }
     });
 
@@ -1330,15 +1299,15 @@
             t.classList.toggle('active', i === index);
             sections[i].classList.toggle('active', i === index);
         });
+        if(index === 5) {
+            renderAdminCommentsList();
+        }
     }
 
     window.onload = () => {
-        commentsData = [
-            { id: 1, name: "Chửng", text: "Hi", vote: "yes", time: "07:41", likes: 0, liked: false, replies: [] },
-            { id: 2, name: "Chửng", text: "Ble", vote: "yes", time: "07:41", likes: 1, liked: true, replies: [] }
-        ];
+        loadComments();
+        renderComments();
     };
 </script>
-
 </body>
 </html>
