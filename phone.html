@@ -737,7 +737,7 @@
             cards: [
                 { id: 1, img: "stage1-card-1-phone.jpg" },
                 { id: 2, img: "stage1-card-2-phone.jpg" },
-                { id: 3, img: "stage1-card-3-phone.jpg" },
+                { id: 3, img: "stage1-card-3-phone.jpg" }, // <-- ĐÃ SỬA .png THÀNH .jpg KHỚP VỚI GITHUB
                 { id: 4, img: "stage1-card-4-phone.jpg" }
             ],
             pairs: [[1, 4], [2, 3]]
@@ -823,7 +823,7 @@
     let actionClickCount = 0;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    // Thay thế localStorage bằng Firebase Realtime Database lắng nghe realtime
+    // Lắng nghe dữ liệu bình luận realtime từ Firebase Realtime Database
     commentsRef.on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -1131,7 +1131,7 @@
         }
     }
 
-    // Bình luận được đẩy lên Firebase Realtime Database
+    // Đẩy bình luận mới lên Firebase Realtime Database
     function postComment() {
         const nameInput = document.getElementById('user-name-input');
         const commentInput = document.getElementById('user-comment-input');
