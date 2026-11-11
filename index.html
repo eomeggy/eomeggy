@@ -150,20 +150,20 @@
 
         /* SELECT STAGE SCREEN */
         #select-screen {
-            padding: 15px 15px 15px calc(0.7cm - 0.3cm); /* Dịch khung level sang trái 0.3cm */
+            padding: 15px 15px 15px 0.4cm;
             overflow-y: auto;
             position: relative;
             align-items: flex-start;
         }
 
-        /* Chữ SELECT STAGE dọc, căn đúng vị trí vùng tô vàng theo yêu cầu */
+        /* Chữ SELECT STAGE sát lề phải của khung điện thoại, phóng to 1.3 lần (1.4rem * 1.3 ≈ 1.82rem) */
         .vertical-title {
-            position: fixed;
-            right: 0.7cm;
+            position: absolute;
+            right: 8px;
             top: 50%;
             transform: translateY(-50%) rotate(90deg);
             font-family: 'Titan One', cursive;
-            font-size: 1.4rem;
+            font-size: 1.82rem;
             letter-spacing: 2px;
             z-index: 100;
             pointer-events: none;
@@ -171,7 +171,7 @@
         }
 
         .stages-scroll-area {
-            width: calc(100% - 2.5rem);
+            width: calc(100% - 2rem);
             display: flex;
             flex-direction: column;
             gap: 30px;
@@ -661,7 +661,6 @@
             <video id="intro-video" src="intro-video.mp4" autoplay muted playsinline controls></video>
         </div>
         <div class="btn-group">
-            <!-- Đã bỏ icon trên nút REPLAY INTRO -->
             <button class="custom-btn" onclick="replayIntro()">REPLAY INTRO</button>
             <button class="custom-btn primary" onclick="goToSelectStage()">Start Game ➔</button>
         </div>
@@ -669,7 +668,7 @@
 
     <!-- 2. SELECT STAGE SCREEN -->
     <div id="select-screen" class="screen" onclick="handleScreenClick(event)">
-        <!-- Chữ SELECT STAGE dọc, cách lề phải 0.7cm -->
+        <!-- Chữ SELECT STAGE phóng to 1.3 lần và áp sát lề phải khung điện thoại -->
         <div class="vertical-title title-exact-match">SELECT STAGE</div>
         <div class="stages-scroll-area" id="stages-scroll-container">
             <!-- EASY -->
@@ -819,7 +818,7 @@
             audio: "stage2-audio.mp3",
             victoryImg: "victory2-img.png",
             question: "HAVE YOU STARTED TO BELIEVE?",
-            buttonText: "A LITTLE",
+            buttonText: "A LITTLE ➔",
             cards: [
                 { id: 1, img: "stage2-card-1.jpg" },
                 { id: 2, img: "stage2-card-2.jpg" },
@@ -839,7 +838,7 @@
             audio: "stage3-audio.mp3",
             victoryImg: "victory3-img.png",
             question: "ARE YOU FULLY CONVINCED NOW?",
-            buttonText: "ABSOLUTELY",
+            buttonText: "ABSOLUTELY ➔",
             cards: [
                 { id: 1, img: "stage3-card-1.jpg" },
                 { id: 2, img: "stage3-card-2.jpg" },
@@ -1138,7 +1137,6 @@
 
         const btnContainer = document.getElementById('victory-buttons');
         if(stage.isBonus) {
-            // Nút NO bên trái màu đỏ, YES bên phải màu xanh
             btnContainer.innerHTML = `
                 <button class="custom-btn btn-no" onclick="showResultScreen('no')">NO</button>
                 <button class="custom-btn btn-yes" onclick="showResultScreen('yes')">YES</button>
