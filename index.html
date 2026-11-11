@@ -67,7 +67,6 @@
             display: flex;
             z-index: 10;
         }
-        /* Titan One Font & Exact Title Shadow Matching Intro */
         .title-exact-match {
             font-family: 'Titan One', cursive;
             color: #72334f;
@@ -86,7 +85,6 @@
             font-size: 1.5rem;
             margin-bottom: 5px;
         }
-        /* Khung video Intro chuẩn tỷ lệ 16:9 */
         .video-box-intro {
             width: 100%;
             aspect-ratio: 16/9;
@@ -150,34 +148,20 @@
             background-color: var(--dark-burgundy);
             color: #fff;
         }
-        /* SELECT STAGE SCREEN */
+        /* SELECT STAGE SCREEN: Đã bỏ chữ dọc, tăng kích thước khung ảnh gần full màn hình, canh giữa đối xứng */
         #select-screen {
-            padding: 15px 10px 15px 10px;
+            padding: 20px 12px;
             overflow-y: auto;
-            position: relative;
-            align-items: flex-start;
-        }
-        /* Đã di chuyển chữ SELECT STAGE sang sát lề phải của khung di động */
-        .vertical-title {
-            position: absolute;
-            right: 2px;
-            top: 50%;
-            transform: translateY(-50%) rotate(90deg);
-            font-family: 'Titan One', cursive;
-            font-size: 1.82rem;
-            letter-spacing: 2px;
-            z-index: 100;
-            pointer-events: none;
-            white-space: nowrap;
+            align-items: center;
         }
         .stages-scroll-area {
-            width: calc(100% - 2.2rem);
+            width: 100%;
+            max-width: 370px;
             display: flex;
             flex-direction: column;
-            gap: 30px;
-            padding-top: 20px;
-            padding-bottom: 150px;
-            align-items: flex-start;
+            gap: 25px;
+            padding-bottom: 50px;
+            align-items: center;
         }
         .stage-card-item {
             width: 100%;
@@ -378,6 +362,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center; /* Canh giữa video theo chiều dọc ban đầu */
             gap: 12px;
             transition: all 0.3s ease;
         }
@@ -594,7 +579,6 @@
     <div id="intro-screen" class="screen active">
         <h1 class="title-exact-match">IS SEONGHYEON A CAT?</h1>
         <div class="video-box-intro">
-            <!-- Đảm bảo video intro tự động lặp lại liên tục loop và autoplay -->
             <video id="intro-video" src="intro-video.mp4" autoplay loop muted playsinline controls></video>
         </div>
         <div class="btn-group">
@@ -602,9 +586,8 @@
             <button class="custom-btn primary" onclick="goToSelectStage()">Start Game ➔</button>
         </div>
     </div>
-    <!-- 2. SELECT STAGE SCREEN -->
+    <!-- 2. SELECT STAGE SCREEN (Đã bỏ chữ dọc, khung ảnh cân đối gần full màn hình) -->
     <div id="select-screen" class="screen" onclick="handleScreenClick(event)">
-        <div class="vertical-title title-exact-match">SELECT STAGE</div>
         <div class="stages-scroll-area" id="stages-scroll-container">
             <!-- EASY -->
             <div class="stage-card-item">
@@ -658,10 +641,9 @@
     <!-- 5. RESULT MEDIA & COMMENT SCREEN (YES/NO) -->
     <div id="result-media-screen" class="screen">
         <div class="video-box" id="result-video-box" style="width: 100%;">
-            <!-- Video YES/NO tự động lặp lại liên tục loop -->
             <video id="result-video-player" controls autoplay loop playsinline></video>
         </div>
-        <!-- Khung bình luận mặc định ẩn, bấm nút hành động lần 1 mới hiện -->
+        <!-- Khung bình luận nằm ở giữa Video và Nút bấm khi bấm lần 1 -->
         <div class="comment-section-box" id="comment-box-elem" style="display: none;">
             <h3 class="title-exact-match" style="font-size: 0.95rem;">LEAVE YOUR COMMENTS</h3>
             <input type="text" id="user-name-input" class="name-input font-vietnamese" placeholder="YOUR NAME">
@@ -671,7 +653,7 @@
             </div>
             <div class="comments-list font-vietnamese" id="comments-list-container"></div>
         </div>
-        <button class="custom-btn primary" id="bottom-action-btn" onclick="handleBottomAction()" style="width: 100%; margin-bottom: 15px; flex-shrink: 0;">EM CHIP CAM ON</button>
+        <button class="custom-btn primary" id="bottom-action-btn" onclick="handleBottomAction()" style="width: 100%; margin-top: auto; flex-shrink: 0;">EM CHIP CAM ON</button>
     </div>
 </div>
 <!-- ADMIN CONFIGURATION MODAL -->
@@ -682,12 +664,13 @@
             <button onclick="closeAdmin()" style="background:none; border:none; color:#fff; font-size:1.1rem; cursor:pointer;">✕</button>
         </div>
         <div class="admin-tabs">
-            <button class="admin-tab-btn active" onclick="switchAdminTab(0)">Intro & Level Hover</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab(1)">Stage 1(EASY)</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab(2)">Stage 2(MEDIUM)</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab(3)">Stage 3(HARD)</button>
+            <button class="admin-tab-btn active" onclick="switchAdminTab(0)">Intro & Hover</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(1)">Stage 1</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(2)">Stage 2</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(3)">Stage 3</button>
             <button class="admin-tab-btn" onclick="switchAdminTab(4)">Stage Bonus</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab(5)">Comments Manager</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(5)">Test YES/NO</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(6)">Comments</button>
         </div>
         <div class="admin-section active">
             <div style="background:#23182d; padding:10px; border-radius:12px;">
@@ -712,6 +695,14 @@
         <div class="admin-section">
             <p style="font-size:0.8rem;">Stage Bonus BGM & Card Configuration</p>
             <button class="custom-btn primary" onclick="startStage(4)">Test Run Stage Bonus</button>
+        </div>
+        <!-- Tab Test Video YES/NO mới bổ sung trong Admin -->
+        <div class="admin-section">
+            <p style="font-size:0.8rem;">Test nhanh Video Kết Quả:</p>
+            <div style="display:flex; gap:10px;">
+                <button class="custom-btn primary" onclick="showResultScreen('yes')">Test YES Slide</button>
+                <button class="custom-btn primary" onclick="showResultScreen('no')">Test NO Slide</button>
+            </div>
         </div>
         <div class="admin-section">
             <p style="font-size:0.8rem;">Quản lý và Xóa riêng lẻ bình luận người chơi:</p>
@@ -818,9 +809,8 @@
     let actionClickCount = 0;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    // LocalStorage quản lý bình luận vĩnh viễn không mất khi F5
     function loadComments() {
-        const saved = localStorage.getItem('seonghyeon_comments_v5');
+        const saved = localStorage.getItem('seonghyeon_comments_v6');
         if (saved) {
             try { commentsData = JSON.parse(saved); } catch(e) { commentsData = []; }
         } else {
@@ -831,7 +821,7 @@
         }
     }
     function saveComments() {
-        localStorage.setItem('seonghyeon_comments_v5', JSON.stringify(commentsData));
+        localStorage.setItem('seonghyeon_comments_v6', JSON.stringify(commentsData));
     }
 
     function playSoundEffect(type) {
@@ -885,13 +875,20 @@
     }
 
     function goToScreen(screenId) {
-        // Tắt toàn bộ video intro nếu rời khỏi intro
+        // Dừng triệt để video kết quả YES/NO khi rời khỏi màn hình này
+        const resultVid = document.getElementById('result-video-player');
+        if (screenId !== 'result-media-screen') {
+            resultVid.pause();
+            resultVid.currentTime = 0;
+        }
+
         const introVid = document.getElementById('intro-video');
         if (screenId !== 'intro-screen') {
             introVid.pause();
         } else {
             introVid.play().catch(e => {});
         }
+
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
         if(screenId !== 'gameplay-screen' && currentBgmAudio) {
@@ -1089,7 +1086,7 @@
         }
     }
 
-    // Kết quả YES/NO: Video tự lặp lại (loop), ẩn khung cmt ban đầu
+    // Kết quả YES/NO: Mặc định căn giữa video, ẩn khung bình luận
     function showResultScreen(choice) {
         currentVoteChoice = choice;
         actionClickCount = 0;
@@ -1100,11 +1097,9 @@
         vidPlayer.play().catch(e => {});
 
         const screen = document.getElementById('result-media-screen');
-        screen.style.justifyContent = 'flex-start';
-        const vidBox = document.getElementById('result-video-box');
-        vidBox.style.display = 'flex';
+        screen.style.justifyContent = 'center'; // Video nằm chính giữa chiều dọc
         
-        // Ẩn khung bình luận ở lần đầu xuất hiện slide
+        // Ẩn khung bình luận ban đầu
         document.getElementById('comment-box-elem').style.display = 'none';
 
         const bottomBtn = document.getElementById('bottom-action-btn');
@@ -1118,12 +1113,10 @@
             actionClickCount = 0;
             goToScreen('intro-screen');
         } else {
-            const vidBox = document.getElementById('result-video-box');
-            vidBox.style.display = 'none';
             const screen = document.getElementById('result-media-screen');
-            screen.style.justifyContent = 'center';
+            screen.style.justifyContent = 'flex-start'; // Trả về dạng cuộn để hiển thị đủ video, khung cmt và nút bấm
             
-            // Bấm lần 1 hiện khung bình luận
+            // Bấm lần 1: Hiển thị khung bình luận xen kẽ giữa video và nút bấm
             const commentBox = document.getElementById('comment-box-elem');
             commentBox.style.display = 'flex';
             commentBox.scrollIntoView({ behavior: 'smooth' });
@@ -1149,7 +1142,6 @@
         renderComments();
     }
 
-    // Sắp xếp bình luận: Nhiều tym nhất lên đầu
     function getSortedComments() {
         return [...commentsData].sort((a, b) => (b.likes || 0) - (a.likes || 0));
     }
@@ -1167,9 +1159,10 @@
             if (c.replies && c.replies.length > 0) {
                 repliesHtml = '<div class="reply-container">';
                 c.replies.forEach((rep, rIndex) => {
+                    // Cú pháp hoàn chỉnh: tên người reply + voted YES/NO kèm quote @
                     repliesHtml += `
                         <div class="reply-item">
-                            <span><b>@${rep.replyTo || 'Admin'}:</b> ${rep.text}</span>
+                            <span><b>${rep.name} <span class="voted-badge ${rep.vote === 'no' ? 'no' : ''}">voted ${rep.vote.toUpperCase()}</span></b>: @${rep.replyTo} ${rep.text}</span>
                             <button onclick="deleteReply(${c.id}, ${rIndex})" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-weight:bold;">✕</button>
                         </div>
                     `;
@@ -1239,8 +1232,10 @@
         if(replyText && replyText.trim() !== '') {
             const comment = commentsData.find(c => c.id === id);
             if(!comment.replies) comment.replies = [];
+            const replierName = document.getElementById('user-name-input').value.trim() || "Guest";
             comment.replies.push({
-                name: document.getElementById('user-name-input').value.trim() || "Guest",
+                name: replierName,
+                vote: currentVoteChoice,
                 replyTo: targetName,
                 text: replyText.trim()
             });
@@ -1258,7 +1253,6 @@
         }
     }
 
-    // Quản lý Admin xóa bình luận riêng lẻ
     function renderAdminCommentsList() {
         const container = document.getElementById('admin-comments-manage-list');
         if(!container) return;
@@ -1299,7 +1293,7 @@
             t.classList.toggle('active', i === index);
             sections[i].classList.toggle('active', i === index);
         });
-        if(index === 5) {
+        if(index === 6) {
             renderAdminCommentsList();
         }
     }
