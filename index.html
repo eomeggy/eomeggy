@@ -7,7 +7,7 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts for Bold Bubble Display (Titan One) & Be Vietnam Pro for Comments (Tiếng Việt) -->
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;900&amp;family=Titan+One&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;900&amp;family=Titan+One&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Titan One', cursive, sans-serif;
@@ -248,11 +248,25 @@
                 <button id="tab-btn-s4" onclick="setUploadTab('s4')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/15 whitespace-nowrap">
                     Stage Bonus (BONUS)
                 </button>
-                <button id="tab-btn-result" onclick="setUploadTab('result')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-teal-400 text-stone-900 whitespace-nowrap shadow">
+                <button id="tab-btn-result" onclick="setUploadTab('result')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/15 whitespace-nowrap">
                     Result (YES / NO)
+                </button>
+                <button id="tab-btn-comments" onclick="setUploadTab('comments')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-teal-400 text-stone-900 whitespace-nowrap shadow">
+                    Comments (Admin)
                 </button>
             </div>
             <div class="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar space-y-6">
+                <!-- TAB COMMENTS (ADMIN SETTING) -->
+                <div id="tab-sec-comments" class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="font-black text-teal-300 text-sm block">ADMIN COMMENT MODERATION</span>
+                            <span class="text-xs text-gray-400 font-vietnamese">Admin có toàn quyền xóa bỏ bất kỳ bình luận hoặc phản hồi nào của người chơi.</span>
+                        </div>
+                    </div>
+                    <div id="admin-comments-manage-list" class="space-y-3"></div>
+                </div>
+                <!-- CÁC TAB CŨ GIỮ NGUYÊN -->
                 <div id="tab-sec-intro" class="space-y-5 hidden">
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
                         <div class="space-y-2 flex-1">
@@ -365,7 +379,7 @@
                     </div>
                     <div id="cards-grid-s4" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
                 </div>
-                <div id="tab-sec-result" class="space-y-5">
+                <div id="tab-sec-result" class="space-y-5 hidden">
                     <div class="font-black text-teal-300 text-sm mb-2">RESULT CHOICE MEDIA CONFIGURATION (YES / NO)</div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <!-- YES CONFIG -->
@@ -508,7 +522,6 @@
                 'bonus-card-16.jpg', 'bonus-card-17.jpg', 'bonus-card-18.jpg', 'bonus-card-19.jpg', 'bonus-card-20.jpg'
             ]
         };
-
         let stageMatchingPairs = {
             1: { 0: 0, 3: 0, 1: 1, 2: 1 },
             2: { 0: 0, 6: 0, 1: 1, 7: 1, 2: 2, 5: 2, 3: 3, 4: 3 },
@@ -544,6 +557,38 @@
         };
         
         let userCommentsList = [];
+        
+        // HỆ THỐNG LOCALSTORAGE VÀ QUẢN LÝ BÌNH LUẬN
+        function loadCommentsFromStorage() {
+            try {
+                const saved = localStorage.getItem('seonghyeon_game_comments_pc');
+                if (saved) {
+                    userCommentsList = JSON.parse(saved);
+                } else {
+                    userCommentsList = [];
+                }
+            } catch(e) {
+                userCommentsList = [];
+            }
+        }
+        
+        function saveCommentsToStorage() {
+            try {
+                localStorage.setItem('seonghyeon_game_comments_pc', JSON.stringify(userCommentsList));
+            } catch(e) {}
+        }
+
+        // ĐỊNH DANH NGƯỜI DÙNG CỤ THỂ ĐỂ PHÂN QUYỀN XÓA
+        function getMySessionId() {
+            let id = localStorage.getItem('seonghyeon_user_session_id');
+            if (!id) {
+                id = 'user_' + Math.random().toString(36.substring(2, 9));
+                localStorage.setItem('seonghyeon_user_session_id', id);
+            }
+            return id;
+        }
+
+        let mySessionId = getMySessionId();
 
         let audioUnlocked = false;
         function unlockAudio() {
@@ -556,19 +601,16 @@
         }
         window.addEventListener('click', unlockAudio, { once: true });
         window.addEventListener('touchstart', unlockAudio, { once: true });
-
         function stopAllGlobalMedia() {
             stopBGM();
             stopIntroVideoCompletely();
             [1, 2, 3].forEach(lvl => stopLevelHover(lvl));
             closeMediaDisplayModal();
         }
-
         function stopIntroVideoCompletely() {
             const wrapper = document.getElementById('intro-video-wrapper');
             if (wrapper) wrapper.innerHTML = '';
         }
-
         function recreateIntroVideoElement() {
             const wrapper = document.getElementById('intro-video-wrapper');
             if (wrapper && !wrapper.querySelector('video')) {
@@ -587,14 +629,12 @@
                 wrapper.appendChild(vid);
             }
         }
-
         let audioCtx = null;
         function getAudioContext() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (audioCtx.state === 'suspended') audioCtx.resume();
             return audioCtx;
         }
-
         function playCardFlipSound() {
             if (!soundEnabled) return;
             try {
@@ -612,7 +652,6 @@
                 osc.stop(ctx.currentTime + 0.1);
             } catch (e) {}
         }
-
         function playMatchSuccessSound() {
             if (!soundEnabled) return;
             try {
@@ -632,7 +671,6 @@
                 });
             } catch (e) {}
         }
-
         function playMatchFailSound() {
             if (!soundEnabled) return;
             try {
@@ -651,7 +689,6 @@
                 osc.stop(now + 0.25);
             } catch (e) {}
         }
-
         function playVictoryFanfareSound() {
             if (!soundEnabled) return;
             try {
@@ -677,7 +714,6 @@
                 });
             } catch (e) {}
         }
-
         function playTickSound() {
             if (!soundEnabled) return;
             try {
@@ -694,8 +730,8 @@
                 osc.stop(ctx.currentTime + 0.15);
             } catch (e) {}
         }
-
-        // RENDER COMMENTS LIST (ENGLISH & FULL REPLY VOTE NAMES - FONT TIẾNG VIỆT BE VIETNAM PRO)
+        
+        // RENDER COMMENTS LIST (CÓ LƯU LOCALSTORAGE VÀ PHÂN QUYỀN XÓA CỦA CHÍNH CHỦ)
         function renderCommentsList() {
             const listContainer = document.getElementById('comments-list');
             if (!listContainer) return;
@@ -705,28 +741,32 @@
             }
             listContainer.innerHTML = userCommentsList.map((c, index) => {
                 let voteBadge = c.vote ? ` voted ${c.vote}` : '';
+                let isMyComment = (c.authorId === mySessionId);
+                
                 let repliesHtml = (c.replies || []).map((rep, rIdx) => {
                     let repVoteBadge = rep.vote ? ` voted ${rep.vote}` : '';
+                    let isMyReply = (rep.authorId === mySessionId);
                     return `
                         <div class="bg-pink-100/60 p-2.5 rounded-xl border border-pink-200 mt-2 ml-4 flex flex-col gap-1 font-vietnamese">
                             <div class="flex items-center justify-between">
                                 <span class="font-bold text-[11px] text-[#5d223c]">↳ ${rep.name || 'Anonymous'}<span class="text-rose-600 font-normal ml-1">${repVoteBadge}</span></span>
-                                <button onclick="deleteReply(${index}, ${rIdx})" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold"><i class="fa-solid fa-xmark"></i></button>
+                                ${isMyReply ? `<button onclick="deleteReply(${index}, ${rIdx})" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold" title="Xóa phản hồi của bạn"><i class="fa-solid fa-xmark"></i></button>` : ''}
                             </div>
                             <div class="text-[11px] text-gray-700">${rep.text}</div>
                         </div>
                     `;
                 }).join('');
-
+                
                 return `
                     <div class="bg-pink-50/80 p-3 rounded-2xl border border-pink-100 flex flex-col gap-2 relative font-vietnamese">
-                        <!-- Top Header info & 3 Dots Menu -->
+                        <!-- Top Header info & 3 Dots Menu (Chỉ hiện menu sửa/xóa nếu là comment của chính người đó) -->
                         <div class="flex items-center justify-between">
                             <div class="font-bold text-xs text-[#5d223c]">
                                 ${c.name || 'Anonymous'}<span class="text-rose-600 font-normal ml-1">${voteBadge}</span>
                                 <span class="text-[10px] text-gray-400 font-normal ml-2">Just now</span>
                             </div>
                             <div class="relative">
+                                ${isMyComment ? `
                                 <button onclick="toggleCommentMenu(${index})" class="w-7 h-7 flex items-center justify-center text-gray-500 hover:text-[#5d223c] rounded-full hover:bg-pink-100/50 transition">
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
@@ -738,13 +778,11 @@
                                     <button onclick="deleteComment(${index})" class="text-left px-3 py-1.5 text-rose-600 hover:bg-pink-50 rounded-lg flex items-center gap-1.5 font-bold">
                                         <i class="fa-solid fa-trash text-[10px]"></i> Delete
                                     </button>
-                                </div>
+                                </div>` : ''}
                             </div>
                         </div>
-
                         <!-- Content -->
                         <div class="text-xs text-gray-800">${c.text}</div>
-
                         <!-- React & Reply Action Bar -->
                         <div class="flex items-center gap-5 text-xs text-gray-600 pt-1 border-t border-pink-100/80 mt-1">
                             <button onclick="toggleLikeComment(${index})" class="flex items-center gap-1.5 hover:text-rose-600 transition">
@@ -756,7 +794,6 @@
                                 <span class="font-bold">${(c.replies || []).length}</span>
                             </button>
                         </div>
-
                         <!-- Reply Input Box (Hidden by default) -->
                         <div id="reply-box-${index}" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-pink-200">
                             <input type="text" id="reply-name-${index}" placeholder="Your name..." class="w-full px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5d223c] font-bold focus:outline-none focus:ring-1 focus:ring-[#5d223c]">
@@ -765,7 +802,6 @@
                                 <button onclick="submitReply(${index})" class="px-3 py-1.5 bg-[#5d223c] text-white text-xs font-bold rounded-xl hover:bg-[#461a2d] transition shadow">Send</button>
                             </div>
                         </div>
-
                         <!-- List of Replies -->
                         <div class="space-y-1">
                             ${repliesHtml}
@@ -774,13 +810,14 @@
                 `;
             }).join('');
         }
-
+        
         function postUserComment() {
             const nameEl = document.getElementById('comment-name');
             const textEl = document.getElementById('comment-text');
             if (!textEl || !textEl.value.trim()) return;
             
             const newComment = {
+                authorId: mySessionId,
                 name: nameEl && nameEl.value.trim() ? nameEl.value.trim() : 'Anonymous',
                 vote: currentChoiceVote,
                 text: textEl.value.trim(),
@@ -789,10 +826,11 @@
                 replies: []
             };
             userCommentsList.unshift(newComment);
+            saveCommentsToStorage();
             textEl.value = '';
             renderCommentsList();
         }
-
+        
         function toggleCommentMenu(index) {
             document.querySelectorAll('[id^="comment-menu-"]').forEach((el, idx) => {
                 if (idx !== index) el.classList.add('hidden');
@@ -800,21 +838,23 @@
             const menu = document.getElementById(`comment-menu-${index}`);
             if (menu) menu.classList.toggle('hidden');
         }
-
+        
         function deleteComment(index) {
             userCommentsList.splice(index, 1);
+            saveCommentsToStorage();
             renderCommentsList();
         }
-
+        
         function editComment(index) {
             const currentCmt = userCommentsList[index];
             const newText = prompt("Edit your comment:", currentCmt.text);
             if (newText !== null && newText.trim() !== "") {
                 userCommentsList[index].text = newText.trim();
+                saveCommentsToStorage();
                 renderCommentsList();
             }
         }
-
+        
         function toggleLikeComment(index) {
             const cmt = userCommentsList[index];
             if (cmt.liked) {
@@ -824,9 +864,10 @@
                 cmt.liked = true;
                 cmt.likes = (cmt.likes || 0) + 1;
             }
+            saveCommentsToStorage();
             renderCommentsList();
         }
-
+        
         function toggleReplyBox(index) {
             const box = document.getElementById(`reply-box-${index}`);
             if (box) {
@@ -837,7 +878,7 @@
                 }
             }
         }
-
+        
         function submitReply(index) {
             const nameInput = document.getElementById(`reply-name-${index}`);
             const input = document.getElementById(`reply-input-${index}`);
@@ -847,17 +888,50 @@
                 userCommentsList[index].replies = [];
             }
             userCommentsList[index].replies.push({
+                authorId: mySessionId,
                 name: nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Anonymous',
                 vote: currentChoiceVote,
                 text: input.value.trim()
             });
+            saveCommentsToStorage();
             input.value = '';
             renderCommentsList();
         }
-
+        
         function deleteReply(cIndex, rIndex) {
             userCommentsList[cIndex].replies.splice(rIndex, 1);
+            saveCommentsToStorage();
             renderCommentsList();
+        }
+
+        // TAB QUẢN LÝ BÌNH LUẬN TRONG PHẦN ADMIN SETTING (CHỈ ADMIN MỚI CÓ QUYỀN XÓA TẤT CẢ)
+        function renderAdminCommentsManager() {
+            const container = document.getElementById('admin-comments-manage-list');
+            if (!container) return;
+            if (userCommentsList.length === 0) {
+                container.innerHTML = '<div class="text-xs text-gray-400 italic font-vietnamese">Chưa có bình luận nào trên hệ thống.</div>';
+                return;
+            }
+            container.innerHTML = userCommentsList.map((c, idx) => `
+                <div class="bg-[#23182d] p-3 rounded-2xl border border-purple-900/60 flex items-center justify-between gap-3 font-vietnamese">
+                    <div class="flex flex-col overflow-hidden">
+                        <span class="text-xs font-bold text-teal-300">${c.name} <span class="text-rose-400 font-normal">(${c.vote || 'YES/NO'})</span></span>
+                        <span class="text-xs text-gray-300 truncate">${c.text}</span>
+                    </div>
+                    <button onclick="adminDeleteComment(${idx})" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow transition shrink-0">
+                        Xóa cmt này
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function adminDeleteComment(idx) {
+            if (confirm("Admin có chắc chắn muốn xóa bình luận này không?")) {
+                userCommentsList.splice(idx, 1);
+                saveCommentsToStorage();
+                renderAdminCommentsManager();
+                renderCommentsList();
+            }
         }
 
         function testRunSlide(slideType, stageNum) {
@@ -875,7 +949,6 @@
                 handleBonusChoice('NO');
             }
         }
-
         function showIntroScreen() {
             stopAllGlobalMedia();
             recreateIntroVideoElement();
@@ -890,7 +963,6 @@
                 vid.play().catch(()=>{});
             }
         }
-
         function skipIntroToStageSelect() {
             stopAllGlobalMedia();
             document.getElementById('intro-screen').classList.add('hidden');
@@ -898,7 +970,6 @@
             document.getElementById('game-header').classList.add('hidden');
             document.getElementById('game-main-area').classList.add('hidden');
         }
-
         function replayIntroMainVideo() {
             recreateIntroVideoElement();
             const vid = document.getElementById('main-intro-video');
@@ -908,7 +979,6 @@
                 vid.play().catch(()=>{});
             }
         }
-
         function goToStageSelect() {
             stopTimer();
             stopAllGlobalMedia();
@@ -919,16 +989,14 @@
             document.getElementById('victory-modal').classList.add('hidden');
             document.getElementById('media-display-modal').classList.add('hidden');
         }
-
         function openUploadModal() {
             renderUploadModalGrids();
+            renderAdminCommentsManager();
             document.getElementById('upload-config-modal').classList.remove('hidden');
         }
-
         function closeUploadModal() {
             document.getElementById('upload-config-modal').classList.add('hidden');
         }
-
         function closeMediaDisplayModal() {
             const container = document.getElementById('media-display-content');
             if (container) {
@@ -946,7 +1014,6 @@
             }
             document.getElementById('media-display-modal').classList.add('hidden');
         }
-
         function playLevelHover(lvl) {
             [1, 2, 3].forEach(l => {
                 if (l !== lvl) stopLevelHover(l);
@@ -959,7 +1026,6 @@
                 vidEl.play().catch(()=>{});
             }
         }
-
         function stopLevelHover(lvl) {
             const vidEl = document.getElementById(`level-vid-${lvl}`);
             if (vidEl) {
@@ -968,7 +1034,6 @@
                 vidEl.classList.add('hidden');
             }
         }
-
         function startGame(stage) {
             currentStage = stage;
             stopAllGlobalMedia();
@@ -987,7 +1052,6 @@
             playBGM(stage);
             setupBoard(stage);
         }
-
         function playBGM(stage) {
             const bgm = document.getElementById('stage-bgm-audio');
             if (bgm && stageBGMTracks[stage] && soundEnabled) {
@@ -998,7 +1062,6 @@
                 bgm.pause();
             }
         }
-
         function stopBGM() {
             const bgm = document.getElementById('stage-bgm-audio');
             if (bgm) {
@@ -1007,7 +1070,6 @@
                 bgm.src = '';
             }
         }
-
         function toggleSound() {
             soundEnabled = !soundEnabled;
             const icon = document.getElementById('sound-icon');
@@ -1019,7 +1081,6 @@
                 stopBGM();
             }
         }
-
         function startTimer() {
             stopTimer();
             timerInterval = setInterval(() => {
@@ -1027,19 +1088,16 @@
                 updateHeaderStats();
             }, 1000);
         }
-
         function stopTimer() {
             if (timerInterval) clearInterval(timerInterval);
             if (previewInterval) clearInterval(previewInterval);
         }
-
         function updateHeaderStats() {
             const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
             const secs = (secondsElapsed % 60).toString().padStart(2, '0');
             document.getElementById('timer-display').innerText = `${mins}:${secs}`;
             document.getElementById('moves-display').innerText = movesCount;
         }
-
         function setupBoard(stage) {
             const board = document.getElementById('game-board');
             if (!board) return;
@@ -1061,13 +1119,11 @@
                 totalPairsInStage = 10;
                 board.className = "grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 w-full max-w-2xl mx-auto p-3";
             }
-
             deck = photos.map((imgUrl, idx) => ({
                 index: idx,
                 img: imgUrl,
                 pairId: pairsMap[idx] !== undefined ? pairsMap[idx] : idx
             }));
-
             flippedCards = [];
             matchedPairsCount = 0;
             isProcessing = true;
@@ -1091,7 +1147,6 @@
                 cardEl.onclick = () => handleCardClick(cardEl);
                 board.appendChild(cardEl);
             });
-
             let previewSeconds = stage === 4 ? 5 : 3;
             const previewEl = document.getElementById('preview-countdown');
             const previewBox = document.getElementById('preview-countdown-box');
@@ -1115,7 +1170,6 @@
                 }
             }, 1200);
         }
-
         function handleCardClick(cardEl) {
             if (isProcessing) return;
             const inner = cardEl.querySelector('.card-inner');
@@ -1133,7 +1187,6 @@
                 const pair1 = c1.dataset.pair;
                 const pair2 = c2.dataset.pair;
                 const isMatch = (pair1 === pair2) && (c1.dataset.index !== c2.dataset.index);
-
                 if (isMatch) {
                     matchedPairsCount++;
                     playMatchSuccessSound();
@@ -1153,7 +1206,6 @@
                 }
             }
         }
-
         function handleStageVictory() {
             stopTimer();
             stopBGM();
@@ -1180,14 +1232,12 @@
             }
             modal.classList.remove('hidden');
         }
-
         function handleVictoryNext() {
             document.getElementById('victory-modal').classList.add('hidden');
             if (currentStage === 1) startGame(2);
             else if (currentStage === 2) startGame(3);
             else if (currentStage === 3) startGame(4);
         }
-
         function handleBonusChoice(choice) {
             document.getElementById('victory-modal').classList.add('hidden');
             const modal = document.getElementById('media-display-modal');
@@ -1196,10 +1246,8 @@
             const commentBox = document.getElementById('comment-section-box');
             
             currentChoiceVote = choice.toUpperCase(); 
-
             const nameInput = document.getElementById('comment-name');
             if (nameInput) nameInput.value = '';
-
             container.innerHTML = '';
             if (commentBox) commentBox.classList.add('hidden');
             resultActionState = 0;
@@ -1225,7 +1273,6 @@
             renderCommentsList();
             modal.classList.remove('hidden');
         }
-
         function handleResultActionButtonClick() {
             if (resultActionState === 0) {
                 resultActionState = 1;
@@ -1248,9 +1295,8 @@
                 goToStageSelect();
             }
         }
-
         function setUploadTab(tabKey) {
-            const tabs = ['intro', 's1', 's2', 's3', 's4', 'result'];
+            const tabs = ['intro', 's1', 's2', 's3', 's4', 'result', 'comments'];
             tabs.forEach(t => {
                 const sec = document.getElementById(`tab-sec-${t}`);
                 const btn = document.getElementById(`tab-btn-${t}`);
@@ -1261,8 +1307,11 @@
             const activeBtn = document.getElementById(`tab-btn-${tabKey}`);
             if (activeSec) activeSec.classList.remove('hidden');
             if (activeBtn) activeBtn.className = "px-4 py-2 text-xs font-extrabold rounded-xl bg-teal-400 text-stone-900 whitespace-nowrap shadow";
+            
+            if (tabKey === 'comments') {
+                renderAdminCommentsManager();
+            }
         }
-
         function renderUploadModalGrids() {
             [1, 2, 3, 4].forEach(s => {
                 const bgmLabel = document.getElementById(`bgm-label-${s}`);
@@ -1309,7 +1358,6 @@
                 grid.appendChild(vicCard);
             });
         }
-
         function uploadIntroVideo(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -1318,7 +1366,6 @@
             if (msg) msg.classList.add('hidden');
             recreateIntroVideoElement();
         }
-
         function uploadLevelHoverMedia(e, lvl, type) {
             const file = e.target.files[0];
             if (!file) return;
@@ -1326,7 +1373,6 @@
             if (type === 'img') levelHoverMedia[lvl].img = url;
             if (type === 'vid') levelHoverMedia[lvl].vid = url;
         }
-
         function uploadStageBGM(e, stage) {
             const file = e.target.files[0];
             if (!file) return;
@@ -1337,28 +1383,24 @@
                 playBGM(stage);
             }
         }
-
         function uploadCoverPhoto(e, stage) {
             const file = e.target.files[0];
             if (!file) return;
             stageCovers[stage] = URL.createObjectURL(file);
             renderUploadModalGrids();
         }
-
         function uploadCardPhoto(e, stage, idx) {
             const file = e.target.files[0];
             if (!file) return;
             stageCardPhotos[stage][idx] = URL.createObjectURL(file);
             renderUploadModalGrids();
         }
-
         function uploadVictoryPhoto(e, stage) {
             const file = e.target.files[0];
             if (!file) return;
             stageVictoryImages[stage] = URL.createObjectURL(file);
             renderUploadModalGrids();
         }
-
         function toggleResultMediaType(choiceKey) {
             const key = choiceKey.toUpperCase();
             const selectEl = document.getElementById(`result-type-${choiceKey.toLowerCase()}`);
@@ -1374,7 +1416,6 @@
                 if (imgBox) imgBox.classList.remove('hidden');
             }
         }
-
         function uploadResultMedia(e, choiceKey, fileType) {
             const file = e.target.files[0];
             if (!file) return;
@@ -1384,12 +1425,13 @@
             if (fileType === 'image') resultChoiceMedia[key].image = url;
             if (fileType === 'audio') resultChoiceMedia[key].audio = url;
         }
-
+        
         window.onload = function() {
+            loadCommentsFromStorage();
             showIntroScreen();
             renderCommentsList();
         };
-
+        
         window.addEventListener('keydown', function(e) {
             if (e.key === 'F2') {
                 const btn = document.getElementById('admin-floating-btn');
