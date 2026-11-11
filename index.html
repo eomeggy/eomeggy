@@ -28,7 +28,7 @@
         .titan-font {
             font-family: 'Titan One', cursive;
         }
-        /* Soft blurred glow / shadow effect for titles */
+        /* Glow titles */
         .glow-title {
             font-family: 'Titan One', cursive;
             color: #5c1d30;
@@ -39,7 +39,7 @@
             color: #6b213a;
             text-shadow: 0 0 8px rgba(230, 161, 180, 0.7), 1px 1px 3px rgba(0,0,0,0.15);
         }
-        /* Hide scrollbars completely */
+        /* Scrollbars hidden */
         .hide-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -48,7 +48,7 @@
             display: none;
         }
 
-        /* Vertical text styling without border wrapper */
+        /* Vertical text styling */
         .select-stage-vertical-text {
             font-family: 'Titan One', cursive;
             color: #6b213a;
@@ -58,7 +58,7 @@
             letter-spacing: 0.18em;
         }
 
-        /* Card Flip Animation */
+        /* Card Flip 3D */
         .perspective-1000 {
             perspective: 1000px;
         }
@@ -80,27 +80,30 @@
         .animate-soft-pulse {
             animation: soft-pulse 1.5s infinite ease-in-out;
         }
+
+        /* Strict inline video playback styles */
+        video {
+            object-fit: cover;
+            -webkit-transform: translateZ(0);
+        }
     </style>
 </head>
 <body class="flex justify-center items-center h-screen w-screen bg-[#f7d6e0]">
 
-    <!-- Mobile Vertical Frame Container -->
+    <!-- Mobile Vertical Container -->
     <div id="app-container" class="relative w-full max-w-[420px] h-full sm:h-[860px] bg-[#d37b95] sm:rounded-[36px] shadow-2xl overflow-hidden flex flex-col border-0 sm:border-8 sm:border-[#b85d77]">
 
         <!-- TOP BAR / HEADER -->
         <div id="top-bar" class="hidden px-3 py-2 bg-[#fce7f0]/95 backdrop-blur-md flex justify-between items-center z-30 shadow-sm border-b border-[#d18299]/30 shrink-0">
-            <!-- Left: Select Stage Pill -->
             <button id="header-select-btn" class="bg-[#5c1d30] text-white px-3 py-1.5 rounded-2xl text-[11px] titan-font shadow flex items-center gap-1.5 hover:bg-[#73253d] active:scale-95 transition">
                 <i class="fa-solid fa-house text-xs"></i>
                 <span class="leading-none text-center">SELECT<br>STAGE</span>
             </button>
 
-            <!-- Center: Stage Name -->
             <div id="stage-title-header" class="glow-subtitle text-xs sm:text-sm tracking-wide text-center uppercase">
                 STAGE 1: SKEPTICAL
             </div>
 
-            <!-- Right: Timer, Paw Counter, Audio Toggle -->
             <div class="flex items-center gap-2 text-[11px] titan-font text-[#5c1d30]">
                 <div class="flex items-center gap-1"><i class="fa-solid fa-clock text-xs"></i> <span id="timer-display">00:00</span></div>
                 <div class="flex items-center gap-1"><i class="fa-solid fa-paw text-xs"></i> <span id="matches-display">0/2</span></div>
@@ -110,7 +113,7 @@
             </div>
         </div>
 
-        <!-- MAIN VIEW SLIDES PORT -->
+        <!-- MAIN VIEW PORT -->
         <div id="slides-viewport" class="relative flex-1 overflow-hidden flex flex-col w-full h-full">
 
             <!------------------------------------------------ -->
@@ -122,8 +125,9 @@
                 <div class="text-center my-auto w-full flex flex-col items-center z-20">
                     <h1 class="glow-title text-2xl sm:text-3xl mb-4 tracking-wider text-center">IS SEONGHYEON A CAT?</h1>
                     
-                    <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-lg border-4 border-white/70 mb-6">
-                        <video id="intro-video" class="w-full h-full object-cover" autoplay muted playsinline loop>
+                    <!-- Intro Video Frame -->
+                    <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-lg border-4 border-white/70 mb-6 pointer-events-auto">
+                        <video id="intro-video" class="w-full h-full object-cover" autoplay muted playsinline webkit-playsinline disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" loop>
                             <source src="intro-video.mp4" type="video/mp4">
                         </video>
                     </div>
@@ -147,36 +151,35 @@
             <!------------------------------------------------ -->
             <div id="slide-select-stage" class="absolute inset-0 flex p-3 bg-[#d37b95] z-10 transition-all duration-300 hidden overflow-hidden">
                 
-                <!-- Scroll Container for Polaroid Cards -->
                 <div id="stages-scroll-container" class="hide-scrollbar flex-1 overflow-y-auto pr-2 space-y-6 flex flex-col items-center py-10 snap-y snap-mandatory">
                     
-                    <!-- EASY (Stage 1) -->
+                    <!-- EASY -->
                     <div class="stage-card-wrapper w-full max-w-[260px] bg-[#fff6f8] p-3 pt-3 pb-2 rounded-3xl shadow-xl cursor-pointer snap-center flex flex-col items-center border-4 border-white active:scale-95 transition" data-stage="1">
                         <div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-black/10 shadow-inner">
                             <img src="stage1-easy-img.jpg" alt="Easy" class="stage-img w-full h-full object-cover" onerror="this.src='https://placehold.co/300x300/e6a1b4/5c1d30?text=EASY+IMAGE'">
-                            <video class="stage-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300" muted loop playsinline preload="none">
+                            <video class="stage-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300" muted loop playsinline webkit-playsinline disablePictureInPicture preload="none">
                                 <source src="stage1-easy-video.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="mt-2 text-center titan-font text-[#5c1d30] text-lg tracking-wider">EASY</div>
                     </div>
 
-                    <!-- MEDIUM (Stage 2) -->
+                    <!-- MEDIUM -->
                     <div class="stage-card-wrapper w-full max-w-[260px] bg-[#fff6f8] p-3 pt-3 pb-2 rounded-3xl shadow-xl cursor-pointer snap-center flex flex-col items-center border-4 border-white active:scale-95 transition" data-stage="2">
                         <div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-black/10 shadow-inner">
                             <img src="stage2-medium-img.jpg" alt="Medium" class="stage-img w-full h-full object-cover" onerror="this.src='https://placehold.co/300x300/e6a1b4/5c1d30?text=MEDIUM+IMAGE'">
-                            <video class="stage-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300" muted loop playsinline preload="none">
+                            <video class="stage-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300" muted loop playsinline webkit-playsinline disablePictureInPicture preload="none">
                                 <source src="stage2-medium-video.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="mt-2 text-center titan-font text-[#5c1d30] text-lg tracking-wider">MEDIUM</div>
                     </div>
 
-                    <!-- HARD (Stage 3) -->
+                    <!-- HARD -->
                     <div class="stage-card-wrapper w-full max-w-[260px] bg-[#fff6f8] p-3 pt-3 pb-2 rounded-3xl shadow-xl cursor-pointer snap-center flex flex-col items-center border-4 border-white active:scale-95 transition" data-stage="3">
                         <div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-black/10 shadow-inner">
                             <img src="stage3-hard-img.jpg" alt="Hard" class="stage-img w-full h-full object-cover" onerror="this.src='https://placehold.co/300x300/e6a1b4/5c1d30?text=HARD+IMAGE'">
-                            <video class="stage-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300" muted loop playsinline preload="none">
+                            <video class="stage-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300" muted loop playsinline webkit-playsinline disablePictureInPicture preload="none">
                                 <source src="stage3-hard-video.mp4" type="video/mp4">
                             </video>
                         </div>
@@ -185,7 +188,6 @@
 
                 </div>
 
-                <!-- Vertical Text "SELECT STAGE" -->
                 <div class="w-9 flex items-center justify-center pl-1">
                     <div class="select-stage-vertical-text text-xl uppercase select-none pointer-events-none">
                         SELECT STAGE
@@ -199,15 +201,12 @@
             <!------------------------------------------------ -->
             <div id="slide-gameplay" class="absolute inset-0 flex flex-col p-2 bg-[#d37b95] z-10 hidden overflow-hidden justify-between">
                 
-                <!-- Floating Preview Banner -->
                 <div id="preview-banner" class="mx-auto my-1 bg-white/95 text-[#5c1d30] px-4 py-1 rounded-full shadow-md text-center titan-font text-xs flex items-center justify-center gap-2 animate-soft-pulse z-20 border border-pink-200 shrink-0">
                     <span>Preview Time:</span> <span id="preview-countdown" class="text-sm text-[#73253d]">3s</span>
                 </div>
 
-                <!-- Game Board Grid -->
                 <div class="flex-1 flex items-center justify-center px-1 py-1 w-full overflow-hidden">
                     <div id="game-board-grid" class="grid w-full h-full max-w-[380px] mx-auto items-center justify-center gap-2">
-                        <!-- Dynamic Cards generated by JS -->
                     </div>
                 </div>
 
@@ -232,7 +231,6 @@
                     </p>
 
                     <div id="victory-buttons-container" class="w-full flex gap-3 justify-center mt-2">
-                        <!-- Dynamic buttons for standard stage transition / Bonus YES-NO -->
                     </div>
                 </div>
             </div>
@@ -243,22 +241,20 @@
             <div id="slide-choice-result" class="absolute inset-0 flex flex-col p-4 bg-[#d37b95] z-10 hidden overflow-y-auto hide-scrollbar">
                 <div class="my-auto flex flex-col items-center w-full max-w-sm mx-auto transition-all duration-300" id="choice-slide-content">
                     
-                    <!-- Video Container -->
+                    <!-- Result Video Frame -->
                     <div id="choice-video-container" class="w-full bg-black rounded-2xl overflow-hidden shadow-xl mb-3 transition-all duration-300">
-                        <video id="choice-result-video" class="w-full max-h-[220px] object-contain" autoplay controls playsinline>
+                        <video id="choice-result-video" class="w-full max-h-[220px] object-contain" autoplay playsinline webkit-playsinline disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" controls>
                             <source src="" type="video/mp4">
                         </video>
                     </div>
 
-                    <!-- Comment Section Box -->
+                    <!-- Comment Section Container -->
                     <div id="comment-section-container" class="w-full bg-white/95 backdrop-blur-md rounded-3xl p-4 shadow-lg mb-4 hidden">
                         <h3 class="glow-subtitle text-xs uppercase mb-3 text-center tracking-wider">LEAVE YOUR COMMENTS</h3>
                         
-                        <!-- Input Form -->
                         <div class="space-y-2 mb-3">
                             <input type="text" id="comment-name" placeholder="YOUR NAME..." class="w-full px-3 py-2 rounded-xl bg-white border border-[#d18299]/50 text-xs focus:outline-none focus:ring-2 focus:ring-[#5c1d30]">
                             
-                            <!-- Inline Comment Input with SEND button -->
                             <div class="relative flex items-center">
                                 <input type="text" id="comment-text" placeholder="WRITE COMMENTS..." class="w-full pl-3 pr-16 py-2 rounded-xl bg-white border border-[#d18299]/50 text-xs focus:outline-none focus:ring-2 focus:ring-[#5c1d30]">
                                 <button type="button" id="btn-submit-comment" class="absolute right-1 bg-[#5c1d30] text-white px-3 py-1 rounded-lg titan-font text-[10px] hover:bg-[#73253d] transition">
@@ -267,19 +263,18 @@
                             </div>
                         </div>
 
-                        <!-- Active Reply Indicator -->
+                        <!-- Active Reply Indicator Bar -->
                         <div id="reply-indicator" class="hidden items-center justify-between bg-pink-100 text-[#5c1d30] text-[10px] px-2.5 py-1 rounded-lg mb-2">
                             <span>Replying to <strong id="reply-target-name">User</strong></span>
                             <button id="btn-cancel-reply" class="text-red-500 font-bold ml-2"><i class="fa-solid fa-xmark"></i></button>
                         </div>
 
-                        <!-- Comments Feed -->
-                        <div id="comments-feed" class="space-y-2 max-h-[180px] overflow-y-auto pr-1 hide-scrollbar">
-                            <!-- Dynamic Comments injected here -->
+                        <!-- Nested & Sorted Comments Feed -->
+                        <div id="comments-feed" class="space-y-3 max-h-[220px] overflow-y-auto pr-1 hide-scrollbar">
                         </div>
                     </div>
 
-                    <!-- Primary Action Button -->
+                    <!-- Action Button -->
                     <button id="choice-bottom-btn" class="w-full bg-[#5c1d30] text-white py-3 rounded-2xl titan-font text-xs shadow-md hover:bg-[#73253d] transition active:scale-95">
                         EM CHIP CAM ON
                     </button>
@@ -289,7 +284,7 @@
 
         </div>
 
-        <!-- Hidden Admin Gear (Press F2) -->
+        <!-- Hidden Admin Gear Icon -->
         <div id="admin-gear-btn" class="absolute top-3 right-3 bg-[#5c1d30] text-white w-8 h-8 rounded-full shadow-lg flex items-center justify-center cursor-pointer z-50 hidden hover:scale-110 transition">
             <i class="fa-solid fa-gear text-xs"></i>
         </div>
@@ -340,9 +335,9 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT ENGINE -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Audio Synthesizer Fallback Engine for Sound Effects
+        // Web Audio Synthesizer Engine
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         function playSynthesizedSound(type) {
@@ -395,7 +390,7 @@
         }
 
         /* ========================================================
-         * GAME STATE & CONFIGURATION
+         * STAGE CONFIGURATIONS & EXACT CARD FILE NAMES
          * ======================================================== */
         let currentSlideId = 'slide-intro';
         let currentStage = 1;
@@ -515,32 +510,28 @@
             }
         };
 
-        let commentsData = JSON.parse(localStorage.getItem('seonghyeon_comments') || '[]');
+        // Comments Store (Hierarchical)
+        let commentsData = JSON.parse(localStorage.getItem('seonghyeon_comments_v2') || '[]');
 
         /* ========================================================
-         * INITIALIZATION & EVENT BINDINGS
+         * INITIALIZATION & EVENT LISTENERS
          * ======================================================== */
         window.addEventListener('DOMContentLoaded', () => {
-            // Bind Intro Buttons
             document.getElementById('btn-replay-intro').addEventListener('click', replayIntro);
             document.getElementById('btn-start-game').addEventListener('click', goToSelectStage);
             
-            // Header buttons
             document.getElementById('header-select-btn').addEventListener('click', goToSelectStage);
             document.getElementById('audio-toggle-btn').addEventListener('click', toggleAudio);
 
-            // Choice slide & comment controls
             document.getElementById('choice-bottom-btn').addEventListener('click', handleChoiceButtonAction);
             document.getElementById('btn-submit-comment').addEventListener('click', submitComment);
             document.getElementById('btn-cancel-reply').addEventListener('click', cancelReply);
 
-            // Admin buttons
             document.getElementById('btn-cancel-passcode').addEventListener('click', closePasscodeModal);
             document.getElementById('btn-verify-passcode').addEventListener('click', verifyAdminPasscode);
             document.getElementById('btn-close-admin-dash').addEventListener('click', closeAdminDashboard);
             document.getElementById('admin-gear-btn').addEventListener('click', openAdminModal);
 
-            // Bind Stage Polaroid Clicks
             document.querySelectorAll('.stage-card-wrapper').forEach(wrapper => {
                 wrapper.addEventListener('click', () => {
                     const stg = parseInt(wrapper.dataset.stage);
@@ -548,16 +539,12 @@
                 });
             });
 
-            // Play intro video safely
             const introVid = document.getElementById('intro-video');
             introVid.play().catch(e => {});
 
             initStageScrollObserver();
         });
 
-        /* ========================================================
-         * NAVIGATION & SLIDE SWITCHING
-         * ======================================================== */
         function switchSlide(slideId) {
             currentSlideId = slideId;
             const slides = ['slide-intro', 'slide-select-stage', 'slide-gameplay', 'slide-victory', 'slide-choice-result'];
@@ -604,7 +591,7 @@
         }
 
         /* ========================================================
-         * STAGE SCROLL PREVIEW OBSERVER
+         * SELECT STAGE SCROLL PREVIEW OBSERVER
          * ======================================================== */
         let scrollObserver = null;
         function initStageScrollObserver() {
@@ -642,7 +629,7 @@
         }
 
         /* ========================================================
-         * GAMEPLAY & 1:1 SQUARE CARD GRID SYSTEM
+         * GAMEPLAY & CARDS LOGIC
          * ======================================================== */
         function startStage(stageNum) {
             currentStage = stageNum;
@@ -671,6 +658,7 @@
 
             if (gameTimerInterval) clearInterval(gameTimerInterval);
 
+            // Sequential order from top-left to bottom-right
             let cardDeck = config.cards.map(c => ({ cardId: c.id, file: c.file }));
 
             grid.innerHTML = '';
@@ -700,6 +688,7 @@
             const countdownEl = document.getElementById('preview-countdown');
             banner.classList.remove('hidden');
             
+            // Show cards during preview
             const cardElements = grid.querySelectorAll('.perspective-1000 > div');
             cardElements.forEach(el => el.classList.add('rotate-y-180'));
 
@@ -848,7 +837,7 @@
         }
 
         /* ========================================================
-         * BONUS CHOICE YES/NO & COMMENTS
+         * BONUS CHOICE & NESTED SORTED COMMENTS
          * ======================================================== */
         function handleBonusChoice(choice) {
             currentChoiceType = choice;
@@ -910,21 +899,32 @@
 
             const newComment = {
                 id: Date.now(),
+                parentId: replyingToCommentId || null,
                 name: nameInput.value.trim(),
                 text: textInput.value.trim(),
                 choice: currentChoiceType.toUpperCase(),
+                timestamp: Date.now(),
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                 likes: 0,
-                liked: false,
-                replyTo: replyingToCommentId ? commentsData.find(c => c.id === replyingToCommentId)?.name : null
+                liked: false
             };
 
-            commentsData.unshift(newComment);
-            localStorage.setItem('seonghyeon_comments', JSON.stringify(commentsData));
+            commentsData.push(newComment);
+            localStorage.setItem('seonghyeon_comments_v2', JSON.stringify(commentsData));
 
             textInput.value = '';
             cancelReply();
             renderCommentsFeed();
+        }
+
+        // Sorting helper: Highest Likes first, then Newest Timestamp first
+        function sortComments(list) {
+            return list.sort((a, b) => {
+                if (b.likes !== a.likes) {
+                    return b.likes - a.likes;
+                }
+                return b.timestamp - a.timestamp;
+            });
         }
 
         function renderCommentsFeed() {
@@ -936,42 +936,59 @@
                 return;
             }
 
-            commentsData.forEach(cmt => {
-                const badgeColor = cmt.choice === 'YES' ? 'bg-green-600 text-white' : 'bg-red-600 text-white';
-                const replyTag = cmt.replyTo ? `<span class="text-gray-400 font-normal">replying to <strong class="text-[#5c1d30]">@${escapeHTML(cmt.replyTo)}</strong></span>` : '';
-                
-                const div = document.createElement('div');
-                div.className = 'bg-white p-2.5 rounded-xl shadow-sm text-xs relative border border-pink-100';
-                div.innerHTML = `
-                    <div class="flex justify-between items-center mb-1">
-                        <div class="flex items-center gap-1.5 flex-wrap">
-                            <span class="font-bold text-[#5c1d30] text-[11px]">${escapeHTML(cmt.name)}</span>
-                            <span class="text-[8px] px-1.5 py-0.2 rounded-full titan-font ${badgeColor}">voted ${cmt.choice}</span>
-                            ${replyTag}
-                            <span class="text-[9px] text-gray-400 ml-auto">${cmt.time}</span>
-                        </div>
-                        <div class="relative ml-1">
-                            <button onclick="toggleCommentMenu(${cmt.id})" class="text-gray-400 hover:text-black px-1">
-                                <i class="fa-solid fa-ellipsis-vertical text-[10px]"></i>
-                            </button>
-                            <div id="menu-${cmt.id}" class="absolute right-0 top-5 bg-white shadow-xl rounded-xl border py-1 hidden z-20 w-20 text-[10px]">
-                                <button onclick="editComment(${cmt.id})" class="w-full text-left px-2 py-1 hover:bg-gray-100"><i class="fa-solid fa-pen"></i> Edit</button>
-                                <button onclick="deleteComment(${cmt.id})" class="w-full text-left px-2 py-1 text-red-600 hover:bg-gray-100"><i class="fa-solid fa-trash"></i> Delete</button>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-gray-700 text-[11px] mb-1.5 leading-tight">${escapeHTML(cmt.text)}</p>
-                    <div class="flex items-center gap-4 text-[10px] text-gray-500">
-                        <button onclick="likeComment(${cmt.id})" class="flex items-center gap-1 hover:text-red-500 ${cmt.liked ? 'text-red-500 font-bold' : ''}">
-                            <i class="fa-${cmt.liked ? 'solid' : 'regular'} fa-heart"></i> <span>${cmt.likes}</span>
-                        </button>
-                        <button onclick="initiateReply(${cmt.id}, '${escapeHTML(cmt.name)}')" class="flex items-center gap-1 hover:text-[#5c1d30]">
-                            <i class="fa-solid fa-reply"></i> <span>Reply</span>
-                        </button>
-                    </div>
-                `;
-                feed.appendChild(div);
+            // Top level comments
+            const topLevel = sortComments(commentsData.filter(c => !c.parentId));
+
+            topLevel.forEach(cmt => {
+                const cmtNode = createCommentElement(cmt, false);
+                feed.appendChild(cmtNode);
+
+                // Nested Replies for this comment
+                const replies = sortComments(commentsData.filter(c => c.parentId === cmt.id));
+                if (replies.length > 0) {
+                    const repliesContainer = document.createElement('div');
+                    repliesContainer.className = "ml-5 pl-2 border-l-2 border-pink-200 space-y-2 mt-1.5";
+                    replies.forEach(r => {
+                        repliesContainer.appendChild(createCommentElement(r, true));
+                    });
+                    feed.appendChild(repliesContainer);
+                }
             });
+        }
+
+        function createCommentElement(cmt, isReply) {
+            const badgeColor = cmt.choice === 'YES' ? 'bg-green-600 text-white' : 'bg-red-600 text-white';
+            const div = document.createElement('div');
+            div.className = `bg-white p-2.5 rounded-xl shadow-sm text-xs relative border border-pink-100 ${isReply ? 'bg-pink-50/50' : ''}`;
+            
+            div.innerHTML = `
+                <div class="flex justify-between items-center mb-1">
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <span class="font-bold text-[#5c1d30] text-[11px]">${escapeHTML(cmt.name)}</span>
+                        <span class="text-[8px] px-1.5 py-0.2 rounded-full titan-font ${badgeColor}">voted ${cmt.choice}</span>
+                        <span class="text-[9px] text-gray-400 ml-auto">${cmt.time}</span>
+                    </div>
+                    <div class="relative ml-1">
+                        <button onclick="toggleCommentMenu(${cmt.id})" class="text-gray-400 hover:text-black px-1">
+                            <i class="fa-solid fa-ellipsis-vertical text-[10px]"></i>
+                        </button>
+                        <div id="menu-${cmt.id}" class="absolute right-0 top-5 bg-white shadow-xl rounded-xl border py-1 hidden z-20 w-20 text-[10px]">
+                            <button onclick="editComment(${cmt.id})" class="w-full text-left px-2 py-1 hover:bg-gray-100"><i class="fa-solid fa-pen"></i> Edit</button>
+                            <button onclick="deleteComment(${cmt.id})" class="w-full text-left px-2 py-1 text-red-600 hover:bg-gray-100"><i class="fa-solid fa-trash"></i> Delete</button>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-700 text-[11px] mb-1.5 leading-tight">${escapeHTML(cmt.text)}</p>
+                <div class="flex items-center gap-4 text-[10px] text-gray-500">
+                    <button onclick="likeComment(${cmt.id})" class="flex items-center gap-1 hover:text-red-500 ${cmt.liked ? 'text-red-500 font-bold' : ''}">
+                        <i class="fa-${cmt.liked ? 'solid' : 'regular'} fa-heart"></i> <span>${cmt.likes}</span>
+                    </button>
+                    <button onclick="initiateReply(${cmt.id}, '${escapeHTML(cmt.name)}')" class="flex items-center gap-1 hover:text-[#5c1d30]">
+                        <i class="fa-solid fa-reply"></i> <span>Reply</span>
+                    </button>
+                </div>
+            `;
+            return div;
         }
 
         function toggleCommentMenu(id) {
@@ -986,14 +1003,15 @@
             if (cmt) {
                 cmt.liked = !cmt.liked;
                 cmt.likes += cmt.liked ? 1 : -1;
-                localStorage.setItem('seonghyeon_comments', JSON.stringify(commentsData));
+                localStorage.setItem('seonghyeon_comments_v2', JSON.stringify(commentsData));
                 renderCommentsFeed();
             }
         }
 
         function deleteComment(id) {
-            commentsData = commentsData.filter(c => c.id !== id);
-            localStorage.setItem('seonghyeon_comments', JSON.stringify(commentsData));
+            // Delete comment and any replies referencing it
+            commentsData = commentsData.filter(c => c.id !== id && c.parentId !== id);
+            localStorage.setItem('seonghyeon_comments_v2', JSON.stringify(commentsData));
             renderCommentsFeed();
             renderAdminCommentsList();
         }
@@ -1004,7 +1022,7 @@
             const newText = prompt("Sửa bình luận:", cmt.text);
             if (newText !== null && newText.trim() !== '') {
                 cmt.text = newText.trim();
-                localStorage.setItem('seonghyeon_comments', JSON.stringify(commentsData));
+                localStorage.setItem('seonghyeon_comments_v2', JSON.stringify(commentsData));
                 renderCommentsFeed();
                 renderAdminCommentsList();
             }
@@ -1017,7 +1035,7 @@
         }
 
         /* ========================================================
-         * ADMIN SECURITY & PANELS
+         * ADMIN CONTROLS
          * ======================================================== */
         window.addEventListener('keydown', (e) => {
             if (e.key === 'F2') {
