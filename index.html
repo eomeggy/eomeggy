@@ -150,14 +150,16 @@
 
         /* SELECT STAGE SCREEN */
         #select-screen {
-            padding: 15px;
+            padding: 15px 15px 15px calc(0.7cm - 0.3cm); /* Dịch khung level sang trái 0.3cm */
             overflow-y: auto;
             position: relative;
+            align-items: flex-start;
         }
 
+        /* Chữ SELECT STAGE dọc, căn đúng vị trí vùng tô vàng theo yêu cầu */
         .vertical-title {
             position: fixed;
-            left: 91.66%;
+            right: 0.7cm;
             top: 50%;
             transform: translateY(-50%) rotate(90deg);
             font-family: 'Titan One', cursive;
@@ -169,14 +171,13 @@
         }
 
         .stages-scroll-area {
-            width: 78%;
+            width: calc(100% - 2.5rem);
             display: flex;
             flex-direction: column;
             gap: 30px;
             padding-top: 40px;
             padding-bottom: 150px;
-            align-items: center;
-            margin-right: 25px;
+            align-items: flex-start;
         }
 
         .stage-card-item {
@@ -660,13 +661,15 @@
             <video id="intro-video" src="intro-video.mp4" autoplay muted playsinline controls></video>
         </div>
         <div class="btn-group">
-            <button class="custom-btn" onclick="replayIntro()">🔄 REPLAY INTRO</button>
+            <!-- Đã bỏ icon trên nút REPLAY INTRO -->
+            <button class="custom-btn" onclick="replayIntro()">REPLAY INTRO</button>
             <button class="custom-btn primary" onclick="goToSelectStage()">Start Game ➔</button>
         </div>
     </div>
 
     <!-- 2. SELECT STAGE SCREEN -->
     <div id="select-screen" class="screen" onclick="handleScreenClick(event)">
+        <!-- Chữ SELECT STAGE dọc, cách lề phải 0.7cm -->
         <div class="vertical-title title-exact-match">SELECT STAGE</div>
         <div class="stages-scroll-area" id="stages-scroll-container">
             <!-- EASY -->
@@ -742,7 +745,7 @@
 
 </div>
 
-<!-- ADMIN CONFIGURATION MODAL (Theo yêu cầu ảnh đính kèm) -->
+<!-- ADMIN CONFIGURATION MODAL -->
 <div id="admin-modal">
     <div class="admin-content">
         <div class="admin-header">
@@ -888,9 +891,8 @@
     let currentVoteChoice = 'yes';
     let commentsData = [];
     let activeStageVideoId = null;
-    let resultClickStage = 0; // Đếm số lần bấm nút kết quả (Lần 1 dịch chuyển, Lần 2 về Intro)
+    let actionClickCount = 0;
 
-    // Web Audio API cho Sound Effects (Click card, Match đúng/sai, Chúc mừng pass stage)
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     function playSoundEffect(type) {
@@ -915,8 +917,8 @@
             osc.stop(now + 0.08);
         } else if (type === 'match') {
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(523.25, now); // C5
-            osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(659.25, now + 0.1);
             gainNode.gain.setValueAtTime(0.2, now);
             gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
             osc.start(now);
@@ -930,7 +932,6 @@
             osc.start(now);
             osc.stop(now + 0.3);
         } else if (type === 'victory') {
-            // Fanfare chúc mừng pass stage
             const notes = [523.25, 659.25, 783.99, 1046.50];
             notes.forEach((freq, idx) => {
                 const o = audioCtx.createOscillator();
@@ -965,7 +966,6 @@
         goToScreen('select-screen');
     }
 
-    // 4) Sound 3 video ẩn trong select stage phát tiếng bình thường (bỏ muted)
     function toggleStageVideo(stageId, event) {
         event.stopPropagation();
         const img = document.getElementById(`stage-img-${stageId}`);
@@ -978,7 +978,7 @@
         if (video.paused && video.style.display !== 'block') {
             img.style.display = 'none';
             video.style.display = 'block';
-            video.muted = false; // Phát tiếng video ẩn
+            video.muted = false;
             video.play().catch(e => {});
             activeStageVideoId = stageId;
         } else {
@@ -1008,7 +1008,6 @@
         }
     }
 
-    // 2) & 3) Quản lý âm thanh tách biệt theo slide & nút loa Bật/Tắt sound stage
     function toggleStageAudio() {
         isAudioMuted = !isAudioMuted;
         const btn = document.getElementById('audio-toggle-btn');
@@ -1084,7 +1083,6 @@
         }, 1000);
     }
 
-    // 1) Sound effect khi click card, đúng / sai
     function onCardClick(cardElem) {
         if(!canInteract || cardElem.classList.contains('flipped') || cardElem.classList.contains('matched')) return;
 
@@ -1114,7 +1112,7 @@
                     if(matchesCount === stage.pairs.length) {
                         clearInterval(gameTimer);
                         if(currentBgmAudio) currentBgmAudio.pause();
-                        playSoundEffect('victory'); // Sound chúc mừng pass stage
+                        playSoundEffect('victory');
                         setTimeout(showVictoryScreen, 500);
                     }
                 }, 300);
@@ -1130,7 +1128,6 @@
         }
     }
 
-    // 5) Sửa code màn victory bonus slide chuẩn xác
     function showVictoryScreen() {
         const stage = stagesData[currentStageId];
         goToScreen('victory-screen');
@@ -1141,7 +1138,7 @@
 
         const btnContainer = document.getElementById('victory-buttons');
         if(stage.isBonus) {
-            // Nút NO bên trái màu đỏ, Nút YES bên phải màu xanh
+            // Nút NO bên trái màu đỏ, YES bên phải màu xanh
             btnContainer.innerHTML = `
                 <button class="custom-btn btn-no" onclick="showResultScreen('no')">NO</button>
                 <button class="custom-btn btn-yes" onclick="showResultScreen('yes')">YES</button>
@@ -1159,7 +1156,6 @@
         }
     }
 
-    // 5), 8), 9) Xử lý hiển thị video YES/NO, nút bấm và layout dịch chuyển + bình luận chung
     function showResultScreen(choice) {
         currentVoteChoice = choice;
         actionClickCount = 0;
@@ -1169,7 +1165,6 @@
         vidPlayer.src = choice === 'yes' ? 'yes-button-video.mp4' : 'no-button-video.mp4';
         vidPlayer.play().catch(e => {});
 
-        // Đặt lại style flex ban đầu cho màn hình kết quả
         const screen = document.getElementById('result-media-screen');
         screen.style.justifyContent = 'flex-start';
         const vidBox = document.getElementById('result-video-box');
@@ -1181,17 +1176,14 @@
         renderComments();
     }
 
-    let actionClickCount = 0;
     function handleBottomAction() {
         actionClickCount++;
         if(actionClickCount >= 2) {
-            // Lần bấm thứ 2 -> Quay về slide intro đầu game
             actionClickCount = 0;
             goToScreen('intro-screen');
         } else {
-            // Lần bấm thứ 1 -> Dịch chuyển video lên trên, nút xuống dưới, hiển thị khung bình luận
             const vidBox = document.getElementById('result-video-box');
-            vidBox.style.display = 'none'; // Ẩn hoặc thu gọn video để nhường chỗ cho bình luận
+            vidBox.style.display = 'none';
             const screen = document.getElementById('result-media-screen');
             screen.style.justifyContent = 'center';
             document.getElementById('comment-box-elem').scrollIntoView({ behavior: 'smooth' });
@@ -1220,7 +1212,6 @@
         renderComments();
     }
 
-    // 8) & 9) Lưu trữ chung bình luận, hiển thị huy hiệu voted YES/NO, font tiếng Việt, tim, reply, 3 chấm edit/delete
     function renderComments() {
         const listContainer = document.getElementById('comments-list-container');
         listContainer.innerHTML = '';
@@ -1318,7 +1309,6 @@
         }
     }
 
-    // 10) Phím tắt Shift + U mở Admin Setting Panel
     window.addEventListener('keydown', (e) => {
         if(e.shiftKey && e.key.toLowerCase() === 'u') {
             document.getElementById('admin-modal').style.display = 'flex';
