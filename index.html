@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IS SEONGHYEON A CAT?</title>
-    <!-- Google Fonts: Titan One & Quicksand / Be Vietnam Pro -->
+    <!-- Google Fonts: Titan One & Be Vietnam Pro -->
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Titan+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -13,7 +13,6 @@
             --main-pink: #d87a93;
             --dark-burgundy: #592233;
             --card-pink: #ffc0cb;
-            --glow-color: rgba(255, 255, 255, 0.7);
         }
 
         * {
@@ -75,11 +74,14 @@
             z-index: 10;
         }
 
-        /* Titan One Font & Glow Effect */
-        .glow-text {
+        /* Titan One Font & Exact Title Shadow Matching Intro */
+        .title-exact-match {
             font-family: 'Titan One', cursive;
-            color: var(--dark-burgundy);
-            text-shadow: 0 0 8px var(--glow-color), 0 0 15px rgba(255, 255, 255, 0.5);
+            color: #72334f;
+            text-shadow: 
+                0 0 6px #fce0e8,
+                0 0 12px rgba(252, 224, 232, 0.7),
+                2px 2px 4px rgba(0, 0, 0, 0.15);
             text-align: center;
         }
 
@@ -150,30 +152,32 @@
         /* SELECT STAGE SCREEN */
         #select-screen {
             padding: 15px;
-            overflow-y: scroll;
+            overflow-y: auto;
             position: relative;
         }
 
+        /* Chia dọc màn hình làm 6 phần bằng nhau, chữ nằm ở trung tâm phần thứ 6 từ trái sang (khoảng 91.6%) */
         .vertical-title {
             position: fixed;
-            right: 12px;
+            left: 91.66%;
             top: 50%;
             transform: translateY(-50%) rotate(90deg);
             font-family: 'Titan One', cursive;
-            color: #fff;
-            font-size: 1.6rem;
-            letter-spacing: 3px;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
             z-index: 100;
             pointer-events: none;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            white-space: nowrap;
         }
 
+        /* Kéo dài thanh cuộn dọc thêm nữa (tăng padding-bottom và khoảng cách để dễ scroll chọn EASY / HARD) */
         .stages-scroll-area {
             width: 78%;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            padding-bottom: 40px;
+            gap: 30px;
+            padding-top: 40px;
+            padding-bottom: 150px;
             align-items: center;
             margin-right: 25px;
         }
@@ -184,7 +188,6 @@
             border-radius: 18px;
             padding: 10px;
             box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-            cursor: pointer;
             text-align: center;
         }
 
@@ -195,6 +198,7 @@
             overflow: hidden;
             position: relative;
             background: #000;
+            cursor: pointer;
         }
 
         .stage-media-wrapper img, .stage-media-wrapper video {
@@ -211,6 +215,7 @@
             color: var(--dark-burgundy);
             margin-top: 10px;
             font-size: 1.1rem;
+            cursor: pointer;
         }
 
         /* GAMEPLAY SCREEN */
@@ -550,6 +555,26 @@
             background: #f0f0f0;
         }
 
+        .reply-container {
+            margin-top: 6px;
+            padding-left: 10px;
+            border-left: 2px solid #e2a2b3;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .reply-item {
+            font-size: 0.75rem;
+            color: #555;
+            background: #fce8ec;
+            padding: 4px 6px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         /* ADMIN MODAL */
         #admin-modal {
             position: fixed;
@@ -626,7 +651,7 @@
 
     <!-- 1. INTRO SCREEN -->
     <div id="intro-screen" class="screen active">
-        <h1 class="glow-text">IS SEONGHYEON A CAT?</h1>
+        <h1 class="title-exact-match">IS SEONGHYEON A CAT?</h1>
         <div class="video-box">
             <video id="intro-video" src="intro-video.mp4" autoplay muted playsinline controls></video>
         </div>
@@ -637,32 +662,33 @@
     </div>
 
     <!-- 2. SELECT STAGE SCREEN -->
-    <div id="select-screen" class="screen">
-        <div class="vertical-title">SELECT STAGE</div>
+    <div id="select-screen" class="screen" onclick="handleScreenClick(event)">
+        <!-- Chữ SELECT STAGE dùng class title-exact-match để đồng bộ màu sắc/shadow với tiêu đề intro -->
+        <div class="vertical-title title-exact-match">SELECT STAGE</div>
         <div class="stages-scroll-area" id="stages-scroll-container">
             <!-- EASY -->
-            <div class="stage-card-item" onclick="startStage(1)">
-                <div class="stage-media-wrapper">
-                    <img src="stage1-easy-img.jpg" alt="EASY">
-                    <video src="stage1-easy-video.mp4" muted loop playsinline style="display:none;"></video>
+            <div class="stage-card-item">
+                <div class="stage-media-wrapper" onclick="toggleStageVideo(1, event)">
+                    <img id="stage-img-1" src="stage1-easy-img.jpg" alt="EASY">
+                    <video id="stage-vid-1" src="stage1-easy-video.mp4" muted loop playsinline style="display:none;"></video>
                 </div>
-                <h3>EASY</h3>
+                <h3 onclick="startStage(1)">EASY</h3>
             </div>
             <!-- MEDIUM -->
-            <div class="stage-card-item" onclick="startStage(2)">
-                <div class="stage-media-wrapper">
-                    <img src="stage2-medium-img.jpg" alt="MEDIUM">
-                    <video src="stage2-medium-video.mp4" muted loop playsinline style="display:none;"></video>
+            <div class="stage-card-item">
+                <div class="stage-media-wrapper" onclick="toggleStageVideo(2, event)">
+                    <img id="stage-img-2" src="stage2-medium-img.jpg" alt="MEDIUM">
+                    <video id="stage-vid-2" src="stage2-medium-video.mp4" muted loop playsinline style="display:none;"></video>
                 </div>
-                <h3>MEDIUM</h3>
+                <h3 onclick="startStage(2)">MEDIUM</h3>
             </div>
             <!-- HARD -->
-            <div class="stage-card-item" onclick="startStage(3)">
-                <div class="stage-media-wrapper">
-                    <img src="stage3-hard-img.jpg" alt="HARD">
-                    <video src="stage3-hard-video.mp4" muted loop playsinline style="display:none;"></video>
+            <div class="stage-card-item">
+                <div class="stage-media-wrapper" onclick="toggleStageVideo(3, event)">
+                    <img id="stage-img-3" src="stage3-hard-img.jpg" alt="HARD">
+                    <video id="stage-vid-3" src="stage3-hard-video.mp4" muted loop playsinline style="display:none;"></video>
                 </div>
-                <h3>HARD</h3>
+                <h3 onclick="startStage(3)">HARD</h3>
             </div>
         </div>
     </div>
@@ -684,23 +710,23 @@
 
     <!-- 4. VICTORY SCREEN -->
     <div id="victory-screen" class="screen">
-        <h2 class="glow-text" id="victory-title-text">STAGE 1 CLEARED!</h2>
+        <h2 class="title-exact-match" id="victory-title-text" style="font-size: 1.4rem;">STAGE 1 CLEARED!</h2>
         <div class="victory-img-box">
             <img id="victory-img-elem" src="victory1-img.png" alt="Victory">
         </div>
-        <h2 id="victory-question-text" style="font-size: 1rem;">ARE YOU STILL SKEPTICAL?</h2>
+        <h2 id="victory-question-text" style="font-size: 1rem; color: var(--dark-burgundy);">ARE YOU STILL SKEPTICAL?</h2>
         <div class="victory-buttons" id="victory-buttons-container">
             <button class="custom-btn" style="flex:1;" onclick="nextStageOrResult()">NOT SURE ➔</button>
         </div>
     </div>
 
-    <!-- 5. RESULT MEDIA & COMMENT SCREEN (YES/NO) -->
+    <!-- 5. RESULT MEDIA & COMMENT SCREEN (YES/NO) - ĐẦY ĐỦ TỪ ĐÂY TRỞ VỀ SAU -->
     <div id="result-media-screen" class="screen">
         <div class="video-box" style="width: 100%;">
             <video id="result-video-player" src="yes-button-video.mp4" controls autoplay playsinline></video>
         </div>
         <div class="comment-section-box">
-            <h3 class="glow-text">LEAVE YOUR COMMENTS</h3>
+            <h3 class="title-exact-match" style="font-size: 0.95rem;">LEAVE YOUR COMMENTS</h3>
             <input type="text" id="user-name-input" class="name-input font-vietnamese" placeholder="YOUR NAME">
             <div class="comment-row-action">
                 <input type="text" id="user-comment-input" class="comment-input font-vietnamese" placeholder="WRITE COMMENTS...">
@@ -717,7 +743,7 @@
 <div id="admin-modal">
     <div class="admin-content">
         <div class="admin-header">
-            <h3 class="glow-text" style="color:#fff;">GAME CONFIGURATION</h3>
+            <h3 class="title-exact-match" style="color:#fff; font-size:1rem;">GAME CONFIGURATION</h3>
             <button onclick="closeAdmin()" style="background:none; border:none; color:#fff; font-size:1.1rem; cursor:pointer;">✕</button>
         </div>
         <div class="admin-tabs">
@@ -741,7 +767,6 @@
 </div>
 
 <script>
-    // ĐÚNG CẶP ĐÁP ÁN PHONE PROMPT (KHÔNG COPY TỪ FILE CODE PC CŨ)
     const stagesData = {
         1: {
             name: "STAGE 1: SKEPTICAL",
@@ -836,6 +861,7 @@
     let currentBgmAudio = null;
     let currentVoteChoice = 'yes';
     let commentsData = [];
+    let activeStageVideoId = null;
 
     function goToScreen(screenId) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -852,47 +878,55 @@
     }
 
     function goToSelectStage() {
+        stopAllStageVideos();
         goToScreen('select-screen');
-        setupStageHoverObserver();
     }
 
-    function setupStageHoverObserver() {
-        const container = document.getElementById('select-screen');
-        const items = document.querySelectorAll('.stage-card-item');
-        
-        const checkVisibleItem = () => {
-            const containerRect = container.getBoundingClientRect();
-            const targetLine = containerRect.top + containerRect.height / 2;
+    // Cơ chế phát/tắt video ẩn theo thao tác chạm vào ảnh của từng level
+    function toggleStageVideo(stageId, event) {
+        event.stopPropagation();
+        const img = document.getElementById(`stage-img-${stageId}`);
+        const video = document.getElementById(`stage-vid-${stageId}`);
 
-            items.forEach(item => {
-                const rect = item.getBoundingClientRect();
-                const wrapper = item.querySelector('.stage-media-wrapper');
-                const img = wrapper.querySelector('img');
-                const video = wrapper.querySelector('video');
+        if (activeStageVideoId && activeStageVideoId !== stageId) {
+            stopAllStageVideos();
+        }
 
-                if(rect.top <= targetLine && rect.bottom >= targetLine) {
-                    if(video.paused) {
-                        img.style.display = 'none';
-                        video.style.display = 'block';
-                        video.play().catch(e => {});
-                    }
-                } else {
-                    if(!video.paused) {
-                        video.pause();
-                        video.currentTime = 0;
-                        video.style.display = 'none';
-                        img.style.display = 'block';
-                    }
-                }
-            });
-        };
+        if (video.paused && video.style.display !== 'block') {
+            img.style.display = 'none';
+            video.style.display = 'block';
+            video.play().catch(e => {});
+            activeStageVideoId = stageId;
+        } else {
+            stopAllStageVideos();
+        }
+    }
 
-        container.removeEventListener('scroll', checkVisibleItem);
-        container.addEventListener('scroll', checkVisibleItem);
-        setTimeout(checkVisibleItem, 100);
+    function stopAllStageVideos() {
+        [1, 2, 3].forEach(id => {
+            const img = document.getElementById(`stage-img-${id}`);
+            const video = document.getElementById(`stage-vid-${id}`);
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
+                video.style.display = 'none';
+            }
+            if (img) {
+                img.style.display = 'block';
+            }
+        });
+        activeStageVideoId = null;
+    }
+
+    // Click bên ngoài vùng ảnh sẽ ngắt video đang phát
+    function handleScreenClick(event) {
+        if (!event.target.closest('.stage-media-wrapper')) {
+            stopAllStageVideos();
+        }
     }
 
     function startStage(stageId) {
+        stopAllStageVideos();
         currentStageId = stageId;
         const stage = stagesData[stageId];
         goToScreen('gameplay-screen');
@@ -921,7 +955,7 @@
         gridContainer.className = `cards-grid grid-stage-${stageId === 4 ? 'bonus' : stageId}`;
         gridContainer.innerHTML = '';
 
-        stage.cards.forEach((card, index) => {
+        stage.cards.forEach((card) => {
             const cardElem = document.createElement('div');
             cardElem.className = 'card flipped'; 
             cardElem.dataset.id = card.id;
@@ -1062,7 +1096,8 @@
             vote: currentVoteChoice,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             likes: 0,
-            liked: false
+            liked: false,
+            replies: []
         };
 
         commentsData.unshift(newComment);
@@ -1077,6 +1112,21 @@
         commentsData.forEach(c => {
             const item = document.createElement('div');
             item.className = 'comment-item';
+            
+            let repliesHtml = '';
+            if (c.replies && c.replies.length > 0) {
+                repliesHtml = '<div class="reply-container">';
+                c.replies.forEach((rep, rIndex) => {
+                    repliesHtml += `
+                        <div class="reply-item">
+                            <span><b>${rep.name}:</b> ${rep.text}</span>
+                            <button onclick="deleteReply(${c.id}, ${rIndex})" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-weight:bold;">✕</button>
+                        </div>
+                    `;
+                });
+                repliesHtml += '</div>';
+            }
+
             item.innerHTML = `
                 <div class="comment-header">
                     <span>${c.name}</span>
@@ -1089,9 +1139,10 @@
                     </div>
                 </div>
                 <div class="comment-body">${c.text}</div>
+                ${repliesHtml}
                 <div class="comment-footer-actions">
                     <span class="action-like ${c.liked ? 'liked' : ''}" onclick="likeComment(${c.id})">❤️ ${c.likes}</span>
-                    <span class="action-reply">Reply</span>
+                    <span class="action-reply" onclick="promptReply(${c.id})">Reply</span>
                 </div>
             `;
             listContainer.appendChild(item);
@@ -1130,6 +1181,27 @@
         renderComments();
     }
 
+    function promptReply(id) {
+        const replyText = prompt("Write a reply:");
+        if(replyText && replyText.trim() !== '') {
+            const comment = commentsData.find(c => c.id === id);
+            if(!comment.replies) comment.replies = [];
+            comment.replies.push({
+                name: document.getElementById('user-name-input').value.trim() || "Guest",
+                text: replyText.trim()
+            });
+            renderComments();
+        }
+    }
+
+    function deleteReply(commentId, replyIndex) {
+        const comment = commentsData.find(c => c.id === commentId);
+        if(comment && comment.replies) {
+            comment.replies.splice(replyIndex, 1);
+            renderComments();
+        }
+    }
+
     window.addEventListener('keydown', (e) => {
         if(e.shiftKey && e.key.toLowerCase() === 'u') {
             document.getElementById('admin-modal').style.display = 'flex';
@@ -1154,8 +1226,8 @@
 
     window.onload = () => {
         commentsData = [
-            { id: 1, name: "Chửng", text: "Hi", vote: "yes", time: "07:41", likes: 0, liked: false },
-            { id: 2, name: "Chửng", text: "Ble", vote: "yes", time: "07:41", likes: 1, liked: true }
+            { id: 1, name: "Chửng", text: "Hi", vote: "yes", time: "07:41", likes: 0, liked: false, replies: [] },
+            { id: 2, name: "Chửng", text: "Ble", vote: "yes", time: "07:41", likes: 1, liked: true, replies: [] }
         ];
     };
 </script>
