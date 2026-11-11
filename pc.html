@@ -849,25 +849,49 @@
             }).join('');
         }
         
-        function postUserComment() {
-            const nameEl = document.getElementById('comment-name');
-            const textEl = document.getElementById('comment-text');
-            if (!textEl || !textEl.value.trim()) return;
-            
-            const newComment = {
-                authorId: mySessionId,
-                name: nameEl && nameEl.value.trim() ? nameEl.value.trim() : 'Anonymous',
-                vote: currentChoiceVote,
-                text: textEl.value.trim(),
-                likes: 0,
-                liked: false,
-                replies: []
-            };
-            userCommentsList.unshift(newComment);
-            saveCommentsToStorage();
-            textEl.value = '';
-            renderCommentsList();
+      // Lắng nghe dữ liệu realtime và hàm gửi bình luận cho bản PC
+function initFirebaseComments() {
+    if (!window.db) return;
+    const commentsRef = window.dbRef(window.db, 'comments');
+    window.dbOnValue(commentsRef, (snapshot) => {
+        const data = snapshot.val();
+        userCommentsList = [];
+        if (data) {
+            Object.keys(data).forEach(key => {
+                userCommentsList.unshift({ id: key, ...data[key] });
+            });
         }
+        renderCommentsList();
+        if (typeof renderAdminCommentsManager === 'function') {
+            renderAdminCommentsManager();
+        }
+    });
+}
+window.initFirebaseComments = initFirebaseComments;
+
+function postUserComment() {
+    const nameEl = document.getElementById('comment-name');
+    const textEl = document.getElementById('comment-text');
+    if (!textEl || !textEl.value.trim()) return;
+    
+    if (!window.db) {
+        alert("Database chưa sẵn sàng!");
+        return;
+    }
+
+    const newCommentRef = window.dbPush(window.dbRef(window.db, 'comments'));
+    window.dbSet(newCommentRef, {
+        authorId: mySessionId,
+        name: nameEl && nameEl.value.trim() ? nameEl.value.trim() : 'Anonymous',
+        vote: currentChoiceVote,
+        text: textEl.value.trim(),
+        likes: 0,
+        liked: false,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        replies: []
+    });
+    textEl.value = '';
+}
         
         function toggleCommentMenu(index) {
             document.querySelectorAll('[id^="comment-menu-"]').forEach((el, idx) => {
