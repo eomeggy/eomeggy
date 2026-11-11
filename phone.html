@@ -714,7 +714,6 @@
         </div>
     </div>
 </div>
-
 <script>
     // ==========================================
     // FIREBASE INITIALIZATION & DATABASE CONFIG
@@ -823,6 +822,21 @@
     let activeStageVideoId = null;
     let actionClickCount = 0;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Thay thế localStorage bằng Firebase Realtime Database lắng nghe realtime
+    commentsRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            commentsData = Object.keys(data).map(key => ({
+                firebaseId: key,
+                ...data[key]
+            })).reverse();
+        } else {
+            commentsData = [];
+        }
+        renderComments();
+        renderAdminCommentsList();
+    });
 
     function playSoundEffect(type) {
         if (isAudioMuted) return;
@@ -1117,23 +1131,7 @@
         }
     }
 
-    // ==========================================
-    // FIREBASE DATABASE SYNCHRONIZATION FUNCTIONS
-    // ==========================================
-    commentsRef.on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            commentsData = Object.keys(data).map(key => ({
-                firebaseId: key,
-                ...data[key]
-            })).reverse();
-        } else {
-            commentsData = [];
-        }
-        renderComments();
-        renderAdminCommentsList();
-    });
-
+    // Bình luận được đẩy lên Firebase Realtime Database
     function postComment() {
         const nameInput = document.getElementById('user-name-input');
         const commentInput = document.getElementById('user-comment-input');
@@ -1234,4 +1232,56 @@
             const comment = commentsData.find(c => c.firebaseId === firebaseId);
             let replies = comment.replies ? [...comment.replies] : [];
             replies.push({
-                name: document
+                name: document.getElementById('user-name-input').value.trim() || "Guest",
+                text: replyText.trim()
+            });
+            commentsRef.child(firebaseId).update({ replies: replies });
+        }
+    }
+
+    function deleteReply(firebaseId, replyIndex) {
+        const comment = commentsData.find(c => c.firebaseId === firebaseId);
+        if(comment && comment.replies) {
+            let replies = [...comment.replies];
+            replies.splice(replyIndex, 1);
+            commentsRef.child(firebaseId).update({ replies: replies });
+        }
+    }
+
+    function renderAdminCommentsList() {
+        const adminList = document.getElementById('admin-comments-manage-list');
+        if (!adminList) return;
+        adminList.innerHTML = '';
+        commentsData.forEach(c => {
+            const row = document.createElement('div');
+            row.style.cssText = "display:flex; justify-content:space-between; align-items:center; background:#3b1a26; padding:6px 10px; border-radius:6px; font-size:0.75rem;";
+            row.innerHTML = `
+                <span><b>${c.name}:</b> ${c.text}</span>
+                <button onclick="deleteComment('${c.firebaseId}')" style="background:#e74c3c; color:#fff; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Xóa</button>
+            `;
+            adminList.appendChild(row);
+        });
+    }
+
+    window.addEventListener('keydown', (e) => {
+        if(e.shiftKey && e.key.toLowerCase() === 'u') {
+            document.getElementById('admin-modal').style.display = 'flex';
+        }
+    });
+
+    function closeAdmin() {
+        document.getElementById('admin-modal').style.display = 'none';
+    }
+
+    function switchAdminTab(index) {
+        const tabs = document.querySelectorAll('.admin-tab-btn');
+        const sections = document.querySelectorAll('.admin-section');
+        tabs.forEach((t, i) => {
+            t.classList.toggle('active', i === index);
+            sections[i].classList.toggle('active', i === index);
+        });
+    }
+</script>
+
+</body>
+</html>
