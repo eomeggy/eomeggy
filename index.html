@@ -143,7 +143,7 @@
         }
 
         /* 2. SELECT STAGE SCREEN */
-        #select-screen {
+        #stage-select-screen {
             padding: 15px 15px 15px 0.4cm;
             position: relative;
             align-items: flex-start;
@@ -320,7 +320,7 @@
         }
 
         /* 4. VICTORY SCREEN */
-        #victory-screen {
+        #victory-modal {
             justify-content: center;
             align-items: center;
             text-align: center;
@@ -328,7 +328,7 @@
             padding: 20px;
         }
 
-        #victory-screen h2 {
+        #victory-modal h2 {
             font-family: 'Titan One', cursive;
             font-size: 1.3rem;
             color: var(--dark-burgundy);
@@ -393,6 +393,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            margin-top: 10px;
         }
 
         .comment-input, .name-input {
@@ -425,7 +426,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            max-height: 180px;
+            max-height: 220px;
             overflow-y: auto;
         }
 
@@ -460,12 +461,6 @@
 
         .voted-badge.no {
             background-color: #e74c3c;
-        }
-
-        .comment-time {
-            font-size: 0.6rem;
-            color: #888;
-            margin-left: auto;
         }
 
         .comment-body {
@@ -526,6 +521,55 @@
         .comment-dropdown button:hover {
             background: #f0f0f0;
         }
+
+        .reply-container {
+            margin-top: 6px;
+            padding-left: 8px;
+            border-left: 2px solid #d87a93;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .reply-item {
+            background: #fce8ec;
+            padding: 6px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        /* ADMIN MODAL */
+        #admin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .admin-content {
+            background: #2b131c;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 18px;
+            padding: 15px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 3px solid var(--main-pink);
+        }
     </style>
 </head>
 <body>
@@ -536,6 +580,7 @@
     <div id="intro-screen" class="screen active">
         <h1 class="title-exact-match" style="font-size: 1.4rem;">IS SEONGHYEON A CAT?</h1>
         <div class="video-box" id="intro-video-wrapper">
+            <!-- Video intro tự động lặp lại liên tục (loop) -->
             <video id="main-intro-video" src="intro-video.mp4" autoplay loop playsinline controls preload="auto"></video>
         </div>
         <div class="btn-group">
@@ -614,8 +659,10 @@
     <div id="media-display-modal" class="screen" style="z-index:40;">
         <button onclick="closeMediaDisplayModal()" style="position:absolute; top:12px; right:12px; width:32px; height:32px; background:var(--dark-burgundy); color:#fff; border-radius:50%; border:none; font-weight:bold; cursor:pointer; z-index:50;">✕</button>
         
-        <div id="media-display-content" class="video-box" style="width:100%; margin-bottom:10px;"></div>
+        <!-- Video YES/NO luôn tự động lặp lại (loop) liên tục -->
+        <div id="media-display-content" class="video-box" style="width:100%;"></div>
 
+        <!-- Khung bình luận (Mặc định ẩn, chỉ hiện sau khi bấm nút lần 1) -->
         <div id="comment-section-box" class="comment-section-box hidden">
             <h3 class="title-exact-match" style="font-size:0.9rem;">LIVE YOUR COMMENTS</h3>
             <input type="text" id="comment-name" class="name-input font-vietnamese" placeholder="Your name...">
@@ -626,9 +673,21 @@
             <div class="comments-list font-vietnamese" id="comments-list"></div>
         </div>
 
-        <button id="result-action-button" onclick="handleResultActionButtonClick()" class="custom-btn primary" style="width:100%; margin-top:10px; flex-shrink:0;">WHY NOT ME!?</button>
+        <button id="result-action-button" onclick="handleResultActionButtonClick()" class="custom-btn primary" style="width:100%; margin-top:10px; flex-shrink:0;">EM CHIP CAM ON</button>
     </div>
 
+</div>
+
+<!-- ADMIN MODAL QUẢN LÝ BÌNH LUẬN -->
+<div id="admin-modal">
+    <div class="admin-content">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 class="title-exact-match" style="color:#fff; font-size:1rem;">ADMIN: QUẢN LÝ BÌNH LUẬN</h3>
+            <button onclick="closeAdminModal()" style="background:none; border:none; color:#fff; font-size:1.1rem; cursor:pointer;">✕</button>
+        </div>
+        <p style="font-size:0.75rem; color:#f0d0d5;">Danh sách toàn bộ bình luận của người chơi (Xóa riêng lẻ từng bình luận):</p>
+        <div id="admin-comments-list" style="display:flex; flex-direction:column; gap:8px; max-height:300px; overflow-y:auto;"></div>
+    </div>
 </div>
 
 <audio id="stage-bgm-audio" loop></audio>
@@ -644,10 +703,10 @@
     let matchedPairsCount = 0;
     let isProcessing = false;
     let totalPairsInStage = 2;
-    let introVideoUrl = "intro-video.mp4";
     let currentChoiceVote = 'YES';
-    let resultActionState = 0;
+    let resultActionState = 0; // 0: Mới hiện video + nút, 1: Bấm lần 1 hiện cmt, 2: Bấm lần 2 về intro
     let userCommentsList = [];
+    let replyingToUser = null;
 
     const stageTitles = { 1: 'STAGE 1: SKEPTICAL', 2: 'STAGE 2: TENTATIVE', 3: 'STAGE 3: CONVINCED', 4: 'STAGE BONUS: UNSHAKABLE' };
     const victoryQuestions = { 1: 'ARE YOU STILL SKEPTICAL?', 2: 'HAVE YOU STARTED TO BELIEVE?', 3: 'ARE YOU FULLY CONVINCED NOW?', 4: 'IS SEONGHYEON A CAT?' };
@@ -676,10 +735,25 @@
         NO: { type: 'video', video: 'no-button-video.mp4' }
     };
 
+    // Load dữ liệu bình luận từ localStorage để không bị mất khi F5
+    function loadComments() {
+        const saved = localStorage.getItem('seonghyeon_comments_v3');
+        if (saved) {
+            try { userCommentsList = JSON.parse(saved); } catch(e) { userCommentsList = []; }
+        }
+    }
+
+    function saveComments() {
+        localStorage.setItem('seonghyeon_comments_v3', JSON.stringify(userCommentsList));
+    }
+
     function showIntroScreen() {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById('intro-screen').classList.add('active');
         document.getElementById('game-header').style.display = 'none';
+        closeMediaDisplayModal();
+        const introVid = document.getElementById('main-intro-video');
+        if(introVid) { introVid.currentTime = 0; introVid.play().catch(()=>{}); }
     }
 
     function skipIntroToStageSelect() {
@@ -698,6 +772,13 @@
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById('stage-select-screen').classList.add('active');
         document.getElementById('game-header').style.display = 'none';
+        closeMediaDisplayModal();
+    }
+
+    function closeMediaDisplayModal() {
+        const container = document.getElementById('media-display-content');
+        if(container) container.innerHTML = '';
+        document.getElementById('media-display-modal').classList.remove('active');
     }
 
     function playLevelHover(lvl) {
@@ -906,51 +987,88 @@
         const commentBox = document.getElementById('comment-section-box');
 
         container.innerHTML = '';
-        commentBox.classList.add('hidden');
-        resultActionState = 0;
+        commentBox.classList.add('hidden'); // Ban đầu ẩn khung bình luận đúng yêu cầu
+        resultActionState = 0; 
 
         actionBtn.innerText = currentChoiceVote === 'NO' ? "WHY NOT ME!?" : "EM CHIP CAM ON";
 
         const mediaData = resultChoiceMedia[currentChoiceVote];
         if(mediaData && mediaData.video) {
+            // Video tự động phát và lặp lại liên tục (loop)
             container.innerHTML = `<video src="${mediaData.video}" controls autoplay loop playsinline style="width:100%; height:auto; max-height:40vh; object-fit:contain;"></video>`;
         }
         renderCommentsList();
     }
 
     function handleResultActionButtonClick() {
+        const commentBox = document.getElementById('comment-section-box');
+        const actionBtn = document.getElementById('result-action-button');
+
         if(resultActionState === 0) {
+            // Lần bấm thứ 1: Hiện khung bình luận
             resultActionState = 1;
-            const commentBox = document.getElementById('comment-section-box');
             commentBox.classList.remove('hidden');
             commentBox.scrollIntoView({ behavior: 'smooth' });
-            document.getElementById('result-action-button').innerText = "FINISH & RESTART";
         } else {
-            goToStageSelect();
+            // Lần bấm thứ 2: Quay về màn hình Intro
+            showIntroScreen();
         }
+    }
+
+    // Sắp xếp bình luận: Ưu tiên nhiều tym nhất lên đầu, sau đó đến mới nhất
+    function getSortedComments() {
+        return [...userCommentsList].sort((a, b) => (b.likes || 0) - (a.likes || 0));
     }
 
     function renderCommentsList() {
         const listContainer = document.getElementById('comments-list');
         if(!listContainer) return;
-        if(userCommentsList.length === 0) {
-            listContainer.innerHTML = '<div class="text-[0.7rem] text-gray-500 italic text-center py-2 font-vietnamese">No comments yet.</div>';
+        const sorted = getSortedComments();
+        
+        if(sorted.length === 0) {
+            listContainer.innerHTML = '<div class="text-[0.7rem] text-gray-500 italic text-center py-2 font-vietnamese">No comments yet. Be the first one!</div>';
             return;
         }
-        listContainer.innerHTML = userCommentsList.map((c, index) => `
-            <div class="comment-item">
-                <div class="comment-header">
-                    <span>${c.name}</span>
-                    <span class="voted-badge ${c.vote === 'NO' ? 'no' : ''}">voted ${c.vote}</span>
-                    <span class="comment-time">Just now</span>
-                    <button class="comment-menu-btn" onclick="toggleCommentMenu(${index})">⋮</button>
-                    <div class="comment-dropdown" id="comment-menu-${index}">
-                        <button onclick="deleteComment(${index})">Delete</button>
+
+        listContainer.innerHTML = sorted.map((c) => {
+            let originalIndex = userCommentsList.findIndex(item => item.id === c.id);
+            let repliesHtml = (c.replies || []).map((rep, rIndex) => `
+                <div class="reply-item">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <b>${rep.name} <span class="voted-badge ${rep.vote === 'NO' ? 'no' : ''}">voted ${rep.vote}</span></b>
+                        <button onclick="deleteReply(${originalIndex}, ${rIndex})" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-weight:bold;">✕</button>
+                    </div>
+                    <div><b>@${rep.replyTo}</b> ${rep.text}</div>
+                    <div class="comment-footer-actions">
+                        <span class="action-like ${rep.liked ? 'liked' : ''}" onclick="likeReply(${originalIndex}, ${rIndex})">
+                            <i class="${rep.liked ? 'fas' : 'far'} fa-heart"></i> ${rep.likes || 0}
+                        </span>
+                        <span class="action-reply" onclick="promptReply(${originalIndex}, '${rep.name}')">Reply</span>
                     </div>
                 </div>
-                <div class="comment-body">${c.text}</div>
-            </div>
-        `).join('');
+            `).join('');
+
+            return `
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span>${c.name}</span>
+                        <span class="voted-badge ${c.vote === 'NO' ? 'no' : ''}">voted ${c.vote}</span>
+                        <button class="comment-menu-btn" onclick="toggleCommentMenu(${originalIndex})">⋮</button>
+                        <div class="comment-dropdown" id="comment-menu-${originalIndex}">
+                            <button onclick="deleteComment(${originalIndex})">Delete</button>
+                        </div>
+                    </div>
+                    <div class="comment-body">${c.text}</div>
+                    <div class="comment-footer-actions">
+                        <span class="action-like ${c.liked ? 'liked' : ''}" onclick="likeComment(${originalIndex})">
+                            <i class="${c.liked ? 'fas' : 'far'} fa-heart"></i> ${c.likes || 0}
+                        </span>
+                        <span class="action-reply" onclick="promptReply(${originalIndex}, '${c.name}')">Reply</span>
+                    </div>
+                    ${repliesHtml ? `<div class="reply-container">${repliesHtml}</div>` : ''}
+                </div>
+            `;
+        }).join('');
     }
 
     function postUserComment() {
@@ -958,29 +1076,83 @@
         const textInput = document.getElementById('comment-text');
         if(!textInput.value.trim()) return;
 
-        userCommentsList.unshift({
-            name: nameInput.value.trim() || 'Anonymous',
-            vote: currentChoiceVote,
-            text: textInput.value.trim()
-        });
+        if (replyingToUser) {
+            // Reply theo dạng quote @tên_người_được_reply
+            const parentCmt = userCommentsList[replyingToUser.parentIndex];
+            if (parentCmt) {
+                if (!parentCmt.replies) parentCmt.replies = [];
+                parentCmt.replies.push({
+                    name: nameInput.value.trim() || 'Anonymous',
+                    vote: currentChoiceVote,
+                    replyTo: replyingToUser.targetName,
+                    text: textInput.value.trim(),
+                    likes: 0,
+                    liked: false
+                });
+            }
+            replyingToUser = null;
+            textInput.placeholder = "Write a comment...";
+        } else {
+            userCommentsList.unshift({
+                id: Date.now(),
+                name: nameInput.value.trim() || 'Anonymous',
+                vote: currentChoiceVote,
+                text: textInput.value.trim(),
+                likes: 0,
+                liked: false,
+                replies: []
+            });
+        }
         textInput.value = '';
+        saveComments();
         renderCommentsList();
     }
 
     function toggleCommentMenu(index) {
+        document.querySelectorAll('.comment-dropdown').forEach((d, idx) => {
+            if(idx !== index) d.style.display = 'none';
+        });
         const menu = document.getElementById(`comment-menu-${index}`);
         menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    function deleteComment(index) {
-        userCommentsList.splice(index, 1);
+    function likeComment(index) {
+        let c = userCommentsList[index];
+        if(c.liked) {
+            c.liked = false;
+            c.likes = Math.max(0, (c.likes || 1) - 1);
+        } else {
+            c.liked = true;
+            c.likes = (c.likes || 0) + 1;
+        }
+        saveComments();
         renderCommentsList();
     }
 
-    window.onload = () => {
-        showIntroScreen();
-    };
-</script>
+    function promptReply(parentIndex, targetName) {
+        replyingToUser = { parentIndex, targetName };
+        const textInput = document.getElementById('comment-text');
+        textInput.placeholder = `Replying to @${targetName}...`;
+        textInput.focus();
+    }
 
-</body>
-</html>
+    function likeReply(parentIndex, replyIndex) {
+        let rep = userCommentsList[parentIndex].replies[replyIndex];
+        if(rep.liked) {
+            rep.liked = false;
+            rep.likes = Math.max(0, (rep.likes || 1) - 1);
+        } else {
+            rep.liked = true;
+            rep.likes = (rep.likes || 0) + 1;
+        }
+        saveComments();
+        renderCommentsList();
+    }
+
+    function deleteComment(index) {
+        userCommentsList.splice(index, 1);
+        saveComments();
+        renderCommentsList();
+    }
+
+    function deleteReply(parentIndex, reply
