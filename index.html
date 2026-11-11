@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Is Seonghyeon a Cat Game</title>
-    <!-- Google Fonts: Titan One & Quicksand -->
-    <link href="https://fonts.googleapis.com/css2?family=Titan+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <title>IS SEONGHYEON A CAT?</title>
+    <!-- Google Fonts: Titan One & Quicksand / Be Vietnam Pro -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Titan+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-pink: #f8d7da;
@@ -80,6 +81,10 @@
             color: var(--dark-burgundy);
             text-shadow: 0 0 8px var(--glow-color), 0 0 15px rgba(255, 255, 255, 0.5);
             text-align: center;
+        }
+
+        .font-vietnamese {
+            font-family: 'Be Vietnam Pro', sans-serif;
         }
 
         /* INTRO SCREEN */
@@ -423,4 +428,737 @@
             color: #333;
         }
 
-        .
+        .comment-row-action {
+            display: flex;
+            gap: 8px;
+        }
+
+        .send-btn {
+            background-color: var(--dark-burgundy);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-family: 'Titan One', cursive;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .comment-item {
+            background: #fff9fa;
+            border: 1px solid #f5e1e5;
+            border-radius: 10px;
+            padding: 8px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            position: relative;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--dark-burgundy);
+        }
+
+        .voted-badge {
+            background-color: #2ecc71;
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 5px;
+            border-radius: 5px;
+            font-family: 'Titan One', cursive;
+        }
+
+        .voted-badge.no {
+            background-color: #e74c3c;
+        }
+
+        .comment-time {
+            font-size: 0.65rem;
+            color: #888;
+            margin-left: auto;
+        }
+
+        .comment-body {
+            font-size: 0.85rem;
+            color: #444;
+        }
+
+        .comment-footer-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .action-like, .action-reply {
+            cursor: pointer;
+        }
+
+        .action-like.liked {
+            color: #e74c3c;
+        }
+
+        .comment-menu-btn {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            background: none;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .comment-dropdown {
+            position: absolute;
+            right: 8px;
+            top: 26px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: none;
+            flex-direction: column;
+            z-index: 5;
+        }
+
+        .comment-dropdown button {
+            background: none;
+            border: none;
+            padding: 5px 12px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .comment-dropdown button:hover {
+            background: #f0f0f0;
+        }
+
+        /* ADMIN MODAL */
+        #admin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .admin-content {
+            background: #2b131c;
+            width: 100%;
+            max-width: 550px;
+            border-radius: 18px;
+            padding: 15px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 3px solid var(--main-pink);
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .admin-tab-btn {
+            background: #4a2533;
+            color: #fff;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+
+        .admin-tab-btn.active {
+            background: var(--main-pink);
+            font-weight: bold;
+        }
+
+        .admin-section {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .admin-section.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+
+    <!-- 1. INTRO SCREEN -->
+    <div id="intro-screen" class="screen active">
+        <h1 class="glow-text">IS SEONGHYEON A CAT?</h1>
+        <div class="video-box">
+            <video id="intro-video" src="intro-video.mp4" autoplay muted playsinline controls></video>
+        </div>
+        <div class="btn-group">
+            <button class="custom-btn" onclick="replayIntro()">🔄 REPLAY INTRO</button>
+            <button class="custom-btn primary" onclick="goToSelectStage()">Start Game ➔</button>
+        </div>
+    </div>
+
+    <!-- 2. SELECT STAGE SCREEN -->
+    <div id="select-screen" class="screen">
+        <div class="vertical-title">SELECT STAGE</div>
+        <div class="stages-scroll-area" id="stages-scroll-container">
+            <!-- EASY -->
+            <div class="stage-card-item" onclick="startStage(1)">
+                <div class="stage-media-wrapper">
+                    <img src="stage1-easy-img.jpg" alt="EASY">
+                    <video src="stage1-easy-video.mp4" muted loop playsinline style="display:none;"></video>
+                </div>
+                <h3>EASY</h3>
+            </div>
+            <!-- MEDIUM -->
+            <div class="stage-card-item" onclick="startStage(2)">
+                <div class="stage-media-wrapper">
+                    <img src="stage2-medium-img.jpg" alt="MEDIUM">
+                    <video src="stage2-medium-video.mp4" muted loop playsinline style="display:none;"></video>
+                </div>
+                <h3>MEDIUM</h3>
+            </div>
+            <!-- HARD -->
+            <div class="stage-card-item" onclick="startStage(3)">
+                <div class="stage-media-wrapper">
+                    <img src="stage3-hard-img.jpg" alt="HARD">
+                    <video src="stage3-hard-video.mp4" muted loop playsinline style="display:none;"></video>
+                </div>
+                <h3>HARD</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. GAMEPLAY SCREEN -->
+    <div id="gameplay-screen" class="screen">
+        <div class="game-top-bar">
+            <button class="top-btn" onclick="goToSelectStage()">🏠 SELECT</button>
+            <div class="stage-info-title" id="game-stage-title">STAGE 1: SKEPTICAL</div>
+            <div class="game-stats">
+                <span id="timer-display">⏱️ 00:00</span>
+                <span id="matches-display">🐾 0</span>
+            </div>
+            <button class="top-btn" onclick="toggleAudio()">🔊</button>
+        </div>
+        <div class="preview-banner" id="preview-banner-box">Preview Time: <span id="preview-sec">3</span>s</div>
+        <div class="cards-grid" id="cards-grid-container"></div>
+    </div>
+
+    <!-- 4. VICTORY SCREEN -->
+    <div id="victory-screen" class="screen">
+        <h2 class="glow-text" id="victory-title-text">STAGE 1 CLEARED!</h2>
+        <div class="victory-img-box">
+            <img id="victory-img-elem" src="victory1-img.png" alt="Victory">
+        </div>
+        <h2 id="victory-question-text" style="font-size: 1rem;">ARE YOU STILL SKEPTICAL?</h2>
+        <div class="victory-buttons" id="victory-buttons-container">
+            <button class="custom-btn" style="flex:1;" onclick="nextStageOrResult()">NOT SURE ➔</button>
+        </div>
+    </div>
+
+    <!-- 5. RESULT MEDIA & COMMENT SCREEN (YES/NO) -->
+    <div id="result-media-screen" class="screen">
+        <div class="video-box" style="width: 100%;">
+            <video id="result-video-player" src="yes-button-video.mp4" controls autoplay playsinline></video>
+        </div>
+        <div class="comment-section-box">
+            <h3 class="glow-text">LEAVE YOUR COMMENTS</h3>
+            <input type="text" id="user-name-input" class="name-input font-vietnamese" placeholder="YOUR NAME">
+            <div class="comment-row-action">
+                <input type="text" id="user-comment-input" class="comment-input font-vietnamese" placeholder="WRITE COMMENTS...">
+                <button class="send-btn" onclick="postComment()">SEND</button>
+            </div>
+            <div class="comments-list font-vietnamese" id="comments-list-container"></div>
+        </div>
+        <button class="custom-btn primary" id="bottom-action-btn" onclick="handleBottomAction()" style="width: 100%; margin-bottom: 15px;">EM CHIP CAM ON</button>
+    </div>
+
+</div>
+
+<!-- ADMIN CONFIGURATION MODAL -->
+<div id="admin-modal">
+    <div class="admin-content">
+        <div class="admin-header">
+            <h3 class="glow-text" style="color:#fff;">GAME CONFIGURATION</h3>
+            <button onclick="closeAdmin()" style="background:none; border:none; color:#fff; font-size:1.1rem; cursor:pointer;">✕</button>
+        </div>
+        <div class="admin-tabs">
+            <button class="admin-tab-btn active" onclick="switchAdminTab(0)">Intro & Hover</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(1)">Stage 1 (EASY)</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(2)">Stage 2 (MEDIUM)</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(3)">Stage 3 (HARD)</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(4)">Stage Bonus</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(5)">Result (YES/NO)</button>
+        </div>
+        <div class="admin-section active">
+            <button class="custom-btn primary" onclick="goToScreen('intro-screen')">Test Run Intro</button>
+            <button class="custom-btn primary" onclick="goToScreen('select-screen')">Test Run Stage Select</button>
+        </div>
+        <div class="admin-section"><button class="custom-btn primary" onclick="startStage(1)">Test Run Stage 1</button></div>
+        <div class="admin-section"><button class="custom-btn primary" onclick="startStage(2)">Test Run Stage 2</button></div>
+        <div class="admin-section"><button class="custom-btn primary" onclick="startStage(3)">Test Run Stage 3</button></div>
+        <div class="admin-section"><button class="custom-btn primary" onclick="startStage(4)">Test Run Stage Bonus</button></div>
+        <div class="admin-section"><button class="custom-btn primary" onclick="showResultScreen('yes')">Test YES Slide</button></div>
+    </div>
+</div>
+
+<script>
+    // ĐÚNG CẶP ĐÁP ÁN PHONE PROMPT (KHÔNG COPY TỪ FILE CODE PC CŨ)
+    const stagesData = {
+        1: {
+            name: "STAGE 1: SKEPTICAL",
+            levelName: "EASY",
+            previewTime: 3,
+            audio: "stage1-audio.mp3",
+            victoryImg: "victory1-img.png",
+            question: "ARE YOU STILL SKEPTICAL?",
+            buttonText: "NOT SURE ➔",
+            cards: [
+                { id: 1, img: "stage1-card-1.jpg" },
+                { id: 2, img: "stage1-card-2.jpg" },
+                { id: 3, img: "stage1-card-3.png" },
+                { id: 4, img: "stage1-card-4.jpg" }
+            ],
+            pairs: [[1, 4], [2, 3]]
+        },
+        2: {
+            name: "STAGE 2: TENTATIVE",
+            levelName: "MEDIUM",
+            previewTime: 3,
+            audio: "stage2-audio.mp3",
+            victoryImg: "victory2-img.png",
+            question: "HAVE YOU STARTED TO BELIEVE?",
+            buttonText: "A LITTLE",
+            cards: [
+                { id: 1, img: "stage2-card-1.jpg" },
+                { id: 2, img: "stage2-card-2.jpg" },
+                { id: 3, img: "stage2-card-3.jpg" },
+                { id: 4, img: "stage2-card-4.jpg" },
+                { id: 5, img: "stage2-card-5.jpg" },
+                { id: 6, img: "stage2-card-6.jpg" },
+                { id: 7, img: "stage2-card-7.jpg" },
+                { id: 8, img: "stage2-card-8.jpg" }
+            ],
+            pairs: [[1, 6], [2, 7], [3, 8], [4, 5]]
+        },
+        3: {
+            name: "STAGE 3: CONVINCED",
+            levelName: "HARD",
+            previewTime: 3,
+            audio: "stage3-audio.mp3",
+            victoryImg: "victory3-img.png",
+            question: "ARE YOU FULLY CONVINCED NOW?",
+            buttonText: "ABSOLUTELY",
+            cards: [
+                { id: 1, img: "stage3-card-1.jpg" },
+                { id: 2, img: "stage3-card-2.jpg" },
+                { id: 3, img: "stage3-card-3.jpg" },
+                { id: 4, img: "stage3-card-4.jpg" },
+                { id: 5, img: "stage3-card-5.jpg" },
+                { id: 6, img: "stage3-card-6.jpg" },
+                { id: 7, img: "stage3-card-7.jpg" },
+                { id: 8, img: "stage3-card-8.jpg" },
+                { id: 9, img: "stage3-card-9.jpg" },
+                { id: 10, img: "stage3-card-10.jpg" },
+                { id: 11, img: "stage3-card-11.jpg" },
+                { id: 12, img: "stage3-card-12.jpg" }
+            ],
+            pairs: [[1, 6], [2, 7], [3, 12], [4, 9], [5, 11], [8, 10]]
+        },
+        4: {
+            name: "STAGE 4: UNSHAKABLE",
+            levelName: "BONUS",
+            previewTime: 5,
+            audio: "stage-bonus-audio.mp3",
+            victoryImg: "victory-bonus-img.png",
+            question: "IS SEONGHYEON A CAT?",
+            isBonus: true,
+            cards: [
+                { id: 1, img: "bonus-card-1.jpg" }, { id: 2, img: "bonus-card-2.jpg" },
+                { id: 3, img: "bonus-card-3.jpg" }, { id: 4, img: "bonus-card-4.jpg" },
+                { id: 5, img: "bonus-card-5.png" }, { id: 6, img: "bonus-card-6.jpg" },
+                { id: 7, img: "bonus-card-7.jpg" }, { id: 8, img: "bonus-card-8.jpg" },
+                { id: 9, img: "bonus-card-9.jpg" }, { id: 10, img: "bonus-card-10.png" },
+                { id: 11, img: "bonus-card-11.jpg" }, { id: 12, img: "bonus-card-12.jpg" },
+                { id: 13, img: "bonus-card-13.png" }, { id: 14, img: "bonus-card-14.jpg" },
+                { id: 15, img: "bonus-card-15.png" }, { id: 16, img: "bonus-card-16.jpg" },
+                { id: 17, img: "bonus-card-17.jpg" }, { id: 18, img: "bonus-card-18.jpg" },
+                { id: 19, img: "bonus-card-19.jpg" }, { id: 20, img: "bonus-card-20.jpg" }
+            ],
+            pairs: [[1, 14], [2, 8], [3, 18], [4, 5], [6, 16], [7, 10], [9, 20], [11, 17], [12, 15], [13, 19]]
+        }
+    };
+
+    let currentStageId = 1;
+    let gameTimer = null;
+    let secondsElapsed = 0;
+    let matchesCount = 0;
+    let firstSelectedCard = null;
+    let canInteract = false;
+    let currentBgmAudio = null;
+    let currentVoteChoice = 'yes';
+    let commentsData = [];
+
+    function goToScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        if(screenId !== 'gameplay-screen' && currentBgmAudio) {
+            currentBgmAudio.pause();
+        }
+    }
+
+    function replayIntro() {
+        const vid = document.getElementById('intro-video');
+        vid.currentTime = 0;
+        vid.play();
+    }
+
+    function goToSelectStage() {
+        goToScreen('select-screen');
+        setupStageHoverObserver();
+    }
+
+    function setupStageHoverObserver() {
+        const container = document.getElementById('select-screen');
+        const items = document.querySelectorAll('.stage-card-item');
+        
+        const checkVisibleItem = () => {
+            const containerRect = container.getBoundingClientRect();
+            const targetLine = containerRect.top + containerRect.height / 2;
+
+            items.forEach(item => {
+                const rect = item.getBoundingClientRect();
+                const wrapper = item.querySelector('.stage-media-wrapper');
+                const img = wrapper.querySelector('img');
+                const video = wrapper.querySelector('video');
+
+                if(rect.top <= targetLine && rect.bottom >= targetLine) {
+                    if(video.paused) {
+                        img.style.display = 'none';
+                        video.style.display = 'block';
+                        video.play().catch(e => {});
+                    }
+                } else {
+                    if(!video.paused) {
+                        video.pause();
+                        video.currentTime = 0;
+                        video.style.display = 'none';
+                        img.style.display = 'block';
+                    }
+                }
+            });
+        };
+
+        container.removeEventListener('scroll', checkVisibleItem);
+        container.addEventListener('scroll', checkVisibleItem);
+        setTimeout(checkVisibleItem, 100);
+    }
+
+    function startStage(stageId) {
+        currentStageId = stageId;
+        const stage = stagesData[stageId];
+        goToScreen('gameplay-screen');
+
+        document.getElementById('game-stage-title').innerText = stage.name;
+        document.getElementById('matches-display').innerText = `🐾 0`;
+        matchesCount = 0;
+        secondsElapsed = 0;
+        canInteract = false;
+
+        if(currentBgmAudio) currentBgmAudio.pause();
+        currentBgmAudio = new Audio(stage.audio);
+        currentBgmAudio.volume = 0.8;
+        currentBgmAudio.loop = true;
+        currentBgmAudio.play().catch(e => {});
+
+        if(gameTimer) clearInterval(gameTimer);
+        gameTimer = setInterval(() => {
+            secondsElapsed++;
+            let mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+            let secs = String(secondsElapsed % 60).padStart(2, '0');
+            document.getElementById('timer-display').innerText = `⏱️ ${mins}:${secs}`;
+        }, 1000);
+
+        const gridContainer = document.getElementById('cards-grid-container');
+        gridContainer.className = `cards-grid grid-stage-${stageId === 4 ? 'bonus' : stageId}`;
+        gridContainer.innerHTML = '';
+
+        stage.cards.forEach((card, index) => {
+            const cardElem = document.createElement('div');
+            cardElem.className = 'card flipped'; 
+            cardElem.dataset.id = card.id;
+
+            cardElem.innerHTML = `
+                <div class="card-inner">
+                    <div class="card-front">
+                        <img src="${card.img}" alt="card">
+                    </div>
+                    <div class="card-back">
+                        <img src="card-back-1-2-3-bonus.jpg" alt="back">
+                    </div>
+                </div>
+            `;
+            cardElem.addEventListener('click', () => onCardClick(cardElem));
+            gridContainer.appendChild(cardElem);
+        });
+
+        let previewSec = stage.previewTime;
+        document.getElementById('preview-banner-box').style.display = 'block';
+        document.getElementById('preview-sec').innerText = previewSec;
+
+        let previewInterval = setInterval(() => {
+            previewSec--;
+            document.getElementById('preview-sec').innerText = previewSec;
+            if(previewSec <= 0) {
+                clearInterval(previewInterval);
+                document.getElementById('preview-banner-box').style.display = 'none';
+                document.querySelectorAll('.card').forEach(c => c.classList.remove('flipped'));
+                canInteract = true;
+            }
+        }, 1000);
+    }
+
+    function onCardClick(cardElem) {
+        if(!canInteract || cardElem.classList.contains('flipped') || cardElem.classList.contains('matched')) return;
+
+        cardElem.classList.add('flipped');
+
+        if(!firstSelectedCard) {
+            firstSelectedCard = cardElem;
+        } else {
+            canInteract = false;
+            let id1 = parseInt(firstSelectedCard.dataset.id);
+            let id2 = parseInt(cardElem.dataset.id);
+            let stage = stagesData[currentStageId];
+
+            let isMatch = stage.pairs.some(pair => (pair[0] === id1 && pair[1] === id2) || (pair[0] === id2 && pair[1] === id1));
+
+            if(isMatch) {
+                setTimeout(() => {
+                    firstSelectedCard.classList.add('matched');
+                    cardElem.classList.add('matched');
+                    firstSelectedCard = null;
+                    matchesCount++;
+                    document.getElementById('matches-display').innerText = `🐾 ${matchesCount}`;
+                    canInteract = true;
+
+                    if(matchesCount === stage.pairs.length) {
+                        clearInterval(gameTimer);
+                        if(currentBgmAudio) currentBgmAudio.pause();
+                        setTimeout(showVictoryScreen, 500);
+                    }
+                }, 300);
+            } else {
+                setTimeout(() => {
+                    firstSelectedCard.classList.remove('flipped');
+                    cardElem.classList.remove('flipped');
+                    firstSelectedCard = null;
+                    canInteract = true;
+                }, 700);
+            }
+        }
+    }
+
+    function showVictoryScreen() {
+        const stage = stagesData[currentStageId];
+        goToScreen('victory-screen');
+
+        document.getElementById('victory-title-text').innerText = currentStageId === 4 ? "STAGE BONUS CLEARED!" : `STAGE ${currentStageId} CLEARED!`;
+        document.getElementById('victory-img-elem').src = stage.victoryImg;
+        document.getElementById('victory-question-text').innerText = stage.question;
+
+        const btnContainer = document.getElementById('victory-buttons');
+        if(stage.isBonus) {
+            btnContainer.innerHTML = `
+                <button class="custom-btn btn-no" onclick="showResultScreen('no')">NO</button>
+                <button class="custom-btn btn-yes" onclick="showResultScreen('yes')">YES</button>
+            `;
+        } else {
+            btnContainer.innerHTML = `<button class="custom-btn primary" style="flex:1; padding: 12px; border-radius: 16px;" onclick="nextStageOrResult()">${stage.buttonText}</button>`;
+        }
+    }
+
+    function nextStageOrResult() {
+        if(currentStageId < 3) {
+            startStage(currentStageId + 1);
+        } else if(currentStageId === 3) {
+            startStage(4);
+        }
+    }
+
+    function showResultScreen(choice) {
+        currentVoteChoice = choice;
+        goToScreen('result-media-screen');
+
+        const vidPlayer = document.getElementById('result-video-player');
+        vidPlayer.src = choice === 'yes' ? 'yes-button-video.mp4' : 'no-button-video.mp4';
+        vidPlayer.play().catch(e => {});
+
+        const bottomBtn = document.getElementById('bottom-action-btn');
+        bottomBtn.innerText = choice === 'yes' ? 'EM CHIP CAM ON' : 'WHY NOT ME!?';
+
+        renderComments();
+    }
+
+    let actionClickCount = 0;
+    function handleBottomAction() {
+        actionClickCount++;
+        if(actionClickCount >= 2) {
+            actionClickCount = 0;
+            goToScreen('intro-screen');
+        } else {
+            document.getElementById('result-media-screen').scrollTo({ top: 180, behavior: 'smooth' });
+        }
+    }
+
+    function postComment() {
+        const nameInput = document.getElementById('user-name-input');
+        const commentInput = document.getElementById('user-comment-input');
+
+        if(!nameInput.value.trim() || !commentInput.value.trim()) return;
+
+        const newComment = {
+            id: Date.now(),
+            name: nameInput.value.trim(),
+            text: commentInput.value.trim(),
+            vote: currentVoteChoice,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            likes: 0,
+            liked: false
+        };
+
+        commentsData.unshift(newComment);
+        commentInput.value = '';
+        renderComments();
+    }
+
+    function renderComments() {
+        const listContainer = document.getElementById('comments-list-container');
+        listContainer.innerHTML = '';
+
+        commentsData.forEach(c => {
+            const item = document.createElement('div');
+            item.className = 'comment-item';
+            item.innerHTML = `
+                <div class="comment-header">
+                    <span>${c.name}</span>
+                    <span class="voted-badge ${c.vote === 'no' ? 'no' : ''}">voted ${c.vote.toUpperCase()}</span>
+                    <span class="comment-time">${c.time}</span>
+                    <button class="comment-menu-btn" onclick="toggleCommentMenu(${c.id})">⋮</button>
+                    <div class="comment-dropdown" id="dropdown-${c.id}">
+                        <button onclick="editComment(${c.id})">Edit</button>
+                        <button onclick="deleteComment(${c.id})">Delete</button>
+                    </div>
+                </div>
+                <div class="comment-body">${c.text}</div>
+                <div class="comment-footer-actions">
+                    <span class="action-like ${c.liked ? 'liked' : ''}" onclick="likeComment(${c.id})">❤️ ${c.likes}</span>
+                    <span class="action-reply">Reply</span>
+                </div>
+            `;
+            listContainer.appendChild(item);
+        });
+    }
+
+    function toggleCommentMenu(id) {
+        const dropdown = document.getElementById(`dropdown-${id}`);
+        document.querySelectorAll('.comment-dropdown').forEach(d => { if(d !== dropdown) d.style.display = 'none'; });
+        dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function deleteComment(id) {
+        commentsData = commentsData.filter(c => c.id !== id);
+        renderComments();
+    }
+
+    function editComment(id) {
+        const comment = commentsData.find(c => c.id === id);
+        const newText = prompt("Edit your comment:", comment.text);
+        if(newText !== null && newText.trim() !== '') {
+            comment.text = newText.trim();
+            renderComments();
+        }
+    }
+
+    function likeComment(id) {
+        const comment = commentsData.find(c => c.id === id);
+        if(comment.liked) {
+            comment.likes--;
+            comment.liked = false;
+        } else {
+            comment.likes++;
+            comment.liked = true;
+        }
+        renderComments();
+    }
+
+    window.addEventListener('keydown', (e) => {
+        if(e.shiftKey && e.key.toLowerCase() === 'u') {
+            document.getElementById('admin-modal').style.display = 'flex';
+        }
+        if(e.shiftKey && e.key.toLowerCase() === 'e') {
+            document.getElementById('admin-modal').style.display = 'none';
+        }
+    });
+
+    function closeAdmin() {
+        document.getElementById('admin-modal').style.display = 'none';
+    }
+
+    function switchAdminTab(index) {
+        const tabs = document.querySelectorAll('.admin-tab-btn');
+        const sections = document.querySelectorAll('.admin-section');
+        tabs.forEach((t, i) => {
+            t.classList.toggle('active', i === index);
+            sections[i].classList.toggle('active', i === index);
+        });
+    }
+
+    window.onload = () => {
+        commentsData = [
+            { id: 1, name: "Chửng", text: "Hi", vote: "yes", time: "07:41", likes: 0, liked: false },
+            { id: 2, name: "Chửng", text: "Ble", vote: "yes", time: "07:41", likes: 1, liked: true }
+        ];
+    };
+</script>
+
+</body>
+</html>
