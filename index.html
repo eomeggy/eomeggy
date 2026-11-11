@@ -148,7 +148,7 @@
             background-color: var(--dark-burgundy);
             color: #fff;
         }
-        /* SELECT STAGE SCREEN: Đã bỏ chữ dọc, tăng kích thước khung ảnh gần full màn hình, canh giữa đối xứng */
+        /* SELECT STAGE SCREEN */
         #select-screen {
             padding: 20px 12px;
             overflow-y: auto;
@@ -355,14 +355,14 @@
             border: none;
             cursor: pointer;
         }
-        /* RESULT MEDIA & COMMENTS */
+        /* RESULT MEDIA & COMMENTS (Căn giữa khu vực chính giữa theo chiều dọc ban đầu) */
         #result-media-screen {
             padding: 15px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Canh giữa video theo chiều dọc ban đầu */
+            justify-content: center;
             gap: 12px;
             transition: all 0.3s ease;
         }
@@ -579,37 +579,37 @@
     <div id="intro-screen" class="screen active">
         <h1 class="title-exact-match">IS SEONGHYEON A CAT?</h1>
         <div class="video-box-intro">
-            <video id="intro-video" src="intro-video.mp4" autoplay loop muted playsinline controls></video>
+            <video id="intro-video" src="intro-video-phone.mp4" autoplay loop muted playsinline controls></video>
         </div>
         <div class="btn-group">
             <button class="custom-btn" onclick="replayIntro()">REPLAY INTRO</button>
             <button class="custom-btn primary" onclick="goToSelectStage()">Start Game ➔</button>
         </div>
     </div>
-    <!-- 2. SELECT STAGE SCREEN (Đã bỏ chữ dọc, khung ảnh cân đối gần full màn hình) -->
+    <!-- 2. SELECT STAGE SCREEN -->
     <div id="select-screen" class="screen" onclick="handleScreenClick(event)">
         <div class="stages-scroll-area" id="stages-scroll-container">
             <!-- EASY -->
             <div class="stage-card-item">
                 <div class="stage-media-wrapper" onclick="toggleStageVideo(1, event)">
-                    <img id="stage-img-1" src="stage1-easy-img.jpg" alt="EASY">
-                    <video id="stage-vid-1" src="stage1-easy-video.mp4" loop playsinline style="display:none;"></video>
+                    <img id="stage-img-1" src="stage1-easy-img-phone.jpg" alt="EASY">
+                    <video id="stage-vid-1" src="stage1-easy-video-phone.mp4" loop playsinline style="display:none;"></video>
                 </div>
                 <h3 onclick="startStage(1)">EASY</h3>
             </div>
             <!-- MEDIUM -->
             <div class="stage-card-item">
                 <div class="stage-media-wrapper" onclick="toggleStageVideo(2, event)">
-                    <img id="stage-img-2" src="stage2-medium-img.jpg" alt="MEDIUM">
-                    <video id="stage-vid-2" src="stage2-medium-video.mp4" loop playsinline style="display:none;"></video>
+                    <img id="stage-img-2" src="stage2-medium-img-phone.jpg" alt="MEDIUM">
+                    <video id="stage-vid-2" src="stage2-medium-video-phone.mp4" loop playsinline style="display:none;"></video>
                 </div>
                 <h3 onclick="startStage(2)">MEDIUM</h3>
             </div>
             <!-- HARD -->
             <div class="stage-card-item">
                 <div class="stage-media-wrapper" onclick="toggleStageVideo(3, event)">
-                    <img id="stage-img-3" src="stage3-hard-img.jpg" alt="HARD">
-                    <video id="stage-vid-3" src="stage3-hard-video.mp4" loop playsinline style="display:none;"></video>
+                    <img id="stage-img-3" src="stage3-hard-img-phone.jpg" alt="HARD">
+                    <video id="stage-vid-3" src="stage3-hard-video-phone.mp4" loop playsinline style="display:none;"></video>
                 </div>
                 <h3 onclick="startStage(3)">HARD</h3>
             </div>
@@ -633,7 +633,7 @@
     <div id="victory-screen" class="screen">
         <h2 class="title-exact-match" id="victory-title-text" style="font-size: 1.4rem;">STAGE 1 CLEARED!</h2>
         <div class="victory-img-box">
-            <img id="victory-img-elem" src="victory1-img.png" alt="Victory">
+            <img id="victory-img-elem" src="victory1-img-phone.png" alt="Victory">
         </div>
         <h2 id="victory-question-text" style="font-size: 1rem; color: var(--dark-burgundy);">ARE YOU STILL SKEPTICAL?</h2>
         <div class="victory-buttons" id="victory-buttons-container"></div>
@@ -643,7 +643,7 @@
         <div class="video-box" id="result-video-box" style="width: 100%;">
             <video id="result-video-player" controls autoplay loop playsinline></video>
         </div>
-        <!-- Khung bình luận nằm ở giữa Video và Nút bấm khi bấm lần 1 -->
+        <!-- Khung bình luận nằm ở giữa Video và Nút bấm khi bấm lần 2 -->
         <div class="comment-section-box" id="comment-box-elem" style="display: none;">
             <h3 class="title-exact-match" style="font-size: 0.95rem;">LEAVE YOUR COMMENTS</h3>
             <input type="text" id="user-name-input" class="name-input font-vietnamese" placeholder="YOUR NAME">
@@ -696,7 +696,6 @@
             <p style="font-size:0.8rem;">Stage Bonus BGM & Card Configuration</p>
             <button class="custom-btn primary" onclick="startStage(4)">Test Run Stage Bonus</button>
         </div>
-        <!-- Tab Test Video YES/NO mới bổ sung trong Admin -->
         <div class="admin-section">
             <p style="font-size:0.8rem;">Test nhanh Video Kết Quả:</p>
             <div style="display:flex; gap:10px;">
@@ -716,15 +715,15 @@
             name: "STAGE 1: SKEPTICAL",
             levelName: "EASY",
             previewTime: 3,
-            audio: "stage1-audio.mp3",
-            victoryImg: "victory1-img.png",
+            audio: "stage1-audio-phone.mp3",
+            victoryImg: "victory1-img-phone.png",
             question: "ARE YOU STILL SKEPTICAL?",
             buttonText: "NOT SURE ➔",
             cards: [
-                { id: 1, img: "stage1-card-1.jpg" },
-                { id: 2, img: "stage1-card-2.jpg" },
-                { id: 3, img: "stage1-card-3.png" },
-                { id: 4, img: "stage1-card-4.jpg" }
+                { id: 1, img: "stage1-card-1-phone.jpg" },
+                { id: 2, img: "stage1-card-2-phone.jpg" },
+                { id: 3, img: "stage1-card-3-phone.png" },
+                { id: 4, img: "stage1-card-4-phone.jpg" }
             ],
             pairs: [[1, 4], [2, 3]]
         },
@@ -732,19 +731,19 @@
             name: "STAGE 2: TENTATIVE",
             levelName: "MEDIUM",
             previewTime: 3,
-            audio: "stage2-audio.mp3",
-            victoryImg: "victory2-img.png",
+            audio: "stage2-audio-phone.mp3",
+            victoryImg: "victory2-img-phone.png",
             question: "HAVE YOU STARTED TO BELIEVE?",
             buttonText: "A LITTLE ➔",
             cards: [
-                { id: 1, img: "stage2-card-1.jpg" },
-                { id: 2, img: "stage2-card-2.jpg" },
-                { id: 3, img: "stage2-card-3.jpg" },
-                { id: 4, img: "stage2-card-4.jpg" },
-                { id: 5, img: "stage2-card-5.jpg" },
-                { id: 6, img: "stage2-card-6.jpg" },
-                { id: 7, img: "stage2-card-7.jpg" },
-                { id: 8, img: "stage2-card-8.jpg" }
+                { id: 1, img: "stage2-card-1-phone.jpg" },
+                { id: 2, img: "stage2-card-2-phone.jpg" },
+                { id: 3, img: "stage2-card-3-phone.jpg" },
+                { id: 4, img: "stage2-card-4-phone.jpg" },
+                { id: 5, img: "stage2-card-5-phone.jpg" },
+                { id: 6, img: "stage2-card-6-phone.jpg" },
+                { id: 7, img: "stage2-card-7-phone.jpg" },
+                { id: 8, img: "stage2-card-8-phone.jpg" }
             ],
             pairs: [[1, 6], [2, 7], [3, 8], [4, 5]]
         },
@@ -752,23 +751,23 @@
             name: "STAGE 3: CONVINCED",
             levelName: "HARD",
             previewTime: 3,
-            audio: "stage3-audio.mp3",
-            victoryImg: "victory3-img.png",
+            audio: "stage3-audio-phone.mp3",
+            victoryImg: "victory3-img-phone.png",
             question: "ARE YOU FULLY CONVINCED NOW?",
             buttonText: "ABSOLUTELY ➔",
             cards: [
-                { id: 1, img: "stage3-card-1.jpg" },
-                { id: 2, img: "stage3-card-2.jpg" },
-                { id: 3, img: "stage3-card-3.jpg" },
-                { id: 4, img: "stage3-card-4.jpg" },
-                { id: 5, img: "stage3-card-5.jpg" },
-                { id: 6, img: "stage3-card-6.jpg" },
-                { id: 7, img: "stage3-card-7.jpg" },
-                { id: 8, img: "stage3-card-8.jpg" },
-                { id: 9, img: "stage3-card-9.jpg" },
-                { id: 10, img: "stage3-card-10.jpg" },
-                { id: 11, img: "stage3-card-11.jpg" },
-                { id: 12, img: "stage3-card-12.jpg" }
+                { id: 1, img: "stage3-card-1-phone.jpg" },
+                { id: 2, img: "stage3-card-2-phone.jpg" },
+                { id: 3, img: "stage3-card-3-phone.jpg" },
+                { id: 4, img: "stage3-card-4-phone.jpg" },
+                { id: 5, img: "stage3-card-5-phone.jpg" },
+                { id: 6, img: "stage3-card-6-phone.jpg" },
+                { id: 7, img: "stage3-card-7-phone.jpg" },
+                { id: 8, img: "stage3-card-8-phone.jpg" },
+                { id: 9, img: "stage3-card-9-phone.jpg" },
+                { id: 10, img: "stage3-card-10-phone.jpg" },
+                { id: 11, img: "stage3-card-11-phone.jpg" },
+                { id: 12, img: "stage3-card-12-phone.jpg" }
             ],
             pairs: [[1, 6], [2, 7], [3, 12], [4, 9], [5, 11], [8, 10]]
         },
@@ -776,21 +775,21 @@
             name: "STAGE 4: UNSHAKABLE",
             levelName: "BONUS",
             previewTime: 5,
-            audio: "stage-bonus-audio.mp3",
-            victoryImg: "victory-bonus-img.png",
+            audio: "stage-bonus-audio-phone.mp3",
+            victoryImg: "victory-bonus-img-phone.png",
             question: "IS SEONGHYEON A CAT?",
             isBonus: true,
             cards: [
-                { id: 1, img: "bonus-card-1.jpg" }, { id: 2, img: "bonus-card-2.jpg" },
-                { id: 3, img: "bonus-card-3.jpg" }, { id: 4, img: "bonus-card-4.jpg" },
-                { id: 5, img: "bonus-card-5.png" }, { id: 6, img: "bonus-card-6.jpg" },
-                { id: 7, img: "bonus-card-7.jpg" }, { id: 8, img: "bonus-card-8.jpg" },
-                { id: 9, img: "bonus-card-9.jpg" }, { id: 10, img: "bonus-card-10.png" },
-                { id: 11, img: "bonus-card-11.jpg" }, { id: 12, img: "bonus-card-12.jpg" },
-                { id: 13, img: "bonus-card-13.png" }, { id: 14, img: "bonus-card-14.jpg" },
-                { id: 15, img: "bonus-card-15.png" }, { id: 16, img: "bonus-card-16.jpg" },
-                { id: 17, img: "bonus-card-17.jpg" }, { id: 18, img: "bonus-card-18.jpg" },
-                { id: 19, img: "bonus-card-19.jpg" }, { id: 20, img: "bonus-card-20.jpg" }
+                { id: 1, img: "bonus-card-1-phone.jpg" }, { id: 2, img: "bonus-card-2-phone.jpg" },
+                { id: 3, img: "bonus-card-3-phone.jpg" }, { id: 4, img: "bonus-card-4-phone.jpg" },
+                { id: 5, img: "bonus-card-5-phone.png" }, { id: 6, img: "bonus-card-6-phone.jpg" },
+                { id: 7, img: "bonus-card-7-phone.jpg" }, { id: 8, img: "bonus-card-8-phone.jpg" },
+                { id: 9, img: "bonus-card-9-phone.jpg" }, { id: 10, img: "bonus-card-10-phone.png" },
+                { id: 11, img: "bonus-card-11-phone.jpg" }, { id: 12, img: "bonus-card-12-phone.jpg" },
+                { id: 13, img: "bonus-card-13-phone.png" }, { id: 14, img: "bonus-card-14-phone.jpg" },
+                { id: 15, img: "bonus-card-15-phone.png" }, { id: 16, img: "bonus-card-16-phone.jpg" },
+                { id: 17, img: "bonus-card-17-phone.jpg" }, { id: 18, img: "bonus-card-18-phone.jpg" },
+                { id: 19, img: "bonus-card-19-phone.jpg" }, { id: 20, img: "bonus-card-20-phone.jpg" }
             ],
             pairs: [[1, 14], [2, 8], [3, 18], [4, 5], [6, 16], [7, 10], [9, 20], [11, 17], [12, 15], [13, 19]]
         }
@@ -810,7 +809,7 @@
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     function loadComments() {
-        const saved = localStorage.getItem('seonghyeon_comments_v6');
+        const saved = localStorage.getItem('seonghyeon_comments_v7');
         if (saved) {
             try { commentsData = JSON.parse(saved); } catch(e) { commentsData = []; }
         } else {
@@ -821,7 +820,7 @@
         }
     }
     function saveComments() {
-        localStorage.setItem('seonghyeon_comments_v6', JSON.stringify(commentsData));
+        localStorage.setItem('seonghyeon_comments_v7', JSON.stringify(commentsData));
     }
 
     function playSoundEffect(type) {
@@ -875,7 +874,6 @@
     }
 
     function goToScreen(screenId) {
-        // Dừng triệt để video kết quả YES/NO khi rời khỏi màn hình này
         const resultVid = document.getElementById('result-video-player');
         if (screenId !== 'result-media-screen') {
             resultVid.pause();
@@ -992,7 +990,7 @@
                         <img src="${card.img}" alt="card">
                     </div>
                     <div class="card-back">
-                        <img src="card-back-1-2-3-bonus.jpg" alt="back">
+                        <img src="card-back-1-2-3-bonus-phone.jpg" alt="back">
                     </div>
                 </div>
             `;
@@ -1086,20 +1084,19 @@
         }
     }
 
-    // Kết quả YES/NO: Mặc định căn giữa video, ẩn khung bình luận
+    // Kết quả YES/NO: Mặc định căn giữa màn hình theo chiều dọc, ẩn khung bình luận
     function showResultScreen(choice) {
         currentVoteChoice = choice;
         actionClickCount = 0;
         goToScreen('result-media-screen');
         const vidPlayer = document.getElementById('result-video-player');
-        vidPlayer.src = choice === 'yes' ? 'yes-button-video.mp4' : 'no-button-video.mp4';
+        vidPlayer.src = choice === 'yes' ? 'yes-button-video-phone.mp4' : 'no-button-video-phone.mp4';
         vidPlayer.loop = true;
         vidPlayer.play().catch(e => {});
 
         const screen = document.getElementById('result-media-screen');
-        screen.style.justifyContent = 'center'; // Video nằm chính giữa chiều dọc
+        screen.style.justifyContent = 'center'; // Đưa video và nút bấm nằm ở khu vực chính giữa màn hình theo chiều dọc
         
-        // Ẩn khung bình luận ban đầu
         document.getElementById('comment-box-elem').style.display = 'none';
 
         const bottomBtn = document.getElementById('bottom-action-btn');
@@ -1110,13 +1107,14 @@
     function handleBottomAction() {
         actionClickCount++;
         if(actionClickCount >= 2) {
+            // Lần bấm thứ 2 trở lên sau khi đã hiện cmt: Quay về Intro
             actionClickCount = 0;
             goToScreen('intro-screen');
         } else {
+            // Lần bấm thứ 1: Tách layout ra, hiển thị khung bình luận xen giữa video và nút bấm
             const screen = document.getElementById('result-media-screen');
-            screen.style.justifyContent = 'flex-start'; // Trả về dạng cuộn để hiển thị đủ video, khung cmt và nút bấm
+            screen.style.justifyContent = 'flex-start';
             
-            // Bấm lần 1: Hiển thị khung bình luận xen kẽ giữa video và nút bấm
             const commentBox = document.getElementById('comment-box-elem');
             commentBox.style.display = 'flex';
             commentBox.scrollIntoView({ behavior: 'smooth' });
@@ -1159,7 +1157,6 @@
             if (c.replies && c.replies.length > 0) {
                 repliesHtml = '<div class="reply-container">';
                 c.replies.forEach((rep, rIndex) => {
-                    // Cú pháp hoàn chỉnh: tên người reply + voted YES/NO kèm quote @
                     repliesHtml += `
                         <div class="reply-item">
                             <span><b>${rep.name} <span class="voted-badge ${rep.vote === 'no' ? 'no' : ''}">voted ${rep.vote.toUpperCase()}</span></b>: @${rep.replyTo} ${rep.text}</span>
