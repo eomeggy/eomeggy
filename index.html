@@ -156,7 +156,7 @@
             align-items: flex-start;
         }
 
-        /* Chữ SELECT STAGE sát lề phải của khung điện thoại, phóng to 1.3 lần (1.4rem * 1.3 ≈ 1.82rem) */
+        /* Chữ SELECT STAGE sát lề phải của khung điện thoại, phóng to 1.3 lần */
         .vertical-title {
             position: absolute;
             right: 8px;
@@ -668,7 +668,6 @@
 
     <!-- 2. SELECT STAGE SCREEN -->
     <div id="select-screen" class="screen" onclick="handleScreenClick(event)">
-        <!-- Chữ SELECT STAGE phóng to 1.3 lần và áp sát lề phải khung điện thoại -->
         <div class="vertical-title title-exact-match">SELECT STAGE</div>
         <div class="stages-scroll-area" id="stages-scroll-container">
             <!-- EASY -->
@@ -720,9 +719,7 @@
             <img id="victory-img-elem" src="victory1-img.png" alt="Victory">
         </div>
         <h2 id="victory-question-text" style="font-size: 1rem; color: var(--dark-burgundy);">ARE YOU STILL SKEPTICAL?</h2>
-        <div class="victory-buttons" id="victory-buttons-container">
-            <button class="custom-btn" style="flex:1;" onclick="nextStageOrResult()">NOT SURE ➔</button>
-        </div>
+        <div class="victory-buttons" id="victory-buttons-container"></div>
     </div>
 
     <!-- 5. RESULT MEDIA & COMMENT SCREEN (YES/NO) -->
@@ -1131,25 +1128,33 @@
         const stage = stagesData[currentStageId];
         goToScreen('victory-screen');
 
-        document.getElementById('victory-title-text').innerText = currentStageId === 4 ? "STAGE BONUS CLEARED!" : `STAGE ${currentStageId} CLEARED!`;
+        document.getElementById('victory-title-text').innerText = (currentStageId === 4) ? "STAGE BONUS CLEARED!" : `STAGE ${currentStageId} CLEARED!`;
         document.getElementById('victory-img-elem').src = stage.victoryImg;
         document.getElementById('victory-question-text').innerText = stage.question;
 
         const btnContainer = document.getElementById('victory-buttons');
-        if(stage.isBonus) {
+        
+        // Phân tách rõ ràng giữa màn Bonus (2 nút YES/NO) và các màn thường (Stage 1, 2, 3)
+        if (currentStageId === 4) {
             btnContainer.innerHTML = `
                 <button class="custom-btn btn-no" onclick="showResultScreen('no')">NO</button>
                 <button class="custom-btn btn-yes" onclick="showResultScreen('yes')">YES</button>
             `;
         } else {
-            btnContainer.innerHTML = `<button class="custom-btn primary" style="flex:1; padding: 12px; border-radius: 16px;" onclick="nextStageOrResult()">${stage.buttonText}</button>`;
+            btnContainer.innerHTML = `
+                <button class="custom-btn primary" style="flex:1; padding: 12px; border-radius: 16px;" onclick="nextStageOrResult()">
+                    ${stage.buttonText}
+                </button>
+            `;
         }
     }
 
     function nextStageOrResult() {
-        if(currentStageId < 3) {
-            startStage(currentStageId + 1);
-        } else if(currentStageId === 3) {
+        if (currentStageId === 1) {
+            startStage(2);
+        } else if (currentStageId === 2) {
+            startStage(3);
+        } else if (currentStageId === 3) {
             startStage(4);
         }
     }
