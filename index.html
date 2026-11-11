@@ -1,1068 +1,659 @@
-<html lang="en"><head>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IS SEONGHYEON A CAT? - Mobile Version</title>
+    <title>IS SEONGHYEON A CAT?</title>
+    <!-- Titan One Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Titan+One&family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;900&amp;family=Titan+One&amp;display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gamePink: '#f7d6e0',
+                        gameDarkPink: '#d4839e',
+                        gameMaroon: '#5c2236',
+                        gameLight: '#fff0f5'
+                    },
+                    fontFamily: {
+                        titan: ['"Titan One"', 'sans-serif'],
+                        rounded: ['"M PLUS Rounded 1c"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         body {
-            font-family: 'Titan One', cursive, sans-serif;
-            background-color: #c96b92;
-            color: #fff;
-            cursor: url('custom-cursor.jpg'), auto !important;
+            background-color: #5c2236;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
             overflow-x: hidden;
-            touch-action: manipulation;
-            margin: 0;
-            padding: 0;
         }
-        button, div[onclick], input, select, a {
-            cursor: url('custom-cursor.jpg'), pointer !important;
+        .titan-font {
+            font-family: 'Titan One', sans-serif;
         }
-        .font-bubble-title {
-            font-family: 'Titan One', cursive, sans-serif;
-            letter-spacing: 1px;
+        .glow-title {
+            text-shadow: 0 0 10px rgba(255, 182, 193, 0.8), 0 0 20px rgba(255, 105, 180, 0.5);
         }
-        .font-vietnamese {
-            font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+        .stage-scroll::-webkit-scrollbar {
+            width: 6px;
+            display: block;
         }
-        .title-exact-match {
-            color: #72334f;
-            text-shadow: 
-                0 0 6px #fce0e8,
-                0 0 12px rgba(252, 224, 232, 0.7),
-                2px 2px 4px rgba(0, 0, 0, 0.15);
+        .stage-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 240, 245, 0.1);
+            border-radius: 10px;
         }
-        .stage-title-bubbly {
-            color: #72334f;
-            text-shadow: 
-                0 0 4px #fce0e8,
-                1px 1px 3px rgba(0, 0, 0, 0.15);
-        }
-        .perspective-1000 {
-            perspective: 1000px;
-        }
-        .transform-style-3d {
-            transform-style: preserve-3d;
-        }
-        .backface-hidden {
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-        }
-        .rotate-y-180 {
-            transform: rotateY(180deg);
-        }
-        video {
-            object-fit: cover;
-            width: 100%;
-            height: 100%;
-            pointer-events: auto;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 0px;
-            height: 0px;
-        }
-        .custom-scrollbar {
-            scrollbar-width: none;
+        .stage-scroll::-webkit-scrollbar-thumb {
+            background: #d4839e;
+            border-radius: 10px;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-between p-2 select-none bg-[#c96b92]">
-    <!-- ADMIN QUICK ACCESS BUTTON -->
-    <div id="admin-floating-btn" class="fixed top-3 right-3 z-50 flex items-center gap-2 hidden">
-        <button onclick="openUploadModal()" class="px-3.5 py-2 bg-[#5d223c] text-white font-extrabold text-xs rounded-2xl shadow-xl hover:bg-[#461a2d] transition border-2 border-white/40 flex items-center gap-2">
-            <i class="fa-solid fa-gear text-teal-300"></i> Admin Upload (⚙️)
-        </button>
-    </div>
+<body class="flex items-center justify-center min-h-screen">
 
-    <!-- INTRO VIDEO SCREEN (Mẫu hình 12) -->
-    <div id="intro-screen" class="fixed inset-0 bg-[#fcebeb] z-50 flex flex-col items-center justify-center p-4">
-        <div class="w-full max-w-sm flex flex-col items-center justify-center my-auto">
-            <h1 class="text-2xl sm:text-3xl font-bubble-title title-exact-match mb-3 tracking-wide text-center">
+    <div id="app-container" class="relative w-full max-w-[430px] h-[100vh] sm:h-[880px] bg-gamePink overflow-hidden flex flex-col shadow-2xl sm:rounded-3xl">
+
+        <!-- ADMIN GEAR BUTTON -->
+        <button id="admin-gear-btn" onclick="checkAdminGearVisibility()" class="absolute top-3 right-3 z-50 w-10 h-10 bg-gameMaroon/80 text-white rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm active:scale-95 transition-transform hidden">
+            ⚙️
+        </button>
+
+        <!-- SLIDE 1: INTRO -->
+        <div id="slide-intro" class="absolute inset-0 flex flex-col items-center justify-between p-6 z-10 bg-gamePink">
+            <div class="h-4"></div>
+            <h1 class="titan-font text-2xl sm:text-3xl text-gameMaroon text-center glow-title tracking-wider mt-2">
                 IS SEONGHYEON A CAT?
             </h1>
-            <!-- Video Frame Container -->
-            <div id="intro-video-container" class="w-full aspect-[4/3] rounded-2xl overflow-hidden border-4 border-white shadow-xl bg-black flex items-center justify-center relative">
-                <div id="intro-video-wrapper" class="w-full h-full flex items-center justify-center">
-                    <video id="main-intro-video" controls autoplay loop muted playsinline webkit-playsinline x5-playsinline preload="auto" src="intro-video.mp4" oncanplay="if(this.currentTime>0.5)this.currentTime=0;"></video>
-                </div>
+            <div class="w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-lg relative border-4 border-white my-auto">
+                <video id="intro-video" class="w-full h-full object-cover pointer-events-auto" autoplay muted playsinline webkit-playsinline x5-playsinline disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" src="intro-video.mp4"></video>
             </div>
-            <!-- Intro Buttons Bar -->
-            <div class="flex items-center justify-between gap-3 mt-4 w-full">
-                <button onclick="replayIntroMainVideo()" class="flex-1 py-3 bg-white hover:bg-gray-50 text-[#5d223c] border-2 border-[#5d223c]/20 font-black rounded-2xl shadow text-xs transition flex items-center justify-center gap-1.5">
-                    <i class="fa-solid fa-rotate-right"></i> REPLAY INTRO
+            <div class="w-full flex flex-col gap-3 pb-6">
+                <button onclick="replayIntro()" class="w-full py-3.5 bg-white text-gameMaroon titan-font text-base rounded-full shadow-md flex items-center justify-center gap-2 active:scale-95 transition-transform border-2 border-gameMaroon/20">
+                    <span>🔄</span> REPLAY INTRO
                 </button>
-               <button onclick="skipIntroToStageSelect()" class="flex-1 py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-xs rounded-2xl shadow-lg transition-all flex items-center justify-center gap-1.5 font-bubble-title">
-                    Start Game ➔
+                <button onclick="goToSelectStage()" class="w-full py-3.5 bg-gameMaroon text-white titan-font text-base rounded-full shadow-md flex items-center justify-center gap-2 active:scale-95 transition-transform">
+                    START GAME ➔
                 </button>
             </div>
         </div>
-    </div>
 
-    <!-- STAGE SELECT SCREEN (Mẫu hình 10 - Xoay dọc chữ SELECT STAGE bên phải) -->
-    <div id="stage-select-screen" class="fixed inset-0 bg-[#c96b92] z-40 flex items-center justify-center p-0 hidden overflow-hidden">
-        <div class="relative w-full h-full flex items-center justify-center">
+        <!-- SLIDE 2: SELECT STAGE -->
+        <div id="slide-select-stage" class="absolute inset-0 flex flex-col p-4 z-0 bg-gamePink hidden">
+            <div class="relative flex-1 flex overflow-hidden">
+                <div id="stage-scroll-container" class="stage-scroll flex-1 overflow-y-auto pr-12 pl-2 py-4 flex flex-col gap-6 items-center">
+                    
+                    <div class="stage-card-item w-full max-w-[280px] bg-white p-3 rounded-2xl shadow-lg flex flex-col items-center gap-2 cursor-pointer transition-transform shrink-0" data-stage="1" onclick="startStage(1)">
+                        <div class="w-full aspect-square bg-gameLight rounded-xl overflow-hidden relative border-2 border-gamePink">
+                            <img id="stage-img-1" src="stage1-easy-img.jpg" class="w-full h-full object-cover absolute inset-0 z-10 transition-opacity duration-300">
+                            <video id="stage-vid-1" src="stage1-easy-video.mp4" class="w-full h-full object-cover absolute inset-0 z-0" muted loop playsinline webkit-playsinline></video>
+                        </div>
+                        <span class="titan-font text-gameMaroon text-lg tracking-wider">EASY</span>
+                    </div>
+
+                    <div class="stage-card-item w-full max-w-[280px] bg-white p-3 rounded-2xl shadow-lg flex flex-col items-center gap-2 cursor-pointer transition-transform shrink-0" data-stage="2" onclick="startStage(2)">
+                        <div class="w-full aspect-square bg-gameLight rounded-xl overflow-hidden relative border-2 border-gamePink">
+                            <img id="stage-img-2" src="stage2-medium-img.jpg" class="w-full h-full object-cover absolute inset-0 z-10 transition-opacity duration-300">
+                            <video id="stage-vid-2" src="stage2-medium-video.mp4" class="w-full h-full object-cover absolute inset-0 z-0" muted loop playsinline webkit-playsinline></video>
+                        </div>
+                        <span class="titan-font text-gameMaroon text-lg tracking-wider">MEDIUM</span>
+                    </div>
+
+                    <div class="stage-card-item w-full max-w-[280px] bg-white p-3 rounded-2xl shadow-lg flex flex-col items-center gap-2 cursor-pointer transition-transform shrink-0" data-stage="3" onclick="startStage(3)">
+                        <div class="w-full aspect-square bg-gameLight rounded-xl overflow-hidden relative border-2 border-gamePink">
+                            <img id="stage-img-3" src="stage3-hard-img.jpg" class="w-full h-full object-cover absolute inset-0 z-10 transition-opacity duration-300">
+                            <video id="stage-vid-3" src="stage3-hard-video.mp4" class="w-full h-full object-cover absolute inset-0 z-0" muted loop playsinline webkit-playsinline></video>
+                        </div>
+                        <span class="titan-font text-gameMaroon text-lg tracking-wider">HARD</span>
+                    </div>
+
+                    <div class="h-20"></div>
+                </div>
+
+                <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-center pointer-events-none">
+                    <h2 class="titan-font text-gameMaroon text-xl glow-title tracking-widest whitespace-nowrap" style="writing-mode: vertical-rl; transform: rotate(180deg);">
+                        SELECT STAGE
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: GAMEPLAY -->
+        <div id="slide-gameplay" class="absolute inset-0 flex flex-col p-4 z-0 bg-gamePink hidden">
+            <div class="w-full bg-white rounded-full px-4 py-2.5 shadow-md flex items-center justify-between mb-3">
+                <button onclick="goToSelectStage()" class="bg-gameMaroon text-white px-3 py-1.5 rounded-full text-xs titan-font flex items-center gap-1 shadow">
+                    <span>🏠</span> SELECT STAGE
+                </button>
+                <div id="game-stage-title" class="titan-font text-xs sm:text-sm text-gameMaroon">
+                    STAGE 1: SKEPTICAL
+                </div>
+                <div class="flex items-center gap-2 text-gameMaroon text-xs titan-font">
+                    <span>⏱ <span id="game-timer">00:00</span></span>
+                    <span>🐾 <span id="game-matches">0/2</span></span>
+                    <button onclick="toggleAudio()" id="audio-toggle-btn" class="text-base">🔊</button>
+                </div>
+            </div>
+
+            <div id="preview-banner" class="w-full bg-white/90 rounded-2xl py-2 shadow-inner text-center mb-3">
+                <span class="titan-font text-gameMaroon text-sm">Preview Time: <span id="preview-countdown">3</span>s</span>
+            </div>
+
+            <div id="cards-board" class="flex-1 w-full grid gap-2.5 items-center justify-center p-1 overflow-y-auto"></div>
+        </div>
+
+        <!-- SLIDE 4: VICTORY -->
+        <div id="slide-victory" class="absolute inset-0 flex flex-col items-center justify-between p-6 z-0 bg-gamePink hidden overflow-y-auto">
+            <div class="h-2"></div>
+            <h2 id="victory-congrats" class="titan-font text-xl text-gameMaroon text-center glow-title">CONGRATULATIONS!</h2>
             
-            <!-- Rotating Vertical Title "SELECT STAGE" on the Right Side -->
-            <div class="absolute right-4 top-1/2 -translate-y-1/2 z-30 pointer-events-none select-none">
-                <h2 class="text-3xl sm:text-4xl font-bubble-title title-exact-match tracking-widest uppercase" style="writing-mode: vertical-rl; text-orientation: mixed;">
-                    SELECT STAGE
-                </h2>
+            <div id="victory-img-container" class="w-48 sm:w-56 aspect-square my-2 flex items-center justify-center drop-shadow-xl">
+                <img id="victory-img" src="" class="w-full h-full object-contain">
             </div>
 
-            <!-- Scrollable Stages Container -->
-            <div id="stages-scroll-container" onscroll="handleStagesScroll()" class="w-full h-full overflow-y-auto custom-scrollbar flex flex-col items-center py-28 px-4 space-y-8">
-               
-                <!-- EASY STAGE -->
-                <div data-stage-index="1" onclick="startGame(1)" class="stage-card-item bg-[#fff7e6] border-4 border-white rounded-3xl p-4 w-[78%] max-w-[270px] aspect-square flex flex-col items-center justify-between cursor-pointer shadow-2xl transition-all duration-300 relative shrink-0">
-                    <div class="w-full aspect-square rounded-2xl overflow-hidden bg-[#fff7e6] relative flex items-center justify-center">
-                        <img id="level-img-1" src="stage1-easy-img.jpg" class="w-full h-full object-cover rounded-xl">
-                        <video id="level-vid-1" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" muted="" playsinline="" src="stage1-easy-video.mp4"></video>
-                    </div>
-                    <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)] mt-2">EASY</span>
-                </div>
+            <div class="w-full flex flex-col items-center gap-3 my-2">
+                <p id="victory-question" class="titan-font text-sm sm:text-base text-gameMaroon text-center px-4">ARE YOU STILL SKEPTICAL?</p>
+                <div id="victory-buttons-container" class="w-full flex gap-3"></div>
+            </div>
+            <div class="h-2"></div>
+        </div>
 
-                <!-- MEDIUM STAGE -->
-                <div data-stage-index="2" onclick="startGame(2)" class="stage-card-item bg-[#fff7e6] border-4 border-white rounded-3xl p-4 w-[78%] max-w-[270px] aspect-square flex flex-col items-center justify-between cursor-pointer shadow-2xl transition-all duration-300 relative shrink-0">
-                    <div class="w-full aspect-square rounded-2xl overflow-hidden bg-[#fff7e6] relative flex items-center justify-center">
-                        <img id="level-img-2" src="stage2-medium-img.jpg" class="w-full h-full object-cover rounded-xl">
-                        <video id="level-vid-2" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" muted="" playsinline="" src="stage2-medium-video.mp4"></video>
-                    </div>
-                    <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)] mt-2">MEDIUM</span>
-                </div>
-
-                <!-- HARD STAGE -->
-                <div data-stage-index="3" onclick="startGame(3)" class="stage-card-item bg-[#fff7e6] border-4 border-white rounded-3xl p-4 w-[78%] max-w-[270px] aspect-square flex flex-col items-center justify-between cursor-pointer shadow-2xl transition-all duration-300 relative shrink-0">
-                    <div class="w-full aspect-square rounded-2xl overflow-hidden bg-[#fff7e6] relative flex items-center justify-center">
-                        <img id="level-img-3" src="stage3-hard-img.jpg" class="w-full h-full object-cover rounded-xl">
-                        <video id="level-vid-3" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" muted="" playsinline="" src="stage3-hard-video.mp4"></video>
-                    </div>
-                    <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)] mt-2">HARD</span>
-                </div>
-
+        <!-- SLIDE 5: ENDING & COMMENTS -->
+        <div id="slide-ending" class="absolute inset-0 flex flex-col p-4 z-0 bg-gamePink hidden overflow-y-auto">
+            <div class="w-full flex items-center justify-between mb-2">
+                <button onclick="goToSelectStage()" class="bg-gameMaroon text-white px-3 py-1.5 rounded-full text-xs titan-font">🏠 HOME</button>
+                <span id="ending-title" class="titan-font text-sm text-gameMaroon">COMMUNITY</span>
+                <div class="w-10"></div>
             </div>
 
-            <!-- Back to Intro Button at Top Left -->
-            <button onclick="showIntroScreen()" class="absolute top-4 left-4 z-30 px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white border border-white font-extrabold text-xs rounded-xl backdrop-blur-sm flex items-center gap-1.5 shadow">
-                <i class="fa-solid fa-arrow-left"></i> Intro
+            <div class="w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-lg relative border-2 border-white mb-3 shrink-0">
+                <video id="ending-video" class="w-full h-full object-cover" controls playsinline webkit-playsinline x5-playsinline disablePictureInPicture></video>
+            </div>
+
+            <button id="ending-action-btn" onclick="handleEndingActionButton()" class="w-full py-3 bg-gameMaroon text-white titan-font text-sm rounded-full shadow-md mb-4 shrink-0 transition-transform active:scale-95">
+                EM CHIP CAM ON
             </button>
-        </div>
-    </div>
 
-    <!-- MAIN GAMEPLAY HEADER (Mẫu hình 7, 8, 9, 11) -->
-    <header id="game-header" class="w-full max-w-sm flex items-center justify-between p-2.5 bg-white/95 backdrop-blur-md rounded-2xl shadow-md border border-pink-100 mb-2 hidden z-30">
-        <button onclick="goToStageSelect()" class="px-3 py-1.5 bg-[#5d223c] text-white font-bold text-[11px] rounded-xl hover:bg-[#461a2d] transition flex items-center gap-1 shadow">
-            <i class="fa-solid fa-house"></i> SELECT STAGE
-        </button>
-        <div id="stage-indicator" class="font-extrabold text-[11px] font-bubble-title stage-title-bubbly tracking-tight text-center">STAGE 1</div>
-        <div class="flex items-center gap-2 text-[11px] font-extrabold text-[#5d223c]">
-            <div class="flex items-center gap-0.5">
-                <i class="fa-solid fa-clock"></i>
-                <span id="timer-display">00:00</span>
-            </div>
-            <div class="flex items-center gap-0.5">
-                <i class="fa-solid fa-paw"></i>
-                <span id="moves-display">0</span>
-            </div>
-            <button onclick="toggleSound()" class="w-6 h-6 rounded-lg bg-white flex items-center justify-center text-[#5d223c] shadow hover:bg-gray-50 transition border border-pink-100">
-                <i id="sound-icon" class="fa-solid fa-volume-high text-[10px]"></i>
-            </button>
-        </div>
-    </header>
-
-    <!-- MAIN GAMEPLAY AREA -->
-    <main id="game-main-area" class="w-full max-w-sm flex-1 flex flex-col items-center justify-center relative my-auto hidden">
-        <div id="preview-countdown-box" class="mb-4 px-4 py-1.5 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border-2 border-[#5d223c]/20 flex items-center gap-2 text-[#5d223c] font-black text-xs font-vietnamese hidden">
-            <span>Preview Time: </span>
-            <span id="preview-countdown" class="text-rose-600 text-sm font-black font-bubble-title">0s</span>
-        </div>
-        <div id="game-board" class="w-full max-w-xs mx-auto p-2"></div>
-    </main>
-
-    <!-- STAGE TRANSITION & VICTORY MODAL -->
-    <div id="victory-modal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-[#fff7e6] rounded-3xl p-6 max-w-xs w-full text-center shadow-2xl border-4 border-white flex flex-col items-center">
-            <div class="text-yellow-500 text-3xl mb-1">
-                <i class="fa-solid fa-trophy"></i>
-            </div>
-            <div class="text-[10px] font-bold text-emerald-600 tracking-widest uppercase mb-1 font-vietnamese">
-                Stage Cleared!
-            </div>
-            <h2 id="victory-question" class="text-lg font-black text-[#5d223c] mb-3 leading-snug px-1 font-bubble-title">IS SEONGHYEON A CAT?</h2>
-            <div id="victory-image-container" class="w-full max-h-40 my-2 flex items-center justify-center overflow-hidden">
-                <img id="victory-stage-img" src="" class="max-h-36 object-contain drop-shadow-lg" alt="Stage Victory Image">
-            </div>
-            <button id="victory-action-btn" onclick="handleVictoryNext()" class="w-full py-3 bg-[#5d223c] text-white font-black text-sm rounded-2xl shadow-lg hover:bg-[#461a2d] transition transform hover:scale-105 cursor-pointer mt-2 font-bubble-title hidden">ABSOLUTELY ➔</button>
-            <div id="bonus-choice-buttons" class="w-full flex items-center justify-center gap-3 mt-3">
-                <button onclick="handleBonusChoice('NO')" class="flex-1 py-3 bg-rose-500 hover:bg-rose-600 text-white font-black text-lg rounded-2xl shadow-lg transition transform hover:scale-105 border-2 border-white font-bubble-title">
-                    NO
-                </button>
-                <button onclick="handleBonusChoice('YES')" class="flex-1 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-lg rounded-2xl shadow-lg transition transform hover:scale-105 border-2 border-white font-bubble-title">
-                    YES
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- RESULT MEDIA DISPLAY MODAL WITH COMMENT SECTION -->
-    <div id="media-display-modal" class="fixed inset-0 bg-[#ba6085]/95 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="relative bg-[#fcebeb] p-4 rounded-3xl max-w-xs w-full flex flex-col items-center justify-between border-4 border-white shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar transition-all duration-300">
-            <button onclick="closeMediaDisplayModal()" class="absolute top-3 right-3 w-8 h-8 bg-[#5d223c] text-white font-black rounded-full shadow-lg flex items-center justify-center hover:bg-[#461a2d] transition text-sm z-20">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div id="media-display-content" class="w-full flex items-center justify-center overflow-hidden rounded-2xl bg-black border-2 border-white shadow-xl transition-all duration-300"></div>
-            
-            <div id="comment-section-box" class="w-full bg-white/95 rounded-2xl p-3 border-2 border-[#5d223c]/20 shadow-inner flex flex-col space-y-2.5 my-3 transition-all duration-300 hidden">
-                <h4 class="font-black text-xs text-[#5d223c] flex items-center gap-1.5 font-vietnamese">
-                    <i class="fa-solid fa-comments"></i> LIVE YOUR COMMENTS
-                </h4>
-                <div class="flex flex-col gap-1.5 font-vietnamese">
-                    <input type="text" id="comment-name" placeholder="Your name..." class="w-full px-3 py-1.5 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-[#5d223c] font-bold focus:outline-none focus:ring-1 focus:ring-[#5d223c]">
-                    <div class="flex gap-1.5">
-                        <input type="text" id="comment-text" placeholder="Write a comment..." class="flex-1 px-3 py-1.5 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-[#5d223c] focus:outline-none focus:ring-1 focus:ring-[#5d223c]">
-                        <button onclick="postUserComment()" class="px-3 py-1.5 bg-[#5d223c] text-white text-xs font-bold rounded-xl hover:bg-[#461a2d] transition shadow">
-                            Send
-                        </button>
+            <div id="comments-section" class="w-full bg-white/95 rounded-2xl p-4 shadow-xl flex flex-col gap-3">
+                <h3 class="titan-font text-gameMaroon text-xs text-center tracking-wider">LEAVE YOUR COMMENTS</h3>
+                
+                <div class="flex flex-col gap-2">
+                    <input type="text" id="comment-name" placeholder="YOUR NAME..." class="w-full px-3 py-2 bg-gameLight rounded-xl text-xs font-rounded border border-gameMaroon/20 focus:outline-none focus:ring-2 focus:ring-gameMaroon">
+                    <div class="relative flex items-center">
+                        <input type="text" id="comment-text" placeholder="WRITE COMMENTS..." class="w-full pl-3 pr-12 py-2 bg-gameLight rounded-xl text-xs font-rounded border border-gameMaroon/20 focus:outline-none focus:ring-2 focus:ring-gameMaroon">
+                        <button onclick="postComment()" class="absolute right-2 px-3 py-1 bg-gameMaroon text-white text-xs titan-font rounded-lg shadow active:scale-95">SEND</button>
                     </div>
                 </div>
-                <div id="comments-list" class="max-h-40 overflow-y-auto custom-scrollbar flex flex-col gap-2 text-left pt-2 border-t border-pink-100 font-vietnamese"></div>
-            </div>
-            <button id="result-action-button" onclick="handleResultActionButtonClick()" class="py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-xs rounded-2xl transition shadow-md font-bubble-title transform hover:scale-105 border-2 border-white/40 px-5 mt-2">WHY NOT ME!?</button>
-        </div>
-    </div>
 
-    <!-- CONFIGURATION & UPLOAD MODAL -->
-    <div id="upload-config-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-2 hidden">
-        <div class="bg-[#18111e] text-white rounded-3xl max-w-sm w-full h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-purple-900/50 font-vietnamese">
-            <div class="p-3 bg-[#23182d] border-b border-purple-900/40 flex items-center justify-between">
-                <h3 class="font-extrabold text-xs text-teal-300 flex items-center gap-1.5">
-                    <i class="fa-solid fa-sliders"></i> GAME CONFIGURATION
-                </h3>
-                <button onclick="closeUploadModal()" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
+                <div id="replying-banner" class="hidden text-xs text-gameMaroon bg-gamePink/50 px-2 py-1 rounded-lg flex items-center justify-between">
+                    <span id="replying-to-text">Replying...</span>
+                    <button onclick="cancelReply()" class="font-bold text-red-600">✕</button>
+                </div>
+
+                <div id="comments-list" class="flex flex-col gap-2.5 max-h-[220px] overflow-y-auto pr-1"></div>
             </div>
-            <div class="flex border-b border-purple-900/40 bg-[#1e1525] p-1.5 gap-1 overflow-x-auto custom-scrollbar text-[11px]">
-                <button id="tab-btn-intro" onclick="setUploadTab('intro')" class="px-3 py-1.5 font-extrabold rounded-lg bg-white/5 text-gray-300 whitespace-nowrap">Intro</button>
-                <button id="tab-btn-s1" onclick="setUploadTab('s1')" class="px-3 py-1.5 font-extrabold rounded-lg bg-white/5 text-gray-300 whitespace-nowrap">Stage 1</button>
-                <button id="tab-btn-s2" onclick="setUploadTab('s2')" class="px-3 py-1.5 font-extrabold rounded-lg bg-white/5 text-gray-300 whitespace-nowrap">Stage 2</button>
-                <button id="tab-btn-s3" onclick="setUploadTab('s3')" class="px-3 py-1.5 font-extrabold rounded-lg bg-white/5 text-gray-300 whitespace-nowrap">Stage 3</button>
-                <button id="tab-btn-s4" onclick="setUploadTab('s4')" class="px-3 py-1.5 font-extrabold rounded-lg bg-white/5 text-gray-300 whitespace-nowrap">Bonus</button>
-                <button id="tab-btn-result" onclick="setUploadTab('result')" class="px-3 py-1.5 font-extrabold rounded-lg bg-teal-400 text-stone-900 whitespace-nowrap">Result</button>
-            </div>
-            <div class="flex-1 overflow-y-auto p-3 custom-scrollbar space-y-4 text-xs">
-                <div id="tab-sec-intro" class="space-y-3 hidden">
-                    <div class="p-3 bg-[#23182d] rounded-xl border border-purple-800/40 space-y-2">
-                        <span class="font-extrabold text-teal-300 block">Intro Video</span>
-                        <input type="file" accept="video/*" onchange="uploadIntroVideo(event)" class="w-full text-[10px] text-gray-300">
-                    </div>
+            <div class="h-10"></div>
+        </div>
+
+        <!-- ADMIN MODAL -->
+        <div id="admin-modal" class="absolute inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-white w-full max-w-[320px] rounded-3xl p-6 flex flex-col gap-4 shadow-2xl relative">
+                <h3 class="titan-font text-gameMaroon text-center text-base">ADMIN SETTING</h3>
+                <p class="text-xs text-gray-600 text-center">Nhập mật khẩu 6 chữ số:</p>
+                <input type="password" id="admin-pass-input" maxlength="6" placeholder="******" class="w-full text-center tracking-widest text-lg py-2 bg-gray-100 rounded-xl font-bold focus:outline-none focus:ring-2 focus:ring-gameMaroon">
+                <div id="admin-error-msg" class="text-xs text-red-500 text-center font-bold hidden">Sai mật khẩu!</div>
+                <div class="flex gap-2">
+                    <button onclick="closeAdminModal()" class="flex-1 py-2.5 bg-gray-200 text-gray-700 rounded-xl text-xs font-bold">HỦY</button>
+                    <button onclick="verifyAdminPass()" class="flex-1 py-2.5 bg-gameMaroon text-white rounded-xl text-xs titan-font shadow">XÁC NHẬN</button>
                 </div>
-                <div id="tab-sec-s1" class="space-y-3 hidden">
-                    <div class="font-black text-teal-300">STAGE 1 CARDS &amp; BGM</div>
-                    <div id="cards-grid-s1" class="grid grid-cols-2 gap-2"></div>
-                </div>
-                <div id="tab-sec-s2" class="space-y-3 hidden">
-                    <div class="font-black text-teal-300">STAGE 2 CARDS &amp; BGM</div>
-                    <div id="cards-grid-s2" class="grid grid-cols-2 gap-2"></div>
-                </div>
-                <div id="tab-sec-s3" class="space-y-3 hidden">
-                    <div class="font-black text-teal-300">STAGE 3 CARDS &amp; BGM</div>
-                    <div id="cards-grid-s3" class="grid grid-cols-2 gap-2"></div>
-                </div>
-                <div id="tab-sec-s4" class="space-y-3 hidden">
-                    <div class="font-black text-teal-300">STAGE BONUS CARDS &amp; BGM</div>
-                    <div id="cards-grid-s4" class="grid grid-cols-2 gap-2"></div>
-                </div>
-                <div id="tab-sec-result" class="space-y-3">
-                    <div class="font-black text-teal-300">RESULT MEDIA CONFIGURATION</div>
-                    <div class="space-y-2">
-                        <span class="font-bold text-emerald-400 block text-[11px]">YES Video</span>
-                        <input type="file" accept="video/*" onchange="uploadResultMedia(event, 'YES', 'video')" class="w-full text-[10px] text-gray-300">
-                    </div>
-                    <div class="space-y-2 pt-2">
-                        <span class="font-bold text-rose-400 block text-[11px]">NO Video</span>
-                        <input type="file" accept="video/*" onchange="uploadResultMedia(event, 'NO', 'video')" class="w-full text-[10px] text-gray-300">
-                    </div>
-                </div>
-            </div>
-            <div class="p-3 bg-[#18111e] border-t border-purple-900/40 flex justify-end">
-                <button onclick="closeUploadModal()" class="px-4 py-2 bg-teal-400 text-stone-900 font-extrabold text-xs rounded-xl shadow">Save &amp; Close</button>
             </div>
         </div>
+
+        <!-- ADMIN PANEL -->
+        <div id="admin-panel" class="absolute inset-x-0 bottom-0 top-16 bg-white z-50 rounded-t-3xl shadow-2xl flex flex-col p-5 hidden overflow-y-auto">
+            <div class="flex items-center justify-between pb-3 border-b border-gray-200">
+                <h3 class="titan-font text-gameMaroon text-sm">🛠️ ADMIN DASHBOARD (140199)</h3>
+                <button onclick="closeAdminPanel()" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 font-bold flex items-center justify-center">✕</button>
+            </div>
+            <div class="flex flex-col gap-4 py-4">
+                <div class="flex flex-col gap-2">
+                    <span class="text-xs font-bold text-gameMaroon">TEST RUN SLIDES:</span>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="switchSlide('slide-intro'); closeAdminPanel();" class="py-2 bg-gamePink text-gameMaroon rounded-xl text-xs titan-font">Intro Slide</button>
+                        <button onclick="switchSlide('slide-select-stage'); closeAdminPanel();" class="py-2 bg-gamePink text-gameMaroon rounded-xl text-xs titan-font">Select Stage</button>
+                        <button onclick="startStage(1); closeAdminPanel();" class="py-2 bg-gamePink text-gameMaroon rounded-xl text-xs titan-font">Stage 1 (Easy)</button>
+                        <button onclick="startStage(2); closeAdminPanel();" class="py-2 bg-gamePink text-gameMaroon rounded-xl text-xs titan-font">Stage 2 (Medium)</button>
+                        <button onclick="startStage(3); closeAdminPanel();" class="py-2 bg-gamePink text-gameMaroon rounded-xl text-xs titan-font">Stage 3 (Hard)</button>
+                        <button onclick="startStage(4); closeAdminPanel();" class="py-2 bg-gamePink text-gameMaroon rounded-xl text-xs titan-font">Stage Bonus</button>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2 pt-2 border-t border-gray-200">
+                    <span class="text-xs font-bold text-gameMaroon">QUẢN LÝ BÌNH LUẬN:</span>
+                    <button onclick="clearAllComments()" class="py-2 bg-red-100 text-red-600 rounded-xl text-xs font-bold">Xóa tất cả bình luận</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Hidden Stage Audio Element -->
-    <audio id="stage-bgm-audio" loop=""></audio>
-    
+    <!-- JAVASCRIPT -->
     <script>
-        let currentStage = 1;
-        let activeTabStage = 1;
-        let secondsElapsed = 0;
-        let movesCount = 0;
-        let timerInterval = null;
-        let previewInterval = null;
-        let soundEnabled = true;
-        let flippedCards = [];
-        let matchedPairsCount = 0;
-        let isProcessing = false;
-        let totalPairsInStage = 2;
-        let introVideoUrl = "intro-video.mp4";
-        let currentChoiceVote = 'YES';
-        
-        let levelHoverMedia = {
-            1: { img: 'stage1-easy-img.jpg', vid: 'stage1-easy-video.mp4' },
-            2: { img: 'stage2-medium-img.jpg', vid: 'stage2-medium-video.mp4' },
-            3: { img: 'stage3-hard-img.jpg', vid: 'stage3-hard-video.mp4' }
-        };
-        
-        let stageCovers = {
-            1: 'card-back-1-2-3-bonus.jpg',
-            2: 'card-back-1-2-3-bonus.jpg',
-            3: 'card-back-1-2-3-bonus.jpg',
-            4: 'card-back-1-2-3-bonus.jpg'
-        };
-        
-        let stageVictoryImages = { 
-            1: 'victory1-img.png', 
-            2: 'victory2-img.png', 
-            3: 'victory3-img.png', 
-            4: 'victory-bonus-img.png' 
-        };
-        
-        let stageBGMTracks = { 
-            1: 'stage1-audio.mp3', 
-            2: 'stage2-audio.mp3', 
-            3: 'stage3-audio.mp3', 
-            4: 'stage-bonus-audio.mp3' 
-        };
-        
-        let stageCardPhotos = {
-            1: [
-                'stage1-card-1.jpg', 
-                'stage1-card-2.jpg', 
-                'stage1-card-3.png', 
-                'stage1-card-4.jpg'
-            ],
-            2: [
-                'stage2-card-1.jpg', 'stage2-card-2.jpg', 'stage2-card-3.jpg', 'stage2-card-4.jpg', 
-                'stage2-card-5.jpg', 'stage2-card-6.jpg', 'stage2-card-7.jpg', 'stage2-card-8.jpg'
-            ],
-            3: [
-                'stage3-card-1.jpg', 'stage3-card-2.jpg', 'stage3-card-3.jpg', 'stage3-card-4.jpg', 
-                'stage3-card-5.jpg', 'stage3-card-6.jpg', 'stage3-card-7.jpg', 'stage3-card-8.jpg', 
-                'stage3-card-9.jpg', 'stage3-card-10.jpg', 'stage3-card-11.jpg', 'stage3-card-12.jpg'
-            ],
-            4: [
-                'bonus-card-1.jpg', 'bonus-card-2.jpg', 'bonus-card-3.jpg', 'bonus-card-4.jpg', 'bonus-card-5.png',
-                'bonus-card-6.jpg', 'bonus-card-7.jpg', 'bonus-card-8.jpg', 'bonus-card-9.jpg', 'bonus-card-10.png',
-                'bonus-card-11.jpg', 'bonus-card-12.jpg', 'bonus-card-13.png', 'bonus-card-14.jpg', 'bonus-card-15.png',
-                'bonus-card-16.jpg', 'bonus-card-17.jpg', 'bonus-card-18.jpg', 'bonus-card-19.jpg', 'bonus-card-20.jpg'
-            ]
-        };
-        let stageMatchingPairs = {
-            1: { 0: 0, 3: 0, 1: 1, 2: 1 },
-            2: { 0: 0, 6: 0, 1: 1, 7: 1, 2: 2, 5: 2, 3: 3, 4: 3 },
-            3: { 0: 0, 6: 0, 1: 1, 8: 1, 2: 2, 11: 2, 3: 3, 4: 3, 5: 4, 10: 4, 7: 5, 9: 5 },
-            4: { 0: 0, 16: 0, 1: 1, 9: 1, 2: 2, 15: 2, 3: 3, 5: 3, 4: 4, 14: 4, 7: 5, 19: 5, 6: 6, 13: 6, 8: 7, 11: 7, 12: 8, 18: 8, 10: 9, 17: 9 }
-        };
-        
-        let resultChoiceMedia = {
-            YES: { type: 'video', video: 'yes-button-video.mp4', image: '', audio: '' },
-            NO: { type: 'video', video: 'no-button-video.mp4', image: '', audio: '' }
-        };
-        
-        let resultActionState = 0;
-        
-        const stageTitles = {
-            1: 'STAGE 1: SKEPTICAL',
-            2: 'STAGE 2: TENTATIVE',
-            3: 'STAGE 3: CONVINCED',
-            4: 'STAGE BONUS: UNSHAKABLE'
-        };
-        
-        const victoryQuestions = {
-            1: 'ARE YOU STILL SKEPTICAL?',
-            2: 'HAVE YOU STARTING TO BELIEVING?',
-            3: 'ARE YOU FULLY CONVINCED NOW?',
-            4: 'IS SEONGHYEON A CAT?'
-        };
-        
-        const victoryBtnLabels = {
-            1: 'NOT SURE ➔',
-            2: 'A LITTLE ➔',
-            3: 'ABSOLUTELY ➔'
-        };
-        
-        let userCommentsList = [];
-        let audioUnlocked = false;
-        function unlockAudio() {
-            if (audioUnlocked) return;
-            audioUnlocked = true;
-            const ctx = getAudioContext();
-            if (ctx && ctx.state === 'suspended') {
-                ctx.resume();
+        const STAGES_DATA = {
+            1: {
+                name: "SKEPTICAL", levelName: "EASY", grid: "grid-cols-2 grid-rows-2", previewTime: 3, audio: "stage1-audio.mp3",
+                pairs: [[1,4], [2,3]],
+                cards: [
+                    { id: 1, file: "stage1-card-1.jpg" }, { id: 2, file: "stage1-card-2.jpg" },
+                    { id: 3, file: "stage1-card-3.png" }, { id: 4, file: "stage1-card-4.jpg" }
+                ],
+                victoryImg: "victory1-img.png", victoryQuestion: "ARE YOU STILL SKEPTICAL?", victoryBtnText: "NOT SURE ➔", nextStage: 2
+            },
+            2: {
+                name: "TENTATIVE", levelName: "MEDIUM", grid: "grid-cols-2 grid-rows-4", previewTime: 3, audio: "stage2-audio.mp3",
+                pairs: [[1,7], [2,8], [3,6], [4,5]],
+                cards: [
+                    { id: 1, file: "stage2-card-1.jpg" }, { id: 2, file: "stage2-card-2.jpg" },
+                    { id: 3, file: "stage2-card-3.jpg" }, { id: 4, file: "stage2-card-4.jpg" },
+                    { id: 5, file: "stage2-card-5.jpg" }, { id: 6, file: "stage2-card-6.jpg" },
+                    { id: 7, file: "stage2-card-7.jpg" }, { id: 8, file: "stage2-card-8.jpg" }
+                ],
+                victoryImg: "victory2-img.png", victoryQuestion: "HAVE YOU STARTING TO BELIEVING?", victoryBtnText: "A LITTLE", nextStage: 3
+            },
+            3: {
+                name: "CONVINCED", levelName: "HARD", grid: "grid-cols-3 grid-rows-4", previewTime: 3, audio: "stage3-audio.mp3",
+                pairs: [[1,7], [2,9], [3,12], [4,5], [6,11], [8,10]],
+                cards: [
+                    { id: 1, file: "stage3-card-1.jpg" }, { id: 2, file: "stage3-card-2.jpg" },
+                    { id: 3, file: "stage3-card-3.jpg" }, { id: 4, file: "stage3-card-4.jpg" },
+                    { id: 5, file: "stage3-card-5.jpg" }, { id: 6, file: "stage3-card-6.jpg" },
+                    { id: 7, file: "stage3-card-7.jpg" }, { id: 8, file: "stage3-card-8.jpg" },
+                    { id: 9, file: "stage3-card-9.jpg" }, { id: 10, file: "stage3-card-10.jpg" },
+                    { id: 11, file: "stage3-card-11.jpg" }, { id: 12, file: "stage3-card-12.jpg" }
+                ],
+                victoryImg: "victory3-img.png", victoryQuestion: "ARE YOU FULLY CONVINCED NOW?", victoryBtnText: "ABSOLUTELY", nextStage: 4
+            },
+            4: {
+                name: "UNSHAKABLE", levelName: "BONUS", grid: "grid-cols-4 grid-rows-5", previewTime: 5, audio: "stage-bonus-audio.mp3",
+                pairs: [[1,17], [2,10], [3,16], [4,6], [5,15], [8,20], [7,14], [9,12], [13,19], [11,18]],
+                cards: [
+                    { id: 1, file: "bonus-card-1.jpg" }, { id: 2, file: "bonus-card-2.jpg" },
+                    { id: 3, file: "bonus-card-3.jpg" }, { id: 4, file: "bonus-card-4.jpg" },
+                    { id: 5, file: "bonus-card-5.png" }, { id: 6, file: "bonus-card-6.jpg" },
+                    { id: 7, file: "bonus-card-7.jpg" }, { id: 8, file: "bonus-card-8.jpg" },
+                    { id: 9, file: "bonus-card-9.jpg" }, { id: 10, file: "bonus-card-10.png" },
+                    { id: 11, file: "bonus-card-11.jpg" }, { id: 12, file: "bonus-card-12.jpg" },
+                    { id: 13, file: "bonus-card-13.png" }, { id: 14, file: "bonus-card-14.jpg" },
+                    { id: 15, file: "bonus-card-15.png" }, { id: 16, file: "bonus-card-16.jpg" },
+                    { id: 17, file: "bonus-card-17.jpg" }, { id: 18, file: "bonus-card-18.jpg" },
+                    { id: 19, file: "bonus-card-19.jpg" }, { id: 20, file: "bonus-card-20.jpg" }
+                ],
+                victoryImg: "victory-bonus-img.png", victoryQuestion: "IS SEONGHYEON A CAT?", isBonusFinal: true
             }
-        }
-        window.addEventListener('click', unlockAudio, { once: true });
-        window.addEventListener('touchstart', unlockAudio, { once: true });
+        };
 
-        function stopAllGlobalMedia() {
-            stopBGM();
-            stopIntroVideoCompletely();
-            [1, 2, 3].forEach(lvl => stopLevelHover(lvl));
-            closeMediaDisplayModal();
-        }
-        function stopIntroVideoCompletely() {
-            const wrapper = document.getElementById('intro-video-wrapper');
-            if (wrapper) wrapper.innerHTML = '';
-        }
-        function recreateIntroVideoElement() {
-            const wrapper = document.getElementById('intro-video-wrapper');
-            if (wrapper && !wrapper.querySelector('video')) {
-                const vid = document.createElement('video');
-                vid.id = 'main-intro-video';
-                vid.className = "w-full h-full object-cover";
-                vid.controls = true;
-                vid.autoplay = true;
-                vid.loop = true;
-                vid.muted = false;
-                vid.playsInline = true;
-                vid.preload = "auto";
-                vid.oncanplay = function() {
-                    if (this.currentTime > 0.5) this.currentTime = 0;
-                };
-                if (introVideoUrl) vid.src = introVideoUrl;
-                wrapper.appendChild(vid);
-            }
+        const CARD_BACK = "card-back-1-2-3-bonus.jpg";
+
+        let currentStageId = 1, gameTimerInterval = null, gameSeconds = 0, matchedPairsCount = 0, totalPairsInStage = 0;
+        let firstSelectedCard = null, lockBoard = false, audioMuted = false, currentAudio = null, userVote = null, replyingToId = null;
+        let comments = JSON.parse(localStorage.getItem('seonghyeon_comments')) || [];
+        let adminFailCount = parseInt(localStorage.getItem('admin_fail_count')) || 0;
+        let adminLockoutUntil = parseInt(localStorage.getItem('admin_lockout_until')) || 0;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setupSelectStageScrollObserver();
+            renderComments();
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'F2') { e.preventDefault(); checkAdminGearVisibility(); }
+            });
+        });
+
+        function switchSlide(slideId) {
+            document.querySelectorAll('#app-container > div[id^="slide-"]').forEach(el => {
+                el.classList.add('hidden'); el.classList.remove('z-20');
+            });
+            const target = document.getElementById(slideId);
+            if (target) { target.classList.remove('hidden'); target.classList.add('z-20'); }
+            if (currentAudio) currentAudio.pause();
         }
 
-        // Logic tự động kích hoạt video card khi cuộn vào tâm màn hình
-        function handleStagesScroll() {
-            const container = document.getElementById('stages-scroll-container');
+        function replayIntro() {
+            const vid = document.getElementById('intro-video');
+            if (vid) { vid.currentTime = 0; vid.play().catch(e => {}); }
+        }
+
+        function goToSelectStage() {
+            const introVid = document.getElementById('intro-video');
+            if (introVid) introVid.pause();
+            switchSlide('slide-select-stage');
+            checkAdminGearVisibility();
+        }
+
+        function setupSelectStageScrollObserver() {
+            const container = document.getElementById('stage-scroll-container');
+            const items = document.querySelectorAll('.stage-card-item');
             if (!container) return;
-            const containerRect = container.getBoundingClientRect();
-            const containerCenter = containerRect.top + containerRect.height / 2;
-
-            const cards = container.querySelectorAll('.stage-card-item');
-            let closestCard = null;
-            let minDistance = Infinity;
-
-            cards.forEach(card => {
-                const rect = card.getBoundingClientRect();
-                const cardCenter = rect.top + rect.height / 2;
-                const distance = Math.abs(containerCenter - cardCenter);
-
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closestCard = card;
-                }
-            });
-
-            cards.forEach(card => {
-                const stageNum = card.dataset.stageIndex;
-                const imgEl = card.querySelector(`img#level-img-${stageNum}`);
-                const vidEl = card.querySelector(`video#level-vid-${stageNum}`);
-
-                if (card === closestCard && minDistance < 150) {
-                    if (vidEl && levelHoverMedia[stageNum].vid) {
-                        imgEl.classList.add('hidden');
-                        vidEl.classList.remove('hidden');
-                        vidEl.muted = false;
-                        vidEl.play().catch(()=>{});
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const stageNum = entry.target.getAttribute('data-stage');
+                    const img = document.getElementById(`stage-img-${stageNum}`);
+                    const vid = document.getElementById(`stage-vid-${stageNum}`);
+                    if (entry.isIntersecting) {
+                        if (vid) { vid.play().catch(e => {}); if (img) img.style.opacity = '0'; }
+                    } else {
+                        if (vid) { vid.pause(); vid.currentTime = 0; if (img) img.style.opacity = '1'; }
                     }
-                } else {
-                    if (vidEl) {
-                        vidEl.pause();
-                        vidEl.currentTime = 0;
-                        vidEl.classList.add('hidden');
-                    }
-                    if (imgEl) {
-                        imgEl.classList.remove('hidden');
-                    }
-                }
-            });
-        }
-
-        let audioCtx = null;
-        function getAudioContext() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            return audioCtx;
-        }
-        function playCardFlipSound() {
-            if (!soundEnabled) return;
-            try {
-                const ctx = getAudioContext();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(450, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(700, ctx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.15, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.1);
-            } catch (e) {}
-        }
-        function playMatchSuccessSound() {
-            if (!soundEnabled) return;
-            try {
-                const ctx = getAudioContext();
-                const now = ctx.currentTime;
-                [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-                    gain.gain.setValueAtTime(0.2, now + idx * 0.08);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start(now + idx * 0.08);
-                    osc.stop(now + idx * 0.08 + 0.25);
                 });
-            } catch (e) {}
-        }
-        function playMatchFailSound() {
-            if (!soundEnabled) return;
-            try {
-                const ctx = getAudioContext();
-                const now = ctx.currentTime;
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(220, now);
-                osc.frequency.setValueAtTime(160, now + 0.12);
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(now + 0.25);
-            } catch (e) {}
-        }
-        function playVictoryFanfareSound() {
-            if (!soundEnabled) return;
-            try {
-                const ctx = getAudioContext();
-                const now = ctx.currentTime;
-                const notes = [
-                    { f: 523.25, t: 0.0, d: 0.2 },
-                    { f: 659.25, t: 0.18, d: 0.2 },
-                    { f: 783.99, t: 0.36, d: 0.2 },
-                    { f: 1046.50, t: 0.54, d: 0.5 }
-                ];
-                notes.forEach(n => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(n.f, now + n.t);
-                    gain.gain.setValueAtTime(0.25, now + n.t);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + n.t + n.d);
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start(now + n.t);
-                    osc.stop(now + n.t + n.d);
-                });
-            } catch (e) {}
-        }
-        function playTickSound() {
-            if (!soundEnabled) return;
-            try {
-                const ctx = getAudioContext();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(800, ctx.currentTime);
-                gain.gain.setValueAtTime(0.2, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.15);
-            } catch (e) {}
+            }, { root: container, threshold: 0.6 });
+            items.forEach(item => observer.observe(item));
         }
 
-        function renderCommentsList() {
-            const listContainer = document.getElementById('comments-list');
-            if (!listContainer) return;
-            if (userCommentsList.length === 0) {
-                listContainer.innerHTML = '<div class="text-[10px] text-gray-500 italic text-center py-1 font-vietnamese">No comments yet. Be the first one!</div>';
-                return;
-            }
-            listContainer.innerHTML = userCommentsList.map((c, index) => {
-                let voteBadge = c.vote ? ` voted ${c.vote}` : '';
-                let repliesHtml = (c.replies || []).map((rep, rIdx) => {
-                    let repVoteBadge = rep.vote ? ` voted ${rep.vote}` : '';
-                    return `
-                        <div class="bg-pink-100/60 p-2 rounded-lg border border-pink-200 mt-1.5 ml-3 flex flex-col gap-0.5 font-vietnamese">
-                            <div class="flex items-center justify-between">
-                                <span class="font-bold text-[10px] text-[#5d223c]">↳ ${rep.name || 'Anonymous'}<span class="text-rose-600 font-normal ml-1">${repVoteBadge}</span></span>
-                                <button onclick="deleteReply(${index}, ${rIdx})" class="text-rose-500 text-[9px] font-bold"><i class="fa-solid fa-xmark"></i></button>
-                            </div>
-                            <div class="text-[10px] text-gray-700">${rep.text}</div>
-                        </div>
-                    `;
-                }).join('');
-                return `
-                    <div class="bg-pink-50/80 p-2.5 rounded-xl border border-pink-100 flex flex-col gap-1.5 relative font-vietnamese">
-                        <div class="flex items-center justify-between">
-                            <div class="font-bold text-[11px] text-[#5d223c]">
-                                ${c.name || 'Anonymous'}<span class="text-rose-600 font-normal ml-1">${voteBadge}</span>
-                            </div>
-                            <div class="relative">
-                                <button onclick="toggleCommentMenu(${index})" class="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-[#5d223c] rounded-full">
-                                    <i class="fa-solid fa-ellipsis text-xs"></i>
-                                </button>
-                                <div id="comment-menu-${index}" class="absolute right-0 top-7 bg-white shadow-lg rounded-xl border border-pink-100 p-1 z-30 hidden flex flex-col w-24 text-[11px] font-vietnamese">
-                                    <button onclick="editComment(${index})" class="text-left px-2 py-1 text-teal-700 hover:bg-pink-50 font-bold">Edit</button>
-                                    <button onclick="deleteComment(${index})" class="text-left px-2 py-1 text-rose-600 hover:bg-pink-50 font-bold">Delete</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-[11px] text-gray-800">${c.text}</div>
-                        <div class="flex items-center gap-4 text-[11px] text-gray-600 pt-1 border-t border-pink-100">
-                            <button onclick="toggleLikeComment(${index})" class="flex items-center gap-1 hover:text-rose-600">
-                                <i class="${c.liked ? 'fa-solid text-rose-500' : 'fa-regular'} fa-heart"></i>
-                                <span class="font-bold">${c.likes || 0}</span>
-                            </button>
-                            <button onclick="toggleReplyBox(${index})" class="flex items-center gap-1 hover:text-[#5d223c]">
-                                <i class="fa-regular fa-comment"></i>
-                                <span class="font-bold">${(c.replies || []).length}</span>
-                            </button>
-                        </div>
-                        <div id="reply-box-${index}" class="hidden flex flex-col gap-1.5 mt-1.5 pt-1.5 border-t border-pink-200">
-                            <input type="text" id="reply-name-${index}" placeholder="Your name..." class="w-full px-2 py-1 bg-white border border-pink-200 rounded-lg text-[10px] text-[#5d223c] font-bold">
-                            <div class="flex gap-1.5">
-                                <input type="text" id="reply-input-${index}" placeholder="Reply..." class="flex-1 px-2 py-1 bg-white border border-pink-200 rounded-lg text-[10px] text-[#5d223c]">
-                                <button onclick="submitReply(${index})" class="px-2.5 py-1 bg-[#5d223c] text-white text-[10px] font-bold rounded-lg shadow">Send</button>
-                            </div>
-                        </div>
-                        <div class="space-y-1">${repliesHtml}</div>
-                    </div>
-                `;
-            }).join('');
-        }
-        function postUserComment() {
-            const nameEl = document.getElementById('comment-name');
-            const textEl = document.getElementById('comment-text');
-            if (!textEl || !textEl.value.trim()) return;
-            userCommentsList.unshift({
-                name: nameEl && nameEl.value.trim() ? nameEl.value.trim() : 'Anonymous',
-                vote: currentChoiceVote,
-                text: textEl.value.trim(),
-                likes: 0,
-                liked: false,
-                replies: []
-            });
-            textEl.value = '';
-            renderCommentsList();
-        }
-        function toggleCommentMenu(index) {
-            document.querySelectorAll('[id^="comment-menu-"]').forEach((el, idx) => {
-                if (idx !== index) el.classList.add('hidden');
-            });
-            const menu = document.getElementById(`comment-menu-${index}`);
-            if (menu) menu.classList.toggle('hidden');
-        }
-        function deleteComment(index) {
-            userCommentsList.splice(index, 1);
-            renderCommentsList();
-        }
-        function editComment(index) {
-            const currentCmt = userCommentsList[index];
-            const newText = prompt("Edit your comment:", currentCmt.text);
-            if (newText !== null && newText.trim() !== "") {
-                userCommentsList[index].text = newText.trim();
-                renderCommentsList();
-            }
-        }
-        function toggleLikeComment(index) {
-            const cmt = userCommentsList[index];
-            cmt.liked = !cmt.liked;
-            cmt.likes = cmt.liked ? (cmt.likes || 0) + 1 : Math.max(0, cmt.likes - 1);
-            renderCommentsList();
-        }
-        function toggleReplyBox(index) {
-            const box = document.getElementById(`reply-box-${index}`);
-            if (box) box.classList.toggle('hidden');
-        }
-        function submitReply(index) {
-            const nameInput = document.getElementById(`reply-name-${index}`);
-            const input = document.getElementById(`reply-input-${index}`);
-            if (!input || !input.value.trim()) return;
-            if (!userCommentsList[index].replies) userCommentsList[index].replies = [];
-            userCommentsList[index].replies.push({
-                name: nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Anonymous',
-                vote: currentChoiceVote,
-                text: input.value.trim()
-            });
-            input.value = '';
-            renderCommentsList();
-        }
-        function deleteReply(cIndex, rIndex) {
-            userCommentsList[cIndex].replies.splice(rIndex, 1);
-            renderCommentsList();
-        }
-        function testRunSlide(slideType, stageNum) {
-            closeUploadModal();
-            stopAllGlobalMedia();
-            if (slideType === 'intro') {
-                showIntroScreen();
-            } else if (slideType === 'stage-select') {
-                skipIntroToStageSelect();
-            } else if (slideType === 'stage') {
-                startGame(stageNum || 1);
-            } else if (slideType === 'result-yes') {
-                handleBonusChoice('YES');
-            } else if (slideType === 'result-no') {
-                handleBonusChoice('NO');
-            }
-        }
-        function showIntroScreen() {
-            stopAllGlobalMedia();
-            recreateIntroVideoElement();
-            document.getElementById('intro-screen').classList.remove('hidden');
-            document.getElementById('stage-select-screen').classList.add('hidden');
-            document.getElementById('game-header').classList.add('hidden');
-            document.getElementById('game-main-area').classList.add('hidden');
-            const vid = document.getElementById('main-intro-video');
-            if (vid) {
-                vid.currentTime = 0;
-                vid.play().catch(()=>{});
-            }
-        }
-        function skipIntroToStageSelect() {
-            stopAllGlobalMedia();
-            document.getElementById('intro-screen').classList.add('hidden');
-            document.getElementById('stage-select-screen').classList.remove('hidden');
-            document.getElementById('game-header').classList.add('hidden');
-            document.getElementById('game-main-area').classList.add('hidden');
-            setTimeout(handleStagesScroll, 100);
-        }
-        function replayIntroMainVideo() {
-            recreateIntroVideoElement();
-            const vid = document.getElementById('main-intro-video');
-            if (vid && introVideoUrl) {
-                vid.src = introVideoUrl;
-                vid.currentTime = 0;
-                vid.play().catch(()=>{});
-            }
-        }
-        function goToStageSelect() {
-            stopTimer();
-            stopAllGlobalMedia();
-            document.getElementById('intro-screen').classList.add('hidden');
-            document.getElementById('stage-select-screen').classList.remove('hidden');
-            document.getElementById('game-header').classList.add('hidden');
-            document.getElementById('game-main-area').classList.add('hidden');
-            document.getElementById('victory-modal').classList.add('hidden');
-            document.getElementById('media-display-modal').classList.add('hidden');
-            setTimeout(handleStagesScroll, 100);
-        }
-        function openUploadModal() {
-            renderUploadModalGrids();
-            document.getElementById('upload-config-modal').classList.remove('hidden');
-        }
-        function closeUploadModal() {
-            document.getElementById('upload-config-modal').classList.add('hidden');
-        }
-        function closeMediaDisplayModal() {
-            const container = document.getElementById('media-display-content');
-            if (container) {
-                const vid = container.querySelector('video');
-                if (vid) { vid.pause(); vid.src = ''; }
-                const aud = container.querySelector('audio');
-                if (aud) { aud.pause(); aud.src = ''; }
-                container.innerHTML = '';
-            }
-            document.getElementById('media-display-modal').classList.add('hidden');
-        }
-        function startGame(stage) {
-            currentStage = stage;
-            stopAllGlobalMedia();
-            document.getElementById('intro-screen').classList.add('hidden');
-            document.getElementById('stage-select-screen').classList.add('hidden');
-            document.getElementById('game-header').classList.remove('hidden');
-            document.getElementById('game-main-area').classList.remove('hidden');
-            document.getElementById('victory-modal').classList.add('hidden');
-            document.getElementById('media-display-modal').classList.add('hidden');
-            document.getElementById('stage-indicator').innerText = stageTitles[stage];
-            
-            secondsElapsed = 0;
-            movesCount = 0;
-            updateHeaderStats();
-            stopTimer();
-            playBGM(stage);
-            setupBoard(stage);
-        }
-        function playBGM(stage) {
-            const bgm = document.getElementById('stage-bgm-audio');
-            if (bgm && stageBGMTracks[stage] && soundEnabled) {
-                bgm.src = stageBGMTracks[stage];
-                bgm.currentTime = 0;
-                bgm.play().catch(()=>{});
-            } else if (bgm) {
-                bgm.pause();
-            }
-        }
-        function stopBGM() {
-            const bgm = document.getElementById('stage-bgm-audio');
-            if (bgm) { bgm.pause(); bgm.currentTime = 0; bgm.src = ''; }
-        }
-        function toggleSound() {
-            soundEnabled = !soundEnabled;
-            const icon = document.getElementById('sound-icon');
-            if (soundEnabled) {
-                icon.className = "fa-solid fa-volume-high";
-                playBGM(currentStage);
-            } else {
-                icon.className = "fa-solid fa-volume-xmark";
-                stopBGM();
-            }
-        }
-        function startTimer() {
-            stopTimer();
-            timerInterval = setInterval(() => {
-                secondsElapsed++;
-                updateHeaderStats();
-            }, 1000);
-        }
-        function stopTimer() {
-            if (timerInterval) clearInterval(timerInterval);
-            if (previewInterval) clearInterval(previewInterval);
-        }
-        function updateHeaderStats() {
-            const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
-            const secs = (secondsElapsed % 60).toString().padStart(2, '0');
-            document.getElementById('timer-display').innerText = `${mins}:${secs}`;
-            document.getElementById('moves-display').innerText = movesCount;
-        }
-        function setupBoard(stage) {
-            const board = document.getElementById('game-board');
-            if (!board) return;
+        function startStage(stageId) {
+            currentStageId = stageId;
+            const stage = STAGES_DATA[stageId];
+            totalPairsInStage = stage.pairs.length;
+            matchedPairsCount = 0; gameSeconds = 0; lockBoard = true; firstSelectedCard = null;
+
+            document.getElementById('game-stage-title').innerText = `STAGE ${stageId}: ${stage.name}`;
+            document.getElementById('game-matches').innerText = `0/${totalPairsInStage}`;
+            document.getElementById('game-timer').innerText = `00:00`;
+
+            if (currentAudio) currentAudio.pause();
+            currentAudio = new Audio(stage.audio);
+            currentAudio.loop = true;
+            if (!audioMuted) currentAudio.play().catch(e => {});
+
+            const board = document.getElementById('cards-board');
+            board.className = `flex-1 w-full grid ${stage.grid} gap-2.5 items-center justify-center p-1 overflow-y-auto`;
             board.innerHTML = '';
-            let deck = [];
-            const photos = stageCardPhotos[stage];
-            const pairsMap = stageMatchingPairs[stage];
-            
-            if (stage === 1) {
-                totalPairsInStage = 2;
-                board.className = "grid grid-cols-2 gap-3 w-4/5 max-w-xs mx-auto p-2";
-            } else if (stage === 2) {
-                totalPairsInStage = 4;
-                board.className = "grid grid-cols-2 gap-3 w-4/5 max-w-xs mx-auto p-2";
-            } else if (stage === 3) {
-                totalPairsInStage = 6;
-                board.className = "grid grid-cols-4 gap-2 w-full max-w-sm mx-auto p-2";
-            } else if (stage === 4) {
-                totalPairsInStage = 10;
-                board.className = "grid grid-cols-4 gap-1.5 w-full max-w-sm mx-auto p-1";
-            }
-            deck = photos.map((imgUrl, idx) => ({
-                index: idx,
-                img: imgUrl,
-                pairId: pairsMap[idx] !== undefined ? pairsMap[idx] : idx
-            }));
-            flippedCards = [];
-            matchedPairsCount = 0;
-            isProcessing = true;
-            const coverImage = stageCovers[stage] || stageCovers[1];
-            
-            deck.forEach((cardData) => {
+
+            let cardElementsData = [];
+            stage.cards.forEach(c => { cardElementsData.push({ cardId: c.id, file: c.file }); });
+            cardElementsData.sort(() => Math.random() - 0.5);
+
+            cardElementsData.forEach((c, index) => {
                 const cardEl = document.createElement('div');
-                cardEl.className = "perspective-1000 aspect-square w-full cursor-pointer select-none";
-                cardEl.dataset.index = cardData.index;
-                cardEl.dataset.pair = cardData.pairId;
+                cardEl.className = 'w-24 sm:w-28 aspect-square relative cursor-pointer perspective-1000';
                 cardEl.innerHTML = `
-                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-xl shadow">
-                        <div class="card-front absolute inset-0 w-full h-full rounded-xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
-                            <img src="${cardData.img}" class="w-full h-full object-cover">
+                    <div class="card-inner w-full h-full relative transition-transform duration-500 rounded-xl shadow-md overflow-hidden bg-white border-2 border-white" style="transform-style: preserve-3d;">
+                        <div class="card-front absolute inset-0 w-full h-full bg-white flex items-center justify-center" style="backface-visibility: hidden;">
+                            <img src="${c.file}" class="w-full h-full object-cover">
                         </div>
-                        <div class="card-back absolute inset-0 w-full h-full rounded-xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
-                            <img src="${coverImage}" class="w-full h-full object-cover">
+                        <div class="card-back absolute inset-0 w-full h-full bg-white flex items-center justify-center" style="backface-visibility: hidden; transform: rotateY(180deg);">
+                            <img src="${CARD_BACK}" class="w-full h-full object-cover">
                         </div>
                     </div>
                 `;
-                cardEl.onclick = () => handleCardClick(cardEl);
+                cardEl.querySelector('.card-inner').style.transform = 'rotateY(0deg)';
+                cardEl.addEventListener('click', () => handleCardClick(cardEl, c.cardId));
                 board.appendChild(cardEl);
             });
-            let previewSeconds = stage === 4 ? 5 : 3;
-            const previewEl = document.getElementById('preview-countdown');
-            const previewBox = document.getElementById('preview-countdown-box');
-            if (previewBox) previewBox.classList.remove('hidden');
-            if (previewEl) previewEl.innerText = `${previewSeconds}s`;
-            playTickSound();
-            clearInterval(previewInterval);
-            previewInterval = setInterval(() => {
-                previewSeconds--;
-                if (previewEl) previewEl.innerText = `${previewSeconds}s`;
-                if (previewSeconds > 0) playTickSound();
-                if (previewSeconds <= 0) {
+
+            switchSlide('slide-gameplay');
+            const banner = document.getElementById('preview-banner');
+            const countdownEl = document.getElementById('preview-countdown');
+            banner.classList.remove('hidden');
+            let timeLeft = stage.previewTime;
+            countdownEl.innerText = timeLeft;
+
+            const previewInterval = setInterval(() => {
+                timeLeft--;
+                countdownEl.innerText = timeLeft;
+                if (timeLeft <= 0) {
                     clearInterval(previewInterval);
-                    if (previewBox) previewBox.classList.add('hidden');
-                    board.querySelectorAll('.card-inner').forEach(c => c.classList.add('rotate-y-180'));
-                    isProcessing = false;
+                    banner.classList.add('hidden');
+                    document.querySelectorAll('.card-inner').forEach(inner => { inner.style.transform = 'rotateY(180deg)'; });
+                    lockBoard = false;
                     startTimer();
                 }
-            }, 1200);
+            }, 1000);
         }
-        function handleCardClick(cardEl) {
-            if (isProcessing) return;
+
+        function startTimer() {
+            if (gameTimerInterval) clearInterval(gameTimerInterval);
+            gameSeconds = 0;
+            gameTimerInterval = setInterval(() => {
+                gameSeconds++;
+                const mins = String(Math.floor(gameSeconds / 60)).padStart(2, '0');
+                const secs = String(gameSeconds % 60).padStart(2, '0');
+                document.getElementById('game-timer').innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function handleCardClick(cardEl, cardId) {
+            if (lockBoard) return;
             const inner = cardEl.querySelector('.card-inner');
-            if (!inner.classList.contains('rotate-y-180')) return;
-            inner.classList.remove('rotate-y-180');
-            playCardFlipSound();
-            flippedCards.push(cardEl);
-            if (flippedCards.length === 2) {
-                movesCount++;
-                updateHeaderStats();
-                isProcessing = true;
-                const c1 = flippedCards[0];
-                const c2 = flippedCards[1];
-                const isMatch = (c1.dataset.pair === c2.dataset.pair) && (c1.dataset.index !== c2.dataset.index);
+            if (cardEl.classList.contains('matched') || cardEl.classList.contains('flipped')) return;
+
+            inner.style.transform = 'rotateY(0deg)';
+            cardEl.classList.add('flipped');
+
+            if (!firstSelectedCard) {
+                firstSelectedCard = { el: cardEl, id: cardId };
+            } else {
+                const secondSelected = { el: cardEl, id: cardId };
+                lockBoard = true;
+                const stagePairs = STAGES_DATA[currentStageId].pairs;
+                let isMatch = false;
+                stagePairs.forEach(pair => {
+                    if ((pair[0] === firstSelectedCard.id && pair[1] === secondSelected.id) || (pair[1] === firstSelectedCard.id && pair[0] === secondSelected.id)) {
+                        isMatch = true;
+                    }
+                });
 
                 if (isMatch) {
+                    firstSelectedCard.el.classList.add('matched');
+                    secondSelected.el.classList.add('matched');
                     matchedPairsCount++;
-                    playMatchSuccessSound();
-                    flippedCards = [];
-                    isProcessing = false;
+                    document.getElementById('game-matches').innerText = `${matchedPairsCount}/${totalPairsInStage}`;
+                    resetTurn();
                     if (matchedPairsCount === totalPairsInStage) {
-                        setTimeout(() => handleStageVictory(), 600);
+                        clearInterval(gameTimerInterval);
+                        setTimeout(showVictorySlide, 600);
                     }
                 } else {
-                    playMatchFailSound();
                     setTimeout(() => {
-                        c1.querySelector('.card-inner').classList.add('rotate-y-180');
-                        c2.querySelector('.card-inner').classList.add('rotate-y-180');
-                        flippedCards = [];
-                        isProcessing = false;
+                        firstSelectedCard.el.querySelector('.card-inner').style.transform = 'rotateY(180deg)';
+                        secondSelected.el.querySelector('.card-inner').style.transform = 'rotateY(180deg)';
+                        firstSelectedCard.el.classList.remove('flipped');
+                        secondSelected.el.classList.remove('flipped');
+                        resetTurn();
                     }, 800);
                 }
             }
         }
-        function handleStageVictory() {
-            stopTimer();
-            stopBGM();
-            playVictoryFanfareSound();
-            const modal = document.getElementById('victory-modal');
-            document.getElementById('victory-question').innerText = victoryQuestions[currentStage] || victoryQuestions[1];
-            const victoryImg = document.getElementById('victory-stage-img');
-            if (stageVictoryImages[currentStage]) {
-                victoryImg.src = stageVictoryImages[currentStage];
-                victoryImg.classList.remove('hidden');
+
+        function resetTurn() { firstSelectedCard = null; lockBoard = false; }
+        function toggleAudio() {
+            audioMuted = !audioMuted;
+            if (currentAudio) currentAudio.muted = audioMuted;
+            document.getElementById('audio-toggle-btn').innerText = audioMuted ? '🔇' : '🔊';
+        }
+
+        function showVictorySlide() {
+            if (currentAudio) currentAudio.pause();
+            const stage = STAGES_DATA[currentStageId];
+            document.getElementById('victory-img').src = stage.victoryImg;
+            document.getElementById('victory-question').innerText = stage.victoryQuestion;
+            const btnContainer = document.getElementById('victory-buttons-container');
+            btnContainer.innerHTML = '';
+
+            if (stage.isBonusFinal) {
+                btnContainer.className = "w-full flex gap-3";
+                btnContainer.innerHTML = `
+                    <button onclick="handleEndingChoice('NO')" class="flex-1 py-3.5 bg-red-600 text-white titan-font text-sm rounded-full shadow-md active:scale-95">NO</button>
+                    <button onclick="handleEndingChoice('YES')" class="flex-1 py-3.5 bg-green-600 text-white titan-font text-sm rounded-full shadow-md active:scale-95">YES</button>
+                `;
             } else {
-                victoryImg.classList.add('hidden');
+                btnContainer.className = "w-full flex";
+                btnContainer.innerHTML = `
+                    <button onclick="startStage(${stage.nextStage})" class="w-full py-3.5 bg-gameMaroon text-white titan-font text-sm rounded-full shadow-md active:scale-95">${stage.victoryBtnText}</button>
+                `;
             }
-            const actionBtn = document.getElementById('victory-action-btn');
-            const bonusBtns = document.getElementById('bonus-choice-buttons');
-            if (currentStage === 4) {
-                actionBtn.classList.add('hidden');
-                bonusBtns.classList.remove('hidden');
+            switchSlide('slide-victory');
+        }
+
+        function handleEndingChoice(choice) {
+            userVote = choice;
+            const vid = document.getElementById('ending-video');
+            const title = document.getElementById('ending-title');
+            const actionBtn = document.getElementById('ending-action-btn');
+            if (choice === 'YES') {
+                title.innerText = "YOU VOTED YES ❤️"; vid.src = "yes-button-video.mp4"; actionBtn.innerText = "EM CHIP CAM ON";
             } else {
-                actionBtn.classList.remove('hidden');
-                bonusBtns.classList.add('hidden');
-                actionBtn.innerText = victoryBtnLabels[currentStage] || 'NEXT STAGE ➔';
+                title.innerText = "YOU VOTED NO ❌"; vid.src = "no-button-video.mp4"; actionBtn.innerText = "WHY NOT ME!?";
             }
-            modal.classList.remove('hidden');
+            vid.play().catch(e => {});
+            switchSlide('slide-ending');
         }
-        function handleVictoryNext() {
-            document.getElementById('victory-modal').classList.add('hidden');
-            if (currentStage === 1) startGame(2);
-            else if (currentStage === 2) startGame(3);
-            else if (currentStage === 3) startGame(4);
-        }
-        function handleBonusChoice(choice) {
-            document.getElementById('victory-modal').classList.add('hidden');
-            const modal = document.getElementById('media-display-modal');
-            const container = document.getElementById('media-display-content');
-            const actionBtn = document.getElementById('result-action-button');
-            const commentBox = document.getElementById('comment-section-box');
-            
-            currentChoiceVote = choice.toUpperCase(); 
-            if (document.getElementById('comment-name')) document.getElementById('comment-name').value = '';
-            container.innerHTML = '';
-            if (commentBox) commentBox.classList.add('hidden');
-            resultActionState = 0;
-            const mediaData = resultChoiceMedia[choice.toUpperCase()];
-            
-            if (actionBtn) {
-                actionBtn.classList.remove('hidden');
-                actionBtn.innerText = choice.toUpperCase() === 'NO' ? "WHY NOT ME!?" : "EM CHIP CAM ON";
+
+        let endingButtonClicks = 0;
+        function handleEndingActionButton() {
+            endingButtonClicks++;
+            if (endingButtonClicks === 1) {
+                document.getElementById('comments-section').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                endingButtonClicks = 0; switchSlide('slide-intro');
             }
-            if (mediaData && mediaData.type === 'video' && mediaData.video) {
-                container.innerHTML = `<video src="${mediaData.video}" controls autoplay loop playsinline preload="auto"></video>`;
-            } else if (mediaData && mediaData.image) {
-                container.innerHTML = `<div class="w-full flex flex-col items-center justify-center"><img src="${mediaData.image}" class="w-full h-auto max-h-[40vh] object-contain rounded-lg"></div>`;
-            }
-            renderCommentsList();
-            modal.classList.remove('hidden');
         }
-        function handleResultActionButtonClick() {
-            if (resultActionState === 0) {
-                resultActionState = 1;
-                const commentBox = document.getElementById('comment-section-box');
-                if (commentBox) {
-                    commentBox.classList.remove('hidden');
-                    commentBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        function postComment() {
+            const name = document.getElementById('comment-name').value.trim() || "Ẩ danh";
+            const text = document.getElementById('comment-text').value.trim();
+            if (!text) return;
+
+            const newComment = {
+                id: Date.now(), name: name, vote: userVote || 'YES', text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: Date.now(), likes: 0, replyTo: replyingToId, replies: []
+            };
+
+            if (replyingToId) {
+                const parent = comments.find(c => c.id === replyingToId);
+                if (parent) { if (!parent.replies) parent.replies = []; parent.replies.push(newComment); }
+                cancelReply();
+            } else {
+                comments.push(newComment);
+            }
+            saveAndRenderComments();
+            document.getElementById('comment-text').value = '';
+        }
+
+        function saveAndRenderComments() {
+            localStorage.setItem('seonghyeon_comments', JSON.stringify(comments));
+            renderComments();
+        }
+
+        function renderComments() {
+            const listEl = document.getElementById('comments-list');
+            listEl.innerHTML = '';
+            let sortedComments = [...comments].sort((a, b) => (b.likes !== a.likes) ? b.likes - a.likes : b.timestamp - a.timestamp);
+
+            if (sortedComments.length === 0) {
+                listEl.innerHTML = `<div class="text-center text-gray-400 text-xs py-4">Chưa có bình luận nào.</div>`;
+                return;
+            }
+
+            sortedComments.forEach(c => {
+                listEl.appendChild(createCommentElement(c, false));
+                if (c.replies && c.replies.length > 0) {
+                    let sortedReplies = [...c.replies].sort((a, b) => (b.likes !== a.likes) ? b.likes - a.likes : b.timestamp - a.timestamp);
+                    sortedReplies.forEach(r => { listEl.appendChild(createCommentElement(r, true)); });
                 }
+            });
+        }
+
+        function createCommentElement(c, isReply) {
+            const div = document.createElement('div');
+            div.className = `bg-gameLight/70 p-2.5 rounded-xl border border-gameMaroon/10 flex flex-col gap-1 ${isReply ? 'ml-5 pl-3 border-l-2 border-gameMaroon/40' : ''}`;
+            const voteBadge = c.vote === 'YES' 
+                ? `<span class="bg-green-600 text-white text-[10px] px-2 py-0.5 rounded-full titan-font">voted YES</span>`
+                : `<span class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded-full titan-font">voted NO</span>`;
+
+            div.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <span class="font-bold text-xs text-gameMaroon">${escapeHtml(c.name)}</span>
+                        ${voteBadge}
+                        <span class="text-[10px] text-gray-400">${c.time}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="editComment(${c.id})" class="text-xs text-gray-500">✏️</button>
+                        <button onclick="deleteComment(${c.id})" class="text-xs text-red-500">🗑️</button>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-700 break-words">${escapeHtml(c.text)}</p>
+                <div class="flex items-center gap-3 mt-1">
+                    <button onclick="likeComment(${c.id})" class="flex items-center gap-1 text-xs text-red-500 active:scale-110">❤️ <span>${c.likes}</span></button>
+                    <button onclick="startReply(${c.id}, '${escapeHtml(c.name)}')" class="flex items-center gap-1 text-xs text-gameMaroon font-bold">💬 Reply</button>
+                </div>
+            `;
+            return div;
+        }
+
+        function likeComment(id) {
+            let found = comments.find(c => c.id === id);
+            if (found) { found.likes++; } 
+            else { comments.forEach(c => { if (c.replies) { let r = c.replies.find(rep => rep.id === id); if (r) r.likes++; } }); }
+            saveAndRenderComments();
+        }
+
+        function startReply(parentId, parentName) {
+            replyingToId = parentId;
+            document.getElementById('replying-to-text').innerText = `Replying to @${parentName}`;
+            document.getElementById('replying-banner').classList.remove('hidden');
+            document.getElementById('comment-text').focus();
+        }
+
+        function cancelReply() { replyingToId = null; document.getElementById('replying-banner').classList.add('hidden'); }
+
+        function deleteComment(id) {
+            comments = comments.filter(c => c.id !== id);
+            comments.forEach(c => { if (c.replies) c.replies = c.replies.filter(r => r.id !== id); });
+            saveAndRenderComments();
+        }
+
+        function editComment(id) {
+            let target = comments.find(c => c.id === id);
+            if (!target) comments.forEach(c => { if (c.replies) { let r = c.replies.find(rep => rep.id === id); if (r) target = r; } });
+            if (target) {
+                const newText = prompt("Sửa nội dung bình luận:", target.text);
+                if (newText !== null && newText.trim() !== "") { target.text = newText.trim(); saveAndRenderComments(); }
+            }
+        }
+
+        function clearAllComments() { if (confirm("Xóa tất cả bình luận?")) { comments = []; saveAndRenderComments(); } }
+        function escapeHtml(text) { return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
+
+        function checkAdminGearVisibility() {
+            const now = Date.now();
+            if (now < adminLockoutUntil) { alert("Quyền Admin đang bị khóa trong 30 phút."); return; }
+            document.getElementById('admin-modal').classList.remove('hidden');
+            document.getElementById('admin-pass-input').value = '';
+            document.getElementById('admin-error-msg').classList.add('hidden');
+        }
+
+        function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
+
+        function verifyAdminPass() {
+            const inputVal = document.getElementById('admin-pass-input').value;
+            const now = Date.now();
+            if (inputVal === "140199") {
+                adminFailCount = 0; localStorage.setItem('admin_fail_count', 0);
+                closeAdminModal(); document.getElementById('admin-panel').classList.remove('hidden');
             } else {
-                closeMediaDisplayModal();
-                goToStageSelect();
+                adminFailCount++; localStorage.setItem('admin_fail_count', adminFailCount);
+                document.getElementById('admin-error-msg').classList.remove('hidden');
+                if (adminFailCount >= 5) {
+                    adminLockoutUntil = now + 30 * 60 * 1000;
+                    localStorage.setItem('admin_lockout_until', adminLockoutUntil);
+                    closeAdminModal(); alert("Sai 5 lần. Quyền Admin bị khóa 30 phút.");
+                }
             }
         }
-        function setUploadTab(tabKey) {
-            ['intro', 's1', 's2', 's3', 's4', 'result'].forEach(t => {
-                const sec = document.getElementById(`tab-sec-${t}`);
-                const btn = document.getElementById(`tab-btn-${t}`);
-                if (sec) sec.classList.add('hidden');
-                if (btn) btn.className = "px-3 py-1.5 font-extrabold rounded-lg bg-white/5 text-gray-300 whitespace-nowrap";
-            });
-            document.getElementById(`tab-sec-${tabKey}`).classList.remove('hidden');
-            document.getElementById(`tab-btn-${tabKey}`).className = "px-3 py-1.5 font-extrabold rounded-lg bg-teal-400 text-stone-900 whitespace-nowrap";
-        }
-        function renderUploadModalGrids() {
-            [1, 2, 3, 4].forEach(s => {
-                const grid = document.getElementById(`cards-grid-s${s}`);
-                if (!grid) return;
-                grid.innerHTML = '';
-                stageCardPhotos[s].forEach((photoUrl, i) => {
-                    grid.innerHTML += `
-                        <div class="p-2 bg-[#23182d] rounded-xl border border-purple-900/50 flex flex-col items-center justify-between gap-1">
-                            <div class="text-[10px] font-bold text-gray-300">Card #${i + 1}</div>
-                            <div class="w-full aspect-square bg-[#18111e] rounded-lg overflow-hidden flex items-center justify-center">
-                                <img src="${photoUrl}" class="w-full h-full object-cover">
-                            </div>
-                        </div>`;
-                });
-            });
-        }
-        function uploadIntroVideo(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            introVideoUrl = URL.createObjectURL(file);
-            recreateIntroVideoElement();
-        }
-        function uploadResultMedia(e, choiceKey, fileType) {
-            const file = e.target.files[0];
-            if (!file) return;
-            resultChoiceMedia[choiceKey.toUpperCase()].video = URL.createObjectURL(file);
-        }
-        window.onload = function() {
-            showIntroScreen();
-            renderCommentsList();
-        };
-        window.addEventListener('keydown', function(e) {
-            if (e.key === 'F2') {
-                document.getElementById('admin-floating-btn').classList.toggle('hidden');
-            } else if (e.shiftKey && e.key.toUpperCase() === 'U') {
-                openUploadModal();
-            }
-        });
+        function closeAdminPanel() { document.getElementById('admin-panel').classList.add('hidden'); }
     </script>
-</body></html>
+</body>
+</html>
