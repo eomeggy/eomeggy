@@ -355,7 +355,7 @@
             border: none;
             cursor: pointer;
         }
-        /* RESULT MEDIA & COMMENTS (Căn giữa khu vực chính giữa theo chiều dọc ban đầu) */
+        /* RESULT MEDIA & COMMENTS */
         #result-media-screen {
             padding: 15px;
             overflow-y: auto;
@@ -643,7 +643,7 @@
         <div class="video-box" id="result-video-box" style="width: 100%;">
             <video id="result-video-player" controls autoplay loop playsinline></video>
         </div>
-        <!-- Khung bình luận nằm ở giữa Video và Nút bấm khi bấm lần 2 -->
+        <!-- Khung bình luận hiện ra ở giữa Video và Nút bấm khi bấm nút lần 1 -->
         <div class="comment-section-box" id="comment-box-elem" style="display: none;">
             <h3 class="title-exact-match" style="font-size: 0.95rem;">LEAVE YOUR COMMENTS</h3>
             <input type="text" id="user-name-input" class="name-input font-vietnamese" placeholder="YOUR NAME">
@@ -722,7 +722,7 @@
             cards: [
                 { id: 1, img: "stage1-card-1-phone.jpg" },
                 { id: 2, img: "stage1-card-2-phone.jpg" },
-                { id: 3, img: "stage1-card-3-phone.png" },
+                { id: 3, img: "stage1-card-3-phone.jpg" }, // <-- ĐÃ SỬA .png THÀNH .jpg KHỚP VỚI GITHUB
                 { id: 4, img: "stage1-card-4-phone.jpg" }
             ],
             pairs: [[1, 4], [2, 3]]
@@ -1084,7 +1084,6 @@
         }
     }
 
-    // Kết quả YES/NO: Mặc định căn giữa màn hình theo chiều dọc, ẩn khung bình luận
     function showResultScreen(choice) {
         currentVoteChoice = choice;
         actionClickCount = 0;
@@ -1095,7 +1094,7 @@
         vidPlayer.play().catch(e => {});
 
         const screen = document.getElementById('result-media-screen');
-        screen.style.justifyContent = 'center'; // Đưa video và nút bấm nằm ở khu vực chính giữa màn hình theo chiều dọc
+        screen.style.justifyContent = 'center'; 
         
         document.getElementById('comment-box-elem').style.display = 'none';
 
@@ -1106,18 +1105,16 @@
 
     function handleBottomAction() {
         actionClickCount++;
-        if(actionClickCount >= 2) {
-            // Lần bấm thứ 2 trở lên sau khi đã hiện cmt: Quay về Intro
-            actionClickCount = 0;
-            goToScreen('intro-screen');
-        } else {
-            // Lần bấm thứ 1: Tách layout ra, hiển thị khung bình luận xen giữa video và nút bấm
+        if(actionClickCount === 1) {
             const screen = document.getElementById('result-media-screen');
             screen.style.justifyContent = 'flex-start';
             
             const commentBox = document.getElementById('comment-box-elem');
             commentBox.style.display = 'flex';
             commentBox.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            actionClickCount = 0;
+            goToScreen('intro-screen');
         }
     }
 
