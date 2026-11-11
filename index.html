@@ -719,6 +719,7 @@
             <img id="victory-img-elem" src="victory1-img.png" alt="Victory">
         </div>
         <h2 id="victory-question-text" style="font-size: 1rem; color: var(--dark-burgundy);">ARE YOU STILL SKEPTICAL?</h2>
+        <!-- Đã bổ sung lại thẻ chứa nút bấm victory -->
         <div class="victory-buttons" id="victory-buttons-container"></div>
     </div>
 
@@ -1132,9 +1133,9 @@
         document.getElementById('victory-img-elem').src = stage.victoryImg;
         document.getElementById('victory-question-text').innerText = stage.question;
 
-        const btnContainer = document.getElementById('victory-buttons');
+        const btnContainer = document.getElementById('victory-buttons-container');
         
-        // Phân tách rõ ràng giữa màn Bonus (2 nút YES/NO) và các màn thường (Stage 1, 2, 3)
+        // Vẽ nút bấm chính xác theo từng stage (Stage Bonus có 2 nút NO/YES, Stage 1-3 có nút riêng)
         if (currentStageId === 4) {
             btnContainer.innerHTML = `
                 <button class="custom-btn btn-no" onclick="showResultScreen('no')">NO</button>
