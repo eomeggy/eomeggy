@@ -260,8 +260,8 @@
                 <div id="tab-sec-comments" class="space-y-4">
                     <div class="flex items-center justify-between">
                         <div>
-                            <span class="font-black text-teal-300 text-sm block">ADMIN COMMENT MODERATION</span>
-                            <span class="text-xs text-gray-400 font-vietnamese">Admin has full permission to review and delete any player's comment or reply.</span>
+                            <span class="font-black text-teal-300 text-sm block">ADMIN COMMENT &amp; REPLY MODERATION</span>
+                            <span class="text-xs text-gray-400 font-vietnamese">Admin có toàn quyền kiểm duyệt và xóa bỏ cả bình luận gốc lẫn các phản hồi (reply).</span>
                         </div>
                     </div>
                     <div id="admin-comments-manage-list" class="space-y-3"></div>
@@ -727,7 +727,7 @@
             } catch (e) {}
         }
 
-        // RENDER COMMENTS LIST (WITH OWNERSHIP CHECK)
+        // RENDER COMMENTS LIST (WITH THREADS STYLE & REPLY LIKES)
         function renderCommentsList() {
             const listContainer = document.getElementById('comments-list');
             if (!listContainer) return;
@@ -743,12 +743,31 @@
                     let repVoteBadge = rep.vote ? ` voted ${rep.vote}` : '';
                     let isMyReply = (rep.authorId === mySessionId);
                     return `
-                        <div class="bg-pink-100/60 p-2.5 rounded-xl border border-pink-200 mt-2 ml-4 flex flex-col gap-1 font-vietnamese">
+                        <div class="bg-pink-100/60 p-2.5 rounded-xl border-l-2 border-pink-400 mt-2 ml-4 flex flex-col gap-1.5 font-vietnamese relative">
                             <div class="flex items-center justify-between">
-                                <span class="font-bold text-[11px] text-[#5d223c]">↳ ${rep.name || 'Anonymous'}<span class="text-rose-600 font-normal ml-1">${repVoteBadge}</span></span>
-                                ${isMyReply ? `<button onclick="deleteReply(${index}, ${rIdx})" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold"><i class="fa-solid fa-xmark"></i></button>` : ''}
+                                <span class="font-bold text-[11px] text-[#5d223c]">${rep.name || 'Anonymous'}<span class="text-rose-600 font-normal ml-1">${repVoteBadge}</span></span>
+                                <div class="flex items-center gap-2">
+                                    ${isMyReply ? `<button onclick="deleteReply(${index}, ${rIdx})" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold" title="Delete reply"><i class="fa-solid fa-xmark"></i></button>` : ''}
+                                </div>
                             </div>
-                            <div class="text-[11px] text-gray-700">${rep.text}</div>
+                            <div class="text-[11px] text-gray-700">
+                                <span class="font-bold text-[#5d223c] mr-1">@${rep.replyTo || c.name}</span>${rep.text}
+                            </div>
+                            <div class="flex items-center gap-4 text-[10px] text-gray-600 pt-1 border-t border-pink-200/60">
+                                <button onclick="toggleReplyLike(${index}, ${rIdx})" class="flex items-center gap-1 hover:text-rose-600 transition">
+                                    <i class="${rep.liked ? 'fa-solid text-rose-500' : 'fa-regular'} fa-heart"></i>
+                                    <span class="font-bold">${rep.likes || 0}</span>
+                                </button>
+                                <button onclick="toggleReplyToReplyBox(${index}, '${rep.name}')" class="hover:text-[#5d223c] font-bold transition">Reply</button>
+                            </div>
+                            <!-- Nested Reply Box -->
+                            <div id="reply-to-reply-box-${index}-${rIdx}" class="hidden flex flex-col gap-1.5 mt-1 pt-1 border-t border-pink-200">
+                                <input type="text" id="r2r-name-${index}-${rIdx}" placeholder="Your name..." class="w-full px-2.5 py-1 bg-white border border-pink-200 rounded-lg text-[11px] text-[#5d223c] font-bold focus:outline-none">
+                                <div class="flex gap-1.5">
+                                    <input type="text" id="r2r-input-${index}-${rIdx}" placeholder="Reply to @${rep.name}..." class="flex-1 px-2.5 py-1 bg-white border border-pink-200 rounded-lg text-[11px] text-[#5d223c] focus:outline-none">
+                                    <button onclick="submitReplyToReply(${index}, '${rep.name}', ${rIdx})" class="px-2.5 py-1 bg-[#5d223c] text-white text-[10px] font-bold rounded-lg hover:bg-[#461a2d]">Send</button>
+                                </div>
+                            </div>
                         </div>
                     `;
                 }).join('');
@@ -786,13 +805,15 @@
                                 <span class="font-bold">${(c.replies || []).length}</span>
                             </button>
                         </div>
+                        <!-- Reply Input Box (Hidden by default) -->
                         <div id="reply-box-${index}" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-pink-200">
                             <input type="text" id="reply-name-${index}" placeholder="Your name..." class="w-full px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5d223c] font-bold focus:outline-none focus:ring-1 focus:ring-[#5d223c]">
                             <div class="flex gap-2">
-                                <input type="text" id="reply-input-${index}" placeholder="Write a reply..." class="flex-1 px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5d223c] focus:outline-none focus:ring-1 focus:ring-[#5d223c]">
-                                <button onclick="submitReply(${index})" class="px-3 py-1.5 bg-[#5d223c] text-white text-xs font-bold rounded-xl hover:bg-[#461a2d] transition shadow">Send</button>
+                                <input type="text" id="reply-input-${index}" placeholder="Reply to @${c.name}..." class="flex-1 px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5d223c] focus:outline-none focus:ring-1 focus:ring-[#5d223c]">
+                                <button onclick="submitReply(${index}, '${c.name}')" class="px-3 py-1.5 bg-[#5d223c] text-white text-xs font-bold rounded-xl hover:bg-[#461a2d] transition shadow">Send</button>
                             </div>
                         </div>
+                        <!-- List of Replies -->
                         <div class="space-y-1">
                             ${repliesHtml}
                         </div>
@@ -857,6 +878,19 @@
             saveCommentsToStorage();
             renderCommentsList();
         }
+
+        function toggleReplyLike(cIndex, rIndex) {
+            const rep = userCommentsList[cIndex].replies[rIndex];
+            if (rep.liked) {
+                rep.liked = false;
+                rep.likes = Math.max(0, rep.likes - 1);
+            } else {
+                rep.liked = true;
+                rep.likes = (rep.likes || 0) + 1;
+            }
+            saveCommentsToStorage();
+            renderCommentsList();
+        }
         
         function toggleReplyBox(index) {
             const box = document.getElementById(`reply-box-${index}`);
@@ -868,8 +902,17 @@
                 }
             }
         }
+
+        function toggleReplyToReplyBox(cIndex, targetName) {
+            // Find box container and toggle
+            // We can search elements containing this index
+            const container = document.getElementById(`reply-to-reply-box-${cIndex}-${arguments[2]}`);
+            if (container) {
+                container.classList.toggle('hidden');
+            }
+        }
         
-        function submitReply(index) {
+        function submitReply(index, targetName) {
             const nameInput = document.getElementById(`reply-name-${index}`);
             const input = document.getElementById(`reply-input-${index}`);
             if (!input || !input.value.trim()) return;
@@ -881,10 +924,34 @@
                 authorId: mySessionId,
                 name: nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Anonymous',
                 vote: currentChoiceVote,
-                text: input.value.trim()
+                replyTo: targetName,
+                text: input.value.trim(),
+                likes: 0,
+                liked: false
             });
             saveCommentsToStorage();
             input.value = '';
+            renderCommentsList();
+        }
+
+        function submitReplyToReply(cIndex, targetName, rIdx) {
+            const nameInput = document.getElementById(`r2r-name-${cIndex}-${rIdx}`);
+            const input = document.getElementById(`r2r-input-${cIndex}-${rIdx}`);
+            if (!input || !input.value.trim()) return;
+
+            if (!userCommentsList[cIndex].replies) {
+                userCommentsList[cIndex].replies = [];
+            }
+            userCommentsList[cIndex].replies.push({
+                authorId: mySessionId,
+                name: nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Anonymous',
+                vote: currentChoiceVote,
+                replyTo: targetName,
+                text: input.value.trim(),
+                likes: 0,
+                liked: false
+            });
+            saveCommentsToStorage();
             renderCommentsList();
         }
         
@@ -894,7 +961,7 @@
             renderCommentsList();
         }
 
-        // ADMIN SETTING COMMENT MODERATOR MANAGER
+        // ADMIN SETTING COMMENT & REPLY MODERATOR MANAGER
         function renderAdminCommentsManager() {
             const container = document.getElementById('admin-comments-manage-list');
             if (!container) return;
@@ -902,25 +969,63 @@
                 container.innerHTML = '<div class="text-xs text-gray-400 italic font-vietnamese">No comments found in system.</div>';
                 return;
             }
-            container.innerHTML = userCommentsList.map((c, idx) => `
-                <div class="bg-[#23182d] p-3 rounded-2xl border border-purple-900/60 flex items-center justify-between gap-3 font-vietnamese">
-                    <div class="flex flex-col overflow-hidden">
-                        <span class="text-xs font-bold text-teal-300">${c.name} <span class="text-rose-400 font-normal">(${c.vote || 'YES/NO'})</span></span>
-                        <span class="text-xs text-gray-300 truncate">${c.text}</span>
-                    </div>
-                    <button onclick="adminDeleteComment(${idx})" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow transition shrink-0">
-                        Delete Comment
-                    </button>
-                </div>
-            `).join('');
+            
+            let htmlContent = '';
+            userCommentsList.forEach((c, cIdx) => {
+                // Render main comment card for Admin
+                htmlContent += `
+                    <div class="bg-[#23182d] p-3 rounded-2xl border border-purple-900/60 flex flex-col gap-2 font-vietnamese">
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="flex flex-col overflow-hidden">
+                                <span class="text-xs font-bold text-teal-300">${c.name} <span class="text-rose-400 font-normal">(${c.vote || 'YES/NO'})</span></span>
+                                <span class="text-xs text-gray-300">💬 ${c.text}</span>
+                            </div>
+                            <button onclick="adminDeleteComment(${cIdx}, null)" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow transition shrink-0">
+                                Delete Comment
+                            </button>
+                        </div>
+                `;
+
+                // Render replies inside Admin panel if any exist
+                if (c.replies && c.replies.length > 0) {
+                    htmlContent += `<div class="ml-4 pl-3 border-l-2 border-teal-500/50 space-y-2 mt-1">`;
+                    c.replies.forEach((rep, rIdx) => {
+                        htmlContent += `
+                            <div class="bg-[#18111e] p-2.5 rounded-xl border border-purple-900/40 flex items-center justify-between gap-3">
+                                <div class="flex flex-col overflow-hidden">
+                                    <span class="text-[11px] font-bold text-pink-300">↳ ${rep.name} <span class="text-gray-400 font-normal">(@${rep.replyTo})</span></span>
+                                    <span class="text-[11px] text-gray-300">💬 ${rep.text}</span>
+                                </div>
+                                <button onclick="adminDeleteComment(${cIdx}, ${rIdx})" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] rounded-lg shadow transition shrink-0">
+                                    Delete Reply
+                                </button>
+                            </div>
+                        `;
+                    });
+                    htmlContent += `</div>`;
+                }
+
+                htmlContent += `</div>`;
+            });
+
+            container.innerHTML = htmlContent;
         }
 
-        function adminDeleteComment(idx) {
-            if (confirm("Admin, are you sure you want to delete this comment?")) {
-                userCommentsList.splice(idx, 1);
-                saveCommentsToStorage();
-                renderAdminCommentsManager();
-                renderCommentsList();
+        function adminDeleteComment(cIdx, rIdx) {
+            if (rIdx === null || rIdx === undefined) {
+                if (confirm("Admin, are you sure you want to delete this main comment?")) {
+                    userCommentsList.splice(cIdx, 1);
+                    saveCommentsToStorage();
+                    renderAdminCommentsManager();
+                    renderCommentsList();
+                }
+            } else {
+                if (confirm("Admin, are you sure you want to delete this reply?")) {
+                    userCommentsList[cIdx].replies.splice(rIdx, 1);
+                    saveCommentsToStorage();
+                    renderAdminCommentsManager();
+                    renderCommentsList();
+                }
             }
         }
 
