@@ -261,12 +261,12 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <span class="font-black text-teal-300 text-sm block">ADMIN COMMENT MODERATION</span>
-                            <span class="text-xs text-gray-400 font-vietnamese">Admin có toàn quyền xóa bỏ bất kỳ bình luận hoặc phản hồi nào của người chơi.</span>
+                            <span class="text-xs text-gray-400 font-vietnamese">Admin has full permission to review and delete any player's comment or reply.</span>
                         </div>
                     </div>
                     <div id="admin-comments-manage-list" class="space-y-3"></div>
                 </div>
-                <!-- CÁC TAB CŨ GIỮ NGUYÊN -->
+
                 <div id="tab-sec-intro" class="space-y-5 hidden">
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
                         <div class="space-y-2 flex-1">
@@ -558,18 +558,14 @@
         
         let userCommentsList = [];
         
-        // HỆ THỐNG LOCALSTORAGE VÀ QUẢN LÝ BÌNH LUẬN
+        // PERSISTENT STORAGE FUNCTIONS (LOCALSTORAGE)
         function loadCommentsFromStorage() {
             try {
                 const saved = localStorage.getItem('seonghyeon_game_comments_pc');
                 if (saved) {
                     userCommentsList = JSON.parse(saved);
-                } else {
-                    userCommentsList = [];
                 }
-            } catch(e) {
-                userCommentsList = [];
-            }
+            } catch(e) {}
         }
         
         function saveCommentsToStorage() {
@@ -578,11 +574,11 @@
             } catch(e) {}
         }
 
-        // ĐỊNH DANH NGƯỜI DÙNG CỤ THỂ ĐỂ PHÂN QUYỀN XÓA
+        // USER SESSION ID FOR INDIVIDUAL OWNERSHIP
         function getMySessionId() {
             let id = localStorage.getItem('seonghyeon_user_session_id');
             if (!id) {
-                id = 'user_' + Math.random().toString(36.substring(2, 9));
+                id = 'user_' + Math.random().toString(36).substring(2, 9);
                 localStorage.setItem('seonghyeon_user_session_id', id);
             }
             return id;
@@ -730,8 +726,8 @@
                 osc.stop(ctx.currentTime + 0.15);
             } catch (e) {}
         }
-        
-        // RENDER COMMENTS LIST (CÓ LƯU LOCALSTORAGE VÀ PHÂN QUYỀN XÓA CỦA CHÍNH CHỦ)
+
+        // RENDER COMMENTS LIST (WITH OWNERSHIP CHECK)
         function renderCommentsList() {
             const listContainer = document.getElementById('comments-list');
             if (!listContainer) return;
@@ -750,7 +746,7 @@
                         <div class="bg-pink-100/60 p-2.5 rounded-xl border border-pink-200 mt-2 ml-4 flex flex-col gap-1 font-vietnamese">
                             <div class="flex items-center justify-between">
                                 <span class="font-bold text-[11px] text-[#5d223c]">↳ ${rep.name || 'Anonymous'}<span class="text-rose-600 font-normal ml-1">${repVoteBadge}</span></span>
-                                ${isMyReply ? `<button onclick="deleteReply(${index}, ${rIdx})" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold" title="Xóa phản hồi của bạn"><i class="fa-solid fa-xmark"></i></button>` : ''}
+                                ${isMyReply ? `<button onclick="deleteReply(${index}, ${rIdx})" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold"><i class="fa-solid fa-xmark"></i></button>` : ''}
                             </div>
                             <div class="text-[11px] text-gray-700">${rep.text}</div>
                         </div>
@@ -759,7 +755,6 @@
                 
                 return `
                     <div class="bg-pink-50/80 p-3 rounded-2xl border border-pink-100 flex flex-col gap-2 relative font-vietnamese">
-                        <!-- Top Header info & 3 Dots Menu (Chỉ hiện menu sửa/xóa nếu là comment của chính người đó) -->
                         <div class="flex items-center justify-between">
                             <div class="font-bold text-xs text-[#5d223c]">
                                 ${c.name || 'Anonymous'}<span class="text-rose-600 font-normal ml-1">${voteBadge}</span>
@@ -770,7 +765,6 @@
                                 <button onclick="toggleCommentMenu(${index})" class="w-7 h-7 flex items-center justify-center text-gray-500 hover:text-[#5d223c] rounded-full hover:bg-pink-100/50 transition">
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
-                                <!-- Menu 3 Dots (Edit / Delete) -->
                                 <div id="comment-menu-${index}" class="absolute right-0 top-8 bg-white shadow-xl rounded-xl border border-pink-100 p-1.5 z-30 hidden flex flex-col w-28 text-xs font-vietnamese">
                                     <button onclick="editComment(${index})" class="text-left px-3 py-1.5 text-teal-700 hover:bg-pink-50 rounded-lg flex items-center gap-1.5 font-bold">
                                         <i class="fa-solid fa-pen text-[10px]"></i> Edit
@@ -781,9 +775,7 @@
                                 </div>` : ''}
                             </div>
                         </div>
-                        <!-- Content -->
                         <div class="text-xs text-gray-800">${c.text}</div>
-                        <!-- React & Reply Action Bar -->
                         <div class="flex items-center gap-5 text-xs text-gray-600 pt-1 border-t border-pink-100/80 mt-1">
                             <button onclick="toggleLikeComment(${index})" class="flex items-center gap-1.5 hover:text-rose-600 transition">
                                 <i class="${c.liked ? 'fa-solid text-rose-500' : 'fa-regular'} fa-heart"></i>
@@ -794,7 +786,6 @@
                                 <span class="font-bold">${(c.replies || []).length}</span>
                             </button>
                         </div>
-                        <!-- Reply Input Box (Hidden by default) -->
                         <div id="reply-box-${index}" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-pink-200">
                             <input type="text" id="reply-name-${index}" placeholder="Your name..." class="w-full px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5d223c] font-bold focus:outline-none focus:ring-1 focus:ring-[#5d223c]">
                             <div class="flex gap-2">
@@ -802,7 +793,6 @@
                                 <button onclick="submitReply(${index})" class="px-3 py-1.5 bg-[#5d223c] text-white text-xs font-bold rounded-xl hover:bg-[#461a2d] transition shadow">Send</button>
                             </div>
                         </div>
-                        <!-- List of Replies -->
                         <div class="space-y-1">
                             ${repliesHtml}
                         </div>
@@ -904,12 +894,12 @@
             renderCommentsList();
         }
 
-        // TAB QUẢN LÝ BÌNH LUẬN TRONG PHẦN ADMIN SETTING (CHỈ ADMIN MỚI CÓ QUYỀN XÓA TẤT CẢ)
+        // ADMIN SETTING COMMENT MODERATOR MANAGER
         function renderAdminCommentsManager() {
             const container = document.getElementById('admin-comments-manage-list');
             if (!container) return;
             if (userCommentsList.length === 0) {
-                container.innerHTML = '<div class="text-xs text-gray-400 italic font-vietnamese">Chưa có bình luận nào trên hệ thống.</div>';
+                container.innerHTML = '<div class="text-xs text-gray-400 italic font-vietnamese">No comments found in system.</div>';
                 return;
             }
             container.innerHTML = userCommentsList.map((c, idx) => `
@@ -919,14 +909,14 @@
                         <span class="text-xs text-gray-300 truncate">${c.text}</span>
                     </div>
                     <button onclick="adminDeleteComment(${idx})" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow transition shrink-0">
-                        Xóa cmt này
+                        Delete Comment
                     </button>
                 </div>
             `).join('');
         }
 
         function adminDeleteComment(idx) {
-            if (confirm("Admin có chắc chắn muốn xóa bình luận này không?")) {
+            if (confirm("Admin, are you sure you want to delete this comment?")) {
                 userCommentsList.splice(idx, 1);
                 saveCommentsToStorage();
                 renderAdminCommentsManager();
