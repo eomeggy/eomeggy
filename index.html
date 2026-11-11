@@ -11,6 +11,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Titan+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
+    /* ==========================================
+       GLOBAL STYLES & TYPOGRAPHY
+       ========================================== */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -32,6 +35,7 @@
       color: #532338;
     }
 
+    /* Khung giả lập điện thoại giao diện dọc */
     #app-viewport {
       width: 100vw;
       max-width: 430px;
@@ -45,6 +49,7 @@
       box-shadow: 0 0 30px rgba(0,0,0,0.5);
     }
 
+    /* Typography & Effects */
     .titan-text {
       font-family: 'Titan One', cursive;
       color: #532338;
@@ -68,6 +73,7 @@
       display: flex;
     }
 
+    /* Common UI Elements */
     .btn-pink {
       background: #ffffff;
       color: #532338;
@@ -106,7 +112,9 @@
       transform: scale(0.96);
     }
 
-    /* SLIDE 1: INTRO */
+    /* ==========================================
+       SLIDE 1: INTRO SLIDE
+       ========================================== */
     #slide-intro {
       padding: 40px 24px;
       align-items: center;
@@ -144,7 +152,9 @@
       gap: 12px;
     }
 
-    /* SLIDE 2: SELECT STAGE */
+    /* ==========================================
+       SLIDE 2: SELECT STAGE
+       ========================================== */
     #slide-select-stage {
       flex-direction: row;
       position: relative;
@@ -221,7 +231,9 @@
       font-size: 18px;
     }
 
-    /* SLIDE 3: GAMEPLAY */
+    /* ==========================================
+       SLIDE 3: GAME PLAY STAGE
+       ========================================== */
     .game-header {
       width: 100%;
       padding: 16px;
@@ -268,6 +280,7 @@
       margin: auto 0;
     }
 
+    /* Grid Layouts per Stage */
     .grid-4 { grid-template-columns: repeat(2, 1fr); max-width: 280px; }
     .grid-8 { grid-template-columns: repeat(2, 1fr); max-width: 280px; }
     .grid-12 { grid-template-columns: repeat(3, 1fr); max-width: 360px; }
@@ -331,7 +344,9 @@
       object-fit: cover;
     }
 
-    /* SLIDE 4: VICTORY */
+    /* ==========================================
+       SLIDE 4: VICTORY & QUESTION SLIDE
+       ========================================== */
     #slide-victory {
       padding: 32px 20px;
       align-items: center;
@@ -361,7 +376,9 @@
       line-height: 1.4;
     }
 
-    /* SLIDE 5: INTERACTIVE COMMENTS */
+    /* ==========================================
+       SLIDE 5: INTERACTIVE COMMENTS & YES/NO
+       ========================================== */
     #slide-interactive {
       padding: 24px 16px;
       display: flex;
@@ -393,6 +410,7 @@
       font-size: 16px;
     }
 
+    /* Comment Section */
     .comments-section {
       display: none;
       flex-direction: column;
@@ -548,7 +566,9 @@
       margin-top: 6px;
     }
 
-    /* ADMIN */
+    /* ==========================================
+       ADMIN SETTINGS MODAL & WHEEL
+       ========================================== */
     #admin-trigger-wheel {
       position: fixed;
       bottom: 20px;
@@ -626,9 +646,11 @@
 <body>
 
   <div id="app-viewport">
+
+    <!-- AUDIO BACKSTAGE ENGINE -->
     <audio id="bgm-player" loop></audio>
 
-    <!-- SLIDE 1: INTRO -->
+    <!-- ================= SLIDE 1: INTRO ================= -->
     <div id="slide-intro" class="slide active">
       <h1 class="titan-text intro-title">IS SEONGHYEON<br/>A CAT?</h1>
       
@@ -649,9 +671,11 @@
       </div>
     </div>
 
-    <!-- SLIDE 2: SELECT STAGE -->
+    <!-- ================= SLIDE 2: SELECT STAGE ================= -->
     <div id="slide-select-stage" class="slide">
       <div class="select-stage-scroll" id="stage-scroll-container">
+        
+        <!-- Easy / Stage 1 -->
         <div class="stage-card-frame" data-stage="1" onclick="launchStage(1)">
           <div class="stage-media-box">
             <img src="stage1-easy-img.jpg" class="stage-img" alt="Easy Stage" />
@@ -662,6 +686,7 @@
           <div class="titan-text stage-card-title">EASY</div>
         </div>
 
+        <!-- Medium / Stage 2 -->
         <div class="stage-card-frame" data-stage="2" onclick="launchStage(2)">
           <div class="stage-media-box">
             <img src="stage2-medium-img.jpg" class="stage-img" alt="Medium Stage" />
@@ -672,6 +697,7 @@
           <div class="titan-text stage-card-title">MEDIUM</div>
         </div>
 
+        <!-- Hard / Stage 3 -->
         <div class="stage-card-frame" data-stage="3" onclick="launchStage(3)">
           <div class="stage-media-box">
             <img src="stage3-hard-img.jpg" class="stage-img" alt="Hard Stage" />
@@ -681,6 +707,7 @@
           </div>
           <div class="titan-text stage-card-title">HARD</div>
         </div>
+
       </div>
 
       <div class="select-stage-sidebar">
@@ -688,7 +715,7 @@
       </div>
     </div>
 
-    <!-- SLIDE 3: GAMEPLAY -->
+    <!-- ================= SLIDE 3: GAME PLAY ================= -->
     <div id="slide-gameplay" class="slide">
       <div class="game-header">
         <div class="top-nav-bar">
@@ -709,10 +736,12 @@
         </div>
       </div>
 
-      <div class="cards-grid-container" id="cards-container"></div>
+      <div class="cards-grid-container" id="cards-container">
+        <!-- Cards injected dynamically -->
+      </div>
     </div>
 
-    <!-- SLIDE 4: VICTORY -->
+    <!-- ================= SLIDE 4: VICTORY & QUESTIONS ================= -->
     <div id="slide-victory" class="slide">
       <div class="titan-text victory-congrats">CONGRATULATIONS!</div>
       
@@ -724,10 +753,12 @@
         ARE YOU STILL SKEPTICAL?
       </div>
 
-      <div id="victory-buttons-container" style="display: flex; gap: 12px; width: 100%; justify-content: center;"></div>
+      <div id="victory-buttons-container" style="display: flex; gap: 12px; width: 100%; justify-content: center;">
+        <!-- Buttons injected dynamically -->
+      </div>
     </div>
 
-    <!-- SLIDE 5: INTERACTIVE -->
+    <!-- ================= SLIDE 5: INTERACTIVE COMMENTS ================= -->
     <div id="slide-interactive" class="slide">
       <div class="interactive-media-container" id="interactive-media-box">
         <video id="interactive-video" playsinline controls autoplay loop>
@@ -748,18 +779,22 @@
           <button class="btn-pink-filled" style="align-self: flex-end; padding: 8px 18px;" onclick="postComment()">SEND</button>
         </div>
 
-        <div class="comments-list" id="comments-list-box"></div>
+        <div class="comments-list" id="comments-list-box">
+          <!-- Comments List -->
+        </div>
       </div>
     </div>
+
   </div>
 
-  <!-- ADMIN -->
+  <!-- ================= ADMIN WHEEL & MODAL ================= -->
   <div id="admin-trigger-wheel" onclick="openAdminModal()">⚙</div>
 
   <div class="admin-modal" id="admin-modal">
     <div class="admin-card">
       <div class="titan-text" style="text-align: center; font-size: 20px;">ADMIN SETTINGS</div>
       
+      <!-- PIN FORM -->
       <div id="admin-pin-section" class="admin-pin-box">
         <p style="font-size: 13px;">Nhập PIN 6 số Admin:</p>
         <input type="password" id="admin-pin-input" class="pin-input" maxlength="6" />
@@ -767,6 +802,7 @@
         <p id="admin-pin-error" style="color: red; font-size: 11px; display: none;"></p>
       </div>
 
+      <!-- ADMIN DASHBOARD -->
       <div id="admin-dashboard-section" style="display: none; flex-direction: column; gap: 16px;">
         <div style="font-weight: bold; font-size: 14px; border-bottom: 1px solid #ccc; padding-bottom: 4px;">TEST RUN SLIDES</div>
         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
@@ -786,7 +822,11 @@
     </div>
   </div>
 
+  <!-- ================= JAVASCRIPT GAME LOGIC ================= -->
   <script>
+    /* --------------------------------------------------
+       1. STAGE & GAME CONFIGURATION
+       -------------------------------------------------- */
     const STAGE_CONFIGS = {
       1: {
         name: 'SKEPTICAL',
@@ -826,6 +866,9 @@
       }
     };
 
+    /* --------------------------------------------------
+       2. STATE MANAGEMENT
+       -------------------------------------------------- */
     let currentStage = 1;
     let flippedCards = [];
     let matchedPairsCount = 0;
@@ -833,9 +876,10 @@
     let previewInterval = null;
     let gameTimerInterval = null;
     let secondsElapsed = 0;
-    let currentVote = 'YES';
-    let interactiveClickState = 0;
+    let currentVote = 'YES'; // 'YES' or 'NO'
+    let interactiveClickState = 0; // 0: initial, 1: comments open
 
+    // Audio Synthetic Engine (Web Audio API for SFX)
     const AudioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playSoundEffect(type) {
       if (AudioCtx.state === 'suspended') AudioCtx.resume();
@@ -858,8 +902,8 @@
         osc.start(now);
         osc.stop(now + 0.08);
       } else if (type === 'match') {
-        osc.frequency.setValueAtTime(523.25, now);
-        osc.frequency.setValueAtTime(659.25, now + 0.1);
+        osc.frequency.setValueAtTime(523.25, now); // C5
+        osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
         gain.gain.setValueAtTime(0.2, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
         osc.start(now);
@@ -874,11 +918,15 @@
       }
     }
 
+    /* --------------------------------------------------
+       3. NAVIGATION & SLIDE CONTROL
+       -------------------------------------------------- */
     function switchSlide(slideId) {
       document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
       const target = document.getElementById(slideId);
       if (target) target.classList.add('active');
 
+      // Stop BGM if moving away from gameplay
       if (slideId !== 'slide-gameplay') {
         const bgm = document.getElementById('bgm-player');
         bgm.pause();
@@ -895,6 +943,9 @@
       }
     }
 
+    /* --------------------------------------------------
+       4. SELECT STAGE AUTO-PLAY VIDEO ON SCROLL
+       -------------------------------------------------- */
     const stageScrollContainer = document.getElementById('stage-scroll-container');
     if (stageScrollContainer) {
       stageScrollContainer.addEventListener('scroll', () => {
@@ -920,18 +971,24 @@
       });
     }
 
+    /* --------------------------------------------------
+       5. GAMEPLAY LOGIC (CARD MATCHING)
+       -------------------------------------------------- */
     function launchStage(stageNum) {
       currentStage = stageNum;
       const config = STAGE_CONFIGS[stageNum];
       switchSlide('slide-gameplay');
 
+      // Update Header Info
       document.getElementById('game-stage-number').innerText = `STAGE ${stageNum}`;
       document.getElementById('game-stage-name').innerText = config.name;
 
+      // Play Stage Audio
       const bgm = document.getElementById('bgm-player');
       bgm.src = config.audio;
       bgm.play().catch(() => {});
 
+      // Build Cards Grid (Fixed sequence 1..N)
       const container = document.getElementById('cards-container');
       container.className = `cards-grid-container ${config.gridClass}`;
       container.innerHTML = '';
@@ -960,6 +1017,7 @@
         container.appendChild(cardEl);
       }
 
+      // Preview Countdown Logic
       let timeLeft = config.previewTime;
       const timerDisplay = document.getElementById('preview-seconds');
       timerDisplay.innerText = `${timeLeft}s`;
@@ -973,6 +1031,7 @@
         } else {
           clearInterval(previewInterval);
           timerDisplay.innerText = `0s`;
+          // Hide cards (flip back)
           document.querySelectorAll('.card').forEach(c => c.classList.remove('flipped'));
           isBoardLocked = false;
           startTimer();
@@ -1010,6 +1069,7 @@
       const id2 = parseInt(card2.dataset.id);
       const config = STAGE_CONFIGS[currentStage];
 
+      // Check if (id1, id2) exists in stage pairs
       const isMatched = config.pairs.some(pair => 
         (pair[0] === id1 && pair[1] === id2) || (pair[0] === id2 && pair[1] === id1)
       );
@@ -1022,6 +1082,7 @@
         matchedPairsCount++;
         isBoardLocked = false;
 
+        // Check Victory
         if (matchedPairsCount === config.pairs.length) {
           clearInterval(gameTimerInterval);
           setTimeout(() => showVictorySlide(), 800);
@@ -1037,6 +1098,9 @@
       }
     }
 
+    /* --------------------------------------------------
+       6. VICTORY SLIDE & QUESTIONS
+       -------------------------------------------------- */
     function showVictorySlide() {
       switchSlide('slide-victory');
       const img = document.getElementById('victory-image');
@@ -1066,6 +1130,9 @@
       }
     }
 
+    /* --------------------------------------------------
+       7. INTERACTIVE COMMENTS (YES/NO)
+       -------------------------------------------------- */
     function openInteractive(vote) {
       currentVote = vote;
       interactiveClickState = 0;
@@ -1093,14 +1160,17 @@
 
     function handleInteractiveClick() {
       if (interactiveClickState === 0) {
+        // Shift video up, reveal comments
         interactiveClickState = 1;
         document.getElementById('comments-section').classList.add('active');
         document.getElementById('comments-section').scrollIntoView({ behavior: 'smooth' });
       } else {
+        // Back to intro
         switchSlide('slide-intro');
       }
     }
 
+    /* Comment Management (LocalStorage Sync) */
     function getStoredComments() {
       return JSON.parse(localStorage.getItem('game_comments') || '[]');
     }
@@ -1251,6 +1321,9 @@
       return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
+    /* --------------------------------------------------
+       8. ADMIN SHORTCUTS & PANEL (F2 / Shift + U)
+       -------------------------------------------------- */
     let adminAttempts = 0;
     let adminLockedUntil = 0;
 
@@ -1283,14 +1356,14 @@
       const pin = document.getElementById('admin-pin-input').value;
       const err = document.getElementById('admin-pin-error');
 
-      if (pin === '140199') {
+      if (pin === '140199') { // PIN Admin đã cập nhật
         adminAttempts = 0;
         document.getElementById('admin-pin-section').style.display = 'none';
         document.getElementById('admin-dashboard-section').style.display = 'flex';
       } else {
         adminAttempts++;
         if (adminAttempts >= 10) {
-          adminLockedUntil = Date.now() + 30 * 60 * 1000;
+          adminLockedUntil = Date.now() + 30 * 60 * 1000; // Khóa 30 phút
           err.innerText = 'Đã nhập sai 10 lần! Khóa Admin 30 phút.';
           err.style.display = 'block';
           setTimeout(() => closeAdminModal(), 2000);
