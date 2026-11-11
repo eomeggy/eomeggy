@@ -1,1344 +1,1402 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
+<html lang="en"><head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IS SEONGHYEON A CAT?</title>
-    <!-- Google Fonts: Titan One & Be Vietnam Pro -->
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Titan+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IS SEONGHYEON A CAT? - Memory Game</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts for Bold Bubble Display (Titan One) & Be Vietnam Pro for Comments (Tiếng Việt) -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;900&amp;family=Titan+One&amp;display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-pink: #f8d7da;
-            --main-pink: #d87a93;
-            --dark-burgundy: #592233;
-            --card-pink: #ffc0cb;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-            font-family: 'Be Vietnam Pro', sans-serif;
-        }
-
         body {
-            background-color: var(--bg-pink);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
+            font-family: 'Titan One', cursive, sans-serif;
+            background-color: #c96b92;
+            color: #fff;
         }
-
-        /* Mobile Container Frame */
-        #game-container {
-            width: 100%;
-            max-width: 420px;
-            height: 100vh;
-            max-height: 850px;
-            background-color: var(--main-pink);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        .font-bubble-title {
+            font-family: 'Titan One', cursive, sans-serif;
+            letter-spacing: 1px;
         }
-
-        @media (min-width: 423px) {
-            #game-container {
-                border-radius: 30px;
-                border: 8px solid #c25e79;
-            }
+        .font-vietnamese {
+            font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
         }
-
-        .screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-pink);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px;
-            overflow-y: auto;
-            display: none;
-            z-index: 1;
-        }
-
-        .screen.active {
-            display: flex;
-            z-index: 10;
-        }
-
-        /* Titan One Font & Exact Title Shadow Matching Intro */
         .title-exact-match {
-            font-family: 'Titan One', cursive;
             color: #72334f;
             text-shadow: 
                 0 0 6px #fce0e8,
                 0 0 12px rgba(252, 224, 232, 0.7),
                 2px 2px 4px rgba(0, 0, 0, 0.15);
-            text-align: center;
         }
-
-        /* INTRO SCREEN */
-        #intro-screen {
-            justify-content: center;
-            gap: 20px;
+        .stage-title-bubbly {
+            color: #72334f;
+            text-shadow: 
+                0 0 4px #fce0e8,
+                1px 1px 3px rgba(0, 0, 0, 0.15);
         }
-
-        #intro-screen h1 {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-        }
-
-        .video-box {
-            width: 90%;
-            background: #000;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-            border: 4px solid #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .video-box video {
-            width: 100%;
-            height: auto;
-            max-height: 45vh;
-            object-fit: contain;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 12px;
-            width: 90%;
-            justify-content: center;
-        }
-
-        .custom-btn {
-            font-family: 'Titan One', cursive;
-            background-color: #fff;
-            color: var(--dark-burgundy);
-            border: none;
-            padding: 12px 18px;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            transition: transform 0.1s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .custom-btn:active {
-            transform: scale(0.96);
-        }
-
-        .custom-btn.primary {
-            background-color: var(--dark-burgundy);
-            color: #fff;
-        }
-
-        /* SELECT STAGE SCREEN */
-        #select-screen {
-            padding: 15px 15px 15px 0.4cm;
-            overflow-y: auto;
-            position: relative;
-            align-items: flex-start;
-        }
-
-        /* Chữ SELECT STAGE sát lề phải của khung điện thoại, phóng to 1.3 lần */
-        .vertical-title {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%) rotate(90deg);
-            font-family: 'Titan One', cursive;
-            font-size: 1.82rem;
-            letter-spacing: 2px;
-            z-index: 100;
-            pointer-events: none;
-            white-space: nowrap;
-        }
-
-        .stages-scroll-area {
-            width: calc(100% - 2rem);
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            padding-top: 40px;
-            padding-bottom: 150px;
-            align-items: flex-start;
-        }
-
-        .stage-card-item {
-            width: 100%;
-            background: #fff;
-            border-radius: 18px;
-            padding: 10px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-            text-align: center;
-        }
-
-        .stage-media-wrapper {
-            width: 100%;
-            aspect-ratio: 1/1;
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            background: #000;
-            cursor: pointer;
-        }
-
-        .stage-media-wrapper img, .stage-media-wrapper video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        .stage-card-item h3 {
-            font-family: 'Titan One', cursive;
-            color: var(--dark-burgundy);
-            margin-top: 10px;
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
-
-        /* GAMEPLAY SCREEN */
-        #gameplay-screen {
-            padding: 12px;
-        }
-
-        .game-top-bar {
-            width: 100%;
-            background: #fff;
-            border-radius: 14px;
-            padding: 8px 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin-bottom: 10px;
-        }
-
-        .top-btn {
-            background: var(--dark-burgundy);
-            color: #fff;
-            border: none;
-            padding: 6px 8px;
-            border-radius: 8px;
-            font-family: 'Titan One', cursive;
-            font-size: 0.7rem;
-            cursor: pointer;
-        }
-
-        .stage-info-title {
-            font-family: 'Titan One', cursive;
-            font-size: 0.75rem;
-            color: var(--dark-burgundy);
-        }
-
-        .game-stats {
-            display: flex;
-            gap: 8px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--dark-burgundy);
-        }
-
-        .preview-banner {
-            background: #fff;
-            padding: 6px 16px;
-            border-radius: 15px;
-            font-family: 'Titan One', cursive;
-            color: var(--dark-burgundy);
-            margin-bottom: 10px;
-            font-size: 0.85rem;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-        }
-
-        /* GRID CARDS LAYOUT */
-        .cards-grid {
-            display: grid;
-            gap: 8px;
-            width: 100%;
-            max-width: 360px;
-            justify-content: center;
-            align-content: center;
-            flex-grow: 1;
-            padding-bottom: 15px;
-        }
-
-        .grid-stage-1 { grid-template-columns: repeat(2, 1fr); }
-        .grid-stage-2 { grid-template-columns: repeat(2, 1fr); }
-        .grid-stage-3 { grid-template-columns: repeat(3, 1fr); }
-        .grid-stage-bonus { grid-template-columns: repeat(4, 1fr); }
-
-        .card {
-            aspect-ratio: 1/1;
+        .perspective-1000 {
             perspective: 1000px;
-            cursor: pointer;
         }
-
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.4s;
+        .transform-style-3d {
             transform-style: preserve-3d;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
-
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+        .backface-hidden {
             backface-visibility: hidden;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 2px solid #fff;
+            -webkit-backface-visibility: hidden;
         }
-
-        .card-front {
-            background-color: #ffc0cb;
+        .rotate-y-180 {
             transform: rotateY(180deg);
         }
-
-        .card-front img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
         }
-
-        .card-back {
-            background-color: var(--card-pink);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #85345b;
+            border-radius: 9999px;
         }
-
-        .card-back img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* VICTORY SCREEN */
-        #victory-screen {
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            gap: 15px;
-            padding: 30px;
-        }
-
-        #victory-screen h2 {
-            font-family: 'Titan One', cursive;
-            font-size: 1.4rem;
-            color: var(--dark-burgundy);
-        }
-
-        .victory-img-box {
-            width: 170px;
-            height: 170px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .victory-img-box img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .victory-buttons {
-            display: flex;
-            gap: 12px;
-            width: 100%;
-            justify-content: center;
-        }
-
-        .btn-yes {
-            background-color: #2ecc71 !important;
-            color: white !important;
-            flex: 1;
-            padding: 12px;
-            border-radius: 16px;
-            font-family: 'Titan One', cursive;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-no {
-            background-color: #e74c3c !important;
-            color: white !important;
-            flex: 1;
-            padding: 12px;
-            border-radius: 16px;
-            font-family: 'Titan One', cursive;
-            border: none;
-            cursor: pointer;
-        }
-
-        /* RESULT MEDIA & COMMENTS */
-        #result-media-screen {
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .comment-section-box {
-            width: 100%;
-            background: #fff;
-            border-radius: 18px;
-            padding: 12px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .comment-section-box h3 {
-            font-family: 'Titan One', cursive;
-            color: var(--dark-burgundy);
-            font-size: 0.95rem;
-            text-align: center;
-        }
-
-        .comment-input, .name-input {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 10px;
-            border: 2px solid #f0d0d5;
-            outline: none;
-            font-size: 0.85rem;
-            color: #333;
-        }
-
-        .comment-row-action {
-            display: flex;
-            gap: 8px;
-        }
-
-        .send-btn {
-            background-color: var(--dark-burgundy);
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-family: 'Titan One', cursive;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        .comments-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-height: 220px;
-            overflow-y: auto;
-        }
-
-        .comment-item {
-            background: #fff9fa;
-            border: 1px solid #f5e1e5;
-            border-radius: 10px;
-            padding: 8px 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            position: relative;
-        }
-
-        .comment-header {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--dark-burgundy);
-        }
-
-        .voted-badge {
-            background-color: #2ecc71;
-            color: white;
-            font-size: 0.6rem;
-            padding: 2px 5px;
-            border-radius: 5px;
-            font-family: 'Titan One', cursive;
-        }
-
-        .voted-badge.no {
-            background-color: #e74c3c;
-        }
-
-        .comment-time {
-            font-size: 0.65rem;
-            color: #888;
-            margin-left: auto;
-        }
-
-        .comment-body {
-            font-size: 0.85rem;
-            color: #444;
-        }
-
-        .comment-footer-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.75rem;
-            color: #666;
-        }
-
-        .action-like, .action-reply {
-            cursor: pointer;
-        }
-
-        .action-like.liked {
-            color: #e74c3c;
-        }
-
-        .comment-menu-btn {
-            position: absolute;
-            right: 8px;
-            top: 8px;
-            background: none;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .comment-dropdown {
-            position: absolute;
-            right: 8px;
-            top: 26px;
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            display: none;
-            flex-direction: column;
-            z-index: 5;
-        }
-
-        .comment-dropdown button {
-            background: none;
-            border: none;
-            padding: 5px 12px;
-            text-align: left;
-            cursor: pointer;
-            font-size: 0.75rem;
-        }
-
-        .comment-dropdown button:hover {
-            background: #f0f0f0;
-        }
-
-        .reply-container {
-            margin-top: 6px;
-            padding-left: 10px;
-            border-left: 2px solid #e2a2b3;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .reply-item {
-            font-size: 0.75rem;
-            color: #555;
-            background: #fce8ec;
-            padding: 4px 6px;
-            border-radius: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* ADMIN MODAL */
-        #admin-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-        }
-
-        .admin-content {
-            background: #2b131c;
-            width: 100%;
-            max-width: 550px;
-            border-radius: 18px;
-            padding: 15px;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 85vh;
-            overflow-y: auto;
-            border: 3px solid var(--main-pink);
-        }
-
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .admin-tabs {
-            display: flex;
-            gap: 6px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-        }
-
-        .admin-tab-btn {
-            background: #4a2533;
-            color: #fff;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.7rem;
-            white-space: nowrap;
-        }
-
-        .admin-tab-btn.active {
-            background: var(--main-pink);
-            font-weight: bold;
-        }
-
-        .admin-section {
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .admin-section.active {
-            display: flex;
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background-color: #1e1525;
         }
     </style>
 </head>
-<body>
-
-<div id="game-container">
-
-    <!-- 1. INTRO SCREEN -->
-    <div id="intro-screen" class="screen active">
-        <h1 class="title-exact-match">IS SEONGHYEON A CAT?</h1>
-        <div class="video-box">
-            <video id="intro-video" src="intro-video.mp4" autoplay muted playsinline controls></video>
-        </div>
-        <div class="btn-group">
-            <button class="custom-btn" onclick="replayIntro()">REPLAY INTRO</button>
-            <button class="custom-btn primary" onclick="goToSelectStage()">Start Game ➔</button>
-        </div>
+<body class="min-h-screen flex flex-col items-center justify-between p-2 sm:p-4 select-none bg-[#c96b92]">
+    <!-- ADMIN QUICK ACCESS BUTTON (ĐÃ ẨN MẶC ĐỊNH CHO NGƯỜI CHƠI) -->
+    <div id="admin-floating-btn" class="fixed top-3 right-3 z-50 flex items-center gap-2 hidden">
+        <button onclick="openUploadModal()" class="px-3.5 py-2 bg-[#5d223c] text-white font-extrabold text-xs sm:text-sm rounded-2xl shadow-xl hover:bg-[#461a2d] transition border-2 border-white/40 flex items-center gap-2">
+            <i class="fa-solid fa-gear text-teal-300"></i> Admin Upload (⚙️)
+        </button>
     </div>
-
-    <!-- 2. SELECT STAGE SCREEN -->
-    <div id="select-screen" class="screen" onclick="handleScreenClick(event)">
-        <div class="vertical-title title-exact-match">SELECT STAGE</div>
-        <div class="stages-scroll-area" id="stages-scroll-container">
-            <!-- EASY -->
-            <div class="stage-card-item">
-                <div class="stage-media-wrapper" onclick="toggleStageVideo(1, event)">
-                    <img id="stage-img-1" src="stage1-easy-img.jpg" alt="EASY">
-                    <video id="stage-vid-1" src="stage1-easy-video.mp4" loop playsinline style="display:none;"></video>
+    <!-- INTRO VIDEO SCREEN -->
+    <div id="intro-screen" class="fixed inset-0 bg-[#fcebeb] z-50 flex flex-col items-center justify-center p-4 sm:p-8">
+        <div class="w-full max-w-4xl bg-[#fcebeb] flex flex-col items-center justify-center">
+            
+            <h1 class="text-3xl sm:text-5xl font-bubble-title title-exact-match mb-4 tracking-wide text-center">
+                IS SEONGHYEON A CAT?
+            </h1>
+            <!-- Video Frame Container -->
+            <div id="intro-video-container" class="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-[#fcebeb] flex items-center justify-center relative">
+                <div id="intro-video-wrapper" class="w-full h-full">
+                    <video id="main-intro-video" class="w-full h-full object-cover" controls autoplay loop playsinline preload="auto" src="intro-video.mp4" oncanplay="if(this.currentTime>0.5)this.currentTime=0;"></video>
                 </div>
-                <h3 onclick="startStage(1)">EASY</h3>
-            </div>
-            <!-- MEDIUM -->
-            <div class="stage-card-item">
-                <div class="stage-media-wrapper" onclick="toggleStageVideo(2, event)">
-                    <img id="stage-img-2" src="stage2-medium-img.jpg" alt="MEDIUM">
-                    <video id="stage-vid-2" src="stage2-medium-video.mp4" loop playsinline style="display:none;"></video>
+                <div id="intro-placeholder-text" class="absolute inset-0 flex items-center justify-center text-[#5d223c] font-bold text-base sm:text-lg bg-[#fff0f0] p-4 text-center rounded-2xl font-vietnamese hidden">
+                    (No Intro Video Loaded. Press F2 or click Admin Upload to configure media)
                 </div>
-                <h3 onclick="startStage(2)">MEDIUM</h3>
             </div>
-            <!-- HARD -->
-            <div class="stage-card-item">
-                <div class="stage-media-wrapper" onclick="toggleStageVideo(3, event)">
-                    <img id="stage-img-3" src="stage3-hard-img.jpg" alt="HARD">
-                    <video id="stage-vid-3" src="stage3-hard-video.mp4" loop playsinline style="display:none;"></video>
-                </div>
-                <h3 onclick="startStage(3)">HARD</h3>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. GAMEPLAY SCREEN -->
-    <div id="gameplay-screen" class="screen">
-        <div class="game-top-bar">
-            <button class="top-btn" onclick="goToSelectStage()">🏠 SELECT</button>
-            <div class="stage-info-title" id="game-stage-title">STAGE 1: SKEPTICAL</div>
-            <div class="game-stats">
-                <span id="timer-display">⏱️ 00:00</span>
-                <span id="matches-display">🐾 0</span>
-            </div>
-            <button class="top-btn" id="audio-toggle-btn" onclick="toggleStageAudio()">🔊</button>
-        </div>
-        <div class="preview-banner" id="preview-banner-box">Preview Time: <span id="preview-sec">3</span>s</div>
-        <div class="cards-grid" id="cards-grid-container"></div>
-    </div>
-
-    <!-- 4. VICTORY SCREEN -->
-    <div id="victory-screen" class="screen">
-        <h2 class="title-exact-match" id="victory-title-text" style="font-size: 1.4rem;">STAGE 1 CLEARED!</h2>
-        <div class="victory-img-box">
-            <img id="victory-img-elem" src="victory1-img.png" alt="Victory">
-        </div>
-        <h2 id="victory-question-text" style="font-size: 1rem; color: var(--dark-burgundy);">ARE YOU STILL SKEPTICAL?</h2>
-        <!-- Đã bổ sung lại thẻ chứa nút bấm victory -->
-        <div class="victory-buttons" id="victory-buttons-container"></div>
-    </div>
-
-    <!-- 5. RESULT MEDIA & COMMENT SCREEN (YES/NO) -->
-    <div id="result-media-screen" class="screen">
-        <div class="video-box" id="result-video-box" style="width: 100%;">
-            <video id="result-video-player" controls autoplay playsinline></video>
-        </div>
-        <div class="comment-section-box" id="comment-box-elem">
-            <h3 class="title-exact-match" style="font-size: 0.95rem;">LEAVE YOUR COMMENTS</h3>
-            <input type="text" id="user-name-input" class="name-input font-vietnamese" placeholder="YOUR NAME">
-            <div class="comment-row-action">
-                <input type="text" id="user-comment-input" class="comment-input font-vietnamese" placeholder="WRITE COMMENTS…">
-                <button class="send-btn" onclick="postComment()">SEND</button>
-            </div>
-            <div class="comments-list font-vietnamese" id="comments-list-container"></div>
-        </div>
-        <button class="custom-btn primary" id="bottom-action-btn" onclick="handleBottomAction()" style="width: 100%; margin-bottom: 15px; flex-shrink: 0;">EM CHIP CAM ON</button>
-    </div>
-
-</div>
-
-<!-- ADMIN CONFIGURATION MODAL -->
-<div id="admin-modal">
-    <div class="admin-content">
-        <div class="admin-header">
-            <h3 class="title-exact-match" style="color:#fff; font-size:1rem;">GAME CONFIGURATION & MEDIA UPLOAD</h3>
-            <button onclick="closeAdmin()" style="background:none; border:none; color:#fff; font-size:1.1rem; cursor:pointer;">✕</button>
-        </div>
-        <div class="admin-tabs">
-            <button class="admin-tab-btn active" onclick="switchAdminTab(0)">Intro Video & Level Hover</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab(1)">Stage 1(EASY)</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab(2)">Stage 2(MEDIUM)</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab(3)">Stage 3(HARD)</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab(4)">Stage Bonus(BONUS)</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab(5)">Result (YES/NO)</button>
-        </div>
-        <div class="admin-section active">
-            <div style="background:#23182d; padding:10px; border-radius:12px;">
-                <p style="font-size:0.8rem; margin-bottom:5px;">1. Intro Video</p>
-                <input type="file" accept="video/*" style="font-size:0.75rem;">
-            </div>
-            <button class="custom-btn primary" onclick="goToScreen('intro-screen')">Test Run Intro</button>
-            <button class="custom-btn primary" onclick="goToScreen('select-screen')">Test Run Stage Select</button>
-        </div>
-        <div class="admin-section">
-            <p style="font-size:0.8rem;">Stage 1 BGM & Card Configuration</p>
-            <button class="custom-btn primary" onclick="startStage(1)">Test Run Stage 1</button>
-        </div>
-        <div class="admin-section">
-            <p style="font-size:0.8rem;">Stage 2 BGM & Card Configuration</p>
-            <button class="custom-btn primary" onclick="startStage(2)">Test Run Stage 2</button>
-        </div>
-        <div class="admin-section">
-            <p style="font-size:0.8rem;">Stage 3 BGM & Card Configuration</p>
-            <button class="custom-btn primary" onclick="startStage(3)">Test Run Stage 3</button>
-        </div>
-        <div class="admin-section">
-            <p style="font-size:0.8rem;">Stage Bonus BGM & Card Configuration</p>
-            <button class="custom-btn primary" onclick="startStage(4)">Test Run Stage Bonus</button>
-        </div>
-        <div class="admin-section">
-            <p style="font-size:0.8rem;">Result Choice Media (YES / NO)</p>
-            <div style="display:flex; gap:10px;">
-                <button class="custom-btn primary" onclick="showResultScreen('yes')">Test YES Slide</button>
-                <button class="custom-btn primary" onclick="showResultScreen('no')">Test NO Slide</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    const stagesData = {
-        1: {
-            name: "STAGE 1: SKEPTICAL",
-            levelName: "EASY",
-            previewTime: 3,
-            audio: "stage1-audio.mp3",
-            victoryImg: "victory1-img.png",
-            question: "ARE YOU STILL SKEPTICAL?",
-            buttonText: "NOT SURE ➔",
-            cards: [
-                { id: 1, img: "stage1-card-1.jpg" },
-                { id: 2, img: "stage1-card-2.jpg" },
-                { id: 3, img: "stage1-card-3.png" },
-                { id: 4, img: "stage1-card-4.jpg" }
-            ],
-            pairs: [[1, 4], [2, 3]]
-        },
-        2: {
-            name: "STAGE 2: TENTATIVE",
-            levelName: "MEDIUM",
-            previewTime: 3,
-            audio: "stage2-audio.mp3",
-            victoryImg: "victory2-img.png",
-            question: "HAVE YOU STARTED TO BELIEVE?",
-            buttonText: "A LITTLE ➔",
-            cards: [
-                { id: 1, img: "stage2-card-1.jpg" },
-                { id: 2, img: "stage2-card-2.jpg" },
-                { id: 3, img: "stage2-card-3.jpg" },
-                { id: 4, img: "stage2-card-4.jpg" },
-                { id: 5, img: "stage2-card-5.jpg" },
-                { id: 6, img: "stage2-card-6.jpg" },
-                { id: 7, img: "stage2-card-7.jpg" },
-                { id: 8, img: "stage2-card-8.jpg" }
-            ],
-            pairs: [[1, 6], [2, 7], [3, 8], [4, 5]]
-        },
-        3: {
-            name: "STAGE 3: CONVINCED",
-            levelName: "HARD",
-            previewTime: 3,
-            audio: "stage3-audio.mp3",
-            victoryImg: "victory3-img.png",
-            question: "ARE YOU FULLY CONVINCED NOW?",
-            buttonText: "ABSOLUTELY ➔",
-            cards: [
-                { id: 1, img: "stage3-card-1.jpg" },
-                { id: 2, img: "stage3-card-2.jpg" },
-                { id: 3, img: "stage3-card-3.jpg" },
-                { id: 4, img: "stage3-card-4.jpg" },
-                { id: 5, img: "stage3-card-5.jpg" },
-                { id: 6, img: "stage3-card-6.jpg" },
-                { id: 7, img: "stage3-card-7.jpg" },
-                { id: 8, img: "stage3-card-8.jpg" },
-                { id: 9, img: "stage3-card-9.jpg" },
-                { id: 10, img: "stage3-card-10.jpg" },
-                { id: 11, img: "stage3-card-11.jpg" },
-                { id: 12, img: "stage3-card-12.jpg" }
-            ],
-            pairs: [[1, 6], [2, 7], [3, 12], [4, 9], [5, 11], [8, 10]]
-        },
-        4: {
-            name: "STAGE 4: UNSHAKABLE",
-            levelName: "BONUS",
-            previewTime: 5,
-            audio: "stage-bonus-audio.mp3",
-            victoryImg: "victory-bonus-img.png",
-            question: "IS SEONGHYEON A CAT?",
-            isBonus: true,
-            cards: [
-                { id: 1, img: "bonus-card-1.jpg" }, { id: 2, img: "bonus-card-2.jpg" },
-                { id: 3, img: "bonus-card-3.jpg" }, { id: 4, img: "bonus-card-4.jpg" },
-                { id: 5, img: "bonus-card-5.png" }, { id: 6, img: "bonus-card-6.jpg" },
-                { id: 7, img: "bonus-card-7.jpg" }, { id: 8, img: "bonus-card-8.jpg" },
-                { id: 9, img: "bonus-card-9.jpg" }, { id: 10, img: "bonus-card-10.png" },
-                { id: 11, img: "bonus-card-11.jpg" }, { id: 12, img: "bonus-card-12.jpg" },
-                { id: 13, img: "bonus-card-13.png" }, { id: 14, img: "bonus-card-14.jpg" },
-                { id: 15, img: "bonus-card-15.png" }, { id: 16, img: "bonus-card-16.jpg" },
-                { id: 17, img: "bonus-card-17.jpg" }, { id: 18, img: "bonus-card-18.jpg" },
-                { id: 19, img: "bonus-card-19.jpg" }, { id: 20, img: "bonus-card-20.jpg" }
-            ],
-            pairs: [[1, 14], [2, 8], [3, 18], [4, 5], [6, 16], [7, 10], [9, 20], [11, 17], [12, 15], [13, 19]]
-        }
-    };
-
-    let currentStageId = 1;
-    let gameTimer = null;
-    let secondsElapsed = 0;
-    let matchesCount = 0;
-    let firstSelectedCard = null;
-    let canInteract = false;
-    let currentBgmAudio = null;
-    let isAudioMuted = false;
-    let currentVoteChoice = 'yes';
-    let commentsData = [];
-    let activeStageVideoId = null;
-    let actionClickCount = 0;
-
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-    function playSoundEffect(type) {
-        if (isAudioMuted) return;
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-        const osc = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        osc.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-
-        const now = audioCtx.currentTime;
-
-        if (type === 'click') {
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(400, now);
-            osc.frequency.exponentialRampToValueAtTime(600, now + 0.08);
-            gainNode.gain.setValueAtTime(0.15, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
-            osc.start(now);
-            osc.stop(now + 0.08);
-        } else if (type === 'match') {
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(523.25, now);
-            osc.frequency.setValueAtTime(659.25, now + 0.1);
-            gainNode.gain.setValueAtTime(0.2, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-            osc.start(now);
-            osc.stop(now + 0.25);
-        } else if (type === 'wrong') {
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(200, now);
-            osc.frequency.setValueAtTime(140, now + 0.15);
-            gainNode.gain.setValueAtTime(0.2, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-            osc.start(now);
-            osc.stop(now + 0.3);
-        } else if (type === 'victory') {
-            const notes = [523.25, 659.25, 783.99, 1046.50];
-            notes.forEach((freq, idx) => {
-                const o = audioCtx.createOscillator();
-                const g = audioCtx.createGain();
-                o.connect(g);
-                g.connect(audioCtx.destination);
-                o.frequency.setValueAtTime(freq, now + idx * 0.12);
-                g.gain.setValueAtTime(0.2, now + idx * 0.12);
-                g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.12 + 0.3);
-                o.start(now + idx * 0.12);
-                o.stop(now + idx * 0.12 + 0.3);
-            });
-        }
-    }
-
-    function goToScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenId).classList.add('active');
-        if(screenId !== 'gameplay-screen' && currentBgmAudio) {
-            currentBgmAudio.pause();
-        }
-    }
-
-    function replayIntro() {
-        const vid = document.getElementById('intro-video');
-        vid.currentTime = 0;
-        vid.play();
-    }
-
-    function goToSelectStage() {
-        stopAllStageVideos();
-        goToScreen('select-screen');
-    }
-
-    function toggleStageVideo(stageId, event) {
-        event.stopPropagation();
-        const img = document.getElementById(`stage-img-${stageId}`);
-        const video = document.getElementById(`stage-vid-${stageId}`);
-
-        if (activeStageVideoId && activeStageVideoId !== stageId) {
-            stopAllStageVideos();
-        }
-
-        if (video.paused && video.style.display !== 'block') {
-            img.style.display = 'none';
-            video.style.display = 'block';
-            video.muted = false;
-            video.play().catch(e => {});
-            activeStageVideoId = stageId;
-        } else {
-            stopAllStageVideos();
-        }
-    }
-
-    function stopAllStageVideos() {
-        [1, 2, 3].forEach(id => {
-            const img = document.getElementById(`stage-img-${id}`);
-            const video = document.getElementById(`stage-vid-${id}`);
-            if (video) {
-                video.pause();
-                video.currentTime = 0;
-                video.style.display = 'none';
-            }
-            if (img) {
-                img.style.display = 'block';
-            }
-        });
-        activeStageVideoId = null;
-    }
-
-    function handleScreenClick(event) {
-        if (!event.target.closest('.stage-media-wrapper')) {
-            stopAllStageVideos();
-        }
-    }
-
-    function toggleStageAudio() {
-        isAudioMuted = !isAudioMuted;
-        const btn = document.getElementById('audio-toggle-btn');
-        if (currentBgmAudio) {
-            currentBgmAudio.muted = isAudioMuted;
-        }
-        btn.innerText = isAudioMuted ? "🔇" : "🔊";
-    }
-
-    function startStage(stageId) {
-        stopAllStageVideos();
-        currentStageId = stageId;
-        const stage = stagesData[stageId];
-        goToScreen('gameplay-screen');
-
-        document.getElementById('game-stage-title').innerText = stage.name;
-        document.getElementById('matches-display').innerText = `🐾 0`;
-        matchesCount = 0;
-        secondsElapsed = 0;
-        canInteract = false;
-
-        if(currentBgmAudio) currentBgmAudio.pause();
-        currentBgmAudio = new Audio(stage.audio);
-        currentBgmAudio.volume = 0.8;
-        currentBgmAudio.loop = true;
-        currentBgmAudio.muted = isAudioMuted;
-        currentBgmAudio.play().catch(e => {});
-
-        if(gameTimer) clearInterval(gameTimer);
-        gameTimer = setInterval(() => {
-            secondsElapsed++;
-            let mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
-            let secs = String(secondsElapsed % 60).padStart(2, '0');
-            document.getElementById('timer-display').innerText = `⏱️ ${mins}:${secs}`;
-        }, 1000);
-
-        const gridContainer = document.getElementById('cards-grid-container');
-        gridContainer.className = `cards-grid grid-stage-${stageId === 4 ? 'bonus' : stageId}`;
-        gridContainer.innerHTML = '';
-
-        stage.cards.forEach((card) => {
-            const cardElem = document.createElement('div');
-            cardElem.className = 'card flipped'; 
-            cardElem.dataset.id = card.id;
-
-            cardElem.innerHTML = `
-                <div class="card-inner">
-                    <div class="card-front">
-                        <img src="${card.img}" alt="card">
-                    </div>
-                    <div class="card-back">
-                        <img src="card-back-1-2-3-bonus.jpg" alt="back">
-                    </div>
-                </div>
-            `;
-            cardElem.addEventListener('click', () => onCardClick(cardElem));
-            gridContainer.appendChild(cardElem);
-        });
-
-        let previewSec = stage.previewTime;
-        document.getElementById('preview-banner-box').style.display = 'block';
-        document.getElementById('preview-sec').innerText = previewSec;
-
-        let previewInterval = setInterval(() => {
-            previewSec--;
-            document.getElementById('preview-sec').innerText = previewSec;
-            if(previewSec <= 0) {
-                clearInterval(previewInterval);
-                document.getElementById('preview-banner-box').style.display = 'none';
-                document.querySelectorAll('.card').forEach(c => c.classList.remove('flipped'));
-                canInteract = true;
-            }
-        }, 1000);
-    }
-
-    function onCardClick(cardElem) {
-        if(!canInteract || cardElem.classList.contains('flipped') || cardElem.classList.contains('matched')) return;
-
-        playSoundEffect('click');
-        cardElem.classList.add('flipped');
-
-        if(!firstSelectedCard) {
-            firstSelectedCard = cardElem;
-        } else {
-            canInteract = false;
-            let id1 = parseInt(firstSelectedCard.dataset.id);
-            let id2 = parseInt(cardElem.dataset.id);
-            let stage = stagesData[currentStageId];
-
-            let isMatch = stage.pairs.some(pair => (pair[0] === id1 && pair[1] === id2) || (pair[0] === id2 && pair[1] === id1));
-
-            if(isMatch) {
-                playSoundEffect('match');
-                setTimeout(() => {
-                    firstSelectedCard.classList.add('matched');
-                    cardElem.classList.add('matched');
-                    firstSelectedCard = null;
-                    matchesCount++;
-                    document.getElementById('matches-display').innerText = `🐾 ${matchesCount}`;
-                    canInteract = true;
-
-                    if(matchesCount === stage.pairs.length) {
-                        clearInterval(gameTimer);
-                        if(currentBgmAudio) currentBgmAudio.pause();
-                        playSoundEffect('victory');
-                        setTimeout(showVictoryScreen, 500);
-                    }
-                }, 300);
-            } else {
-                playSoundEffect('wrong');
-                setTimeout(() => {
-                    firstSelectedCard.classList.remove('flipped');
-                    cardElem.classList.remove('flipped');
-                    firstSelectedCard = null;
-                    canInteract = true;
-                }, 700);
-            }
-        }
-    }
-
-    function showVictoryScreen() {
-        const stage = stagesData[currentStageId];
-        goToScreen('victory-screen');
-
-        document.getElementById('victory-title-text').innerText = (currentStageId === 4) ? "STAGE BONUS CLEARED!" : `STAGE ${currentStageId} CLEARED!`;
-        document.getElementById('victory-img-elem').src = stage.victoryImg;
-        document.getElementById('victory-question-text').innerText = stage.question;
-
-        const btnContainer = document.getElementById('victory-buttons-container');
-        
-        // Vẽ nút bấm chính xác theo từng stage (Stage Bonus có 2 nút NO/YES, Stage 1-3 có nút riêng)
-        if (currentStageId === 4) {
-            btnContainer.innerHTML = `
-                <button class="custom-btn btn-no" onclick="showResultScreen('no')">NO</button>
-                <button class="custom-btn btn-yes" onclick="showResultScreen('yes')">YES</button>
-            `;
-        } else {
-            btnContainer.innerHTML = `
-                <button class="custom-btn primary" style="flex:1; padding: 12px; border-radius: 16px;" onclick="nextStageOrResult()">
-                    ${stage.buttonText}
+            <!-- Intro Buttons Bar -->
+            <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-6 w-full max-w-2xl">
+                <button onclick="replayIntroMainVideo()" class="px-6 sm:px-8 py-3 bg-white hover:bg-gray-50 text-[#5d223c] border-2 border-[#5d223c]/20 font-black rounded-2xl shadow">
+                    <i class="fa-solid fa-rotate-right"></i> REPLAY INTRO
                 </button>
-            `;
-        }
-    }
-
-    function nextStageOrResult() {
-        if (currentStageId === 1) {
-            startStage(2);
-        } else if (currentStageId === 2) {
-            startStage(3);
-        } else if (currentStageId === 3) {
-            startStage(4);
-        }
-    }
-
-    function showResultScreen(choice) {
-        currentVoteChoice = choice;
-        actionClickCount = 0;
-        goToScreen('result-media-screen');
-
-        const vidPlayer = document.getElementById('result-video-player');
-        vidPlayer.src = choice === 'yes' ? 'yes-button-video.mp4' : 'no-button-video.mp4';
-        vidPlayer.play().catch(e => {});
-
-        const screen = document.getElementById('result-media-screen');
-        screen.style.justifyContent = 'flex-start';
-        const vidBox = document.getElementById('result-video-box');
-        vidBox.style.display = 'flex';
-
-        const bottomBtn = document.getElementById('bottom-action-btn');
-        bottomBtn.innerText = choice === 'yes' ? 'EM CHIP CAM ON' : 'WHY NOT ME!?';
-
-        renderComments();
-    }
-
-    function handleBottomAction() {
-        actionClickCount++;
-        if(actionClickCount >= 2) {
-            actionClickCount = 0;
-            goToScreen('intro-screen');
-        } else {
-            const vidBox = document.getElementById('result-video-box');
-            vidBox.style.display = 'none';
-            const screen = document.getElementById('result-media-screen');
-            screen.style.justifyContent = 'center';
-            document.getElementById('comment-box-elem').scrollIntoView({ behavior: 'smooth' });
-        }
-    }
-
-    function postComment() {
-        const nameInput = document.getElementById('user-name-input');
-        const commentInput = document.getElementById('user-comment-input');
-
-        if(!nameInput.value.trim() || !commentInput.value.trim()) return;
-
-        const newComment = {
-            id: Date.now(),
-            name: nameInput.value.trim(),
-            text: commentInput.value.trim(),
-            vote: currentVoteChoice,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            likes: 0,
-            liked: false,
-            replies: []
+               <button onclick="skipIntroToStageSelect()" class="px-6 sm:px-8 py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-sm sm:text-base rounded-2xl shadow-lg transition-all flex items-center gap-2">
+                    Start Game ➔
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- STAGE SELECT SCREEN -->
+    <div id="stage-select-screen" class="fixed inset-0 bg-[#c96b92] z-40 flex flex-col items-center justify-center p-4 hidden">
+        <div class="w-full max-w-4xl flex flex-col items-center justify-center">
+            
+            <h2 class="text-4xl sm:text-6xl font-bubble-title title-exact-match mb-8 tracking-wider text-center">
+                SELECT STAGE
+            </h2>
+            <!-- 3 Level Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 w-full max-w-3xl mb-8">
+               <!-- EASY -->
+        <div onclick="startGame(1)" onmouseenter="playLevelHover(1)" onmouseleave="stopLevelHover(1)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
+            <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
+                <img id="level-img-1" src="stage1-easy-img.jpg" class="w-full h-full object-cover rounded-xl">
+                <video id="level-vid-1" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="stage1-easy-video.mp4"></video>
+            </div>
+            <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">EASY</span>
+        </div>
+        <!-- MEDIUM -->
+        <div onclick="startGame(2)" onmouseenter="playLevelHover(2)" onmouseleave="stopLevelHover(2)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
+            <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
+                <img id="level-img-2" src="stage2-medium-img.jpg" class="w-full h-full object-cover rounded-xl">
+                <video id="level-vid-2" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="stage2-medium-video.mp4"></video>
+            </div>
+            <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">MEDIUM</span>
+        </div>
+        <!-- HARD -->
+        <div onclick="startGame(3)" onmouseenter="playLevelHover(3)" onmouseleave="stopLevelHover(3)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
+            <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
+                <img id="level-img-3" src="stage3-hard-img.jpg" class="w-full h-full object-cover rounded-xl">
+                <video id="level-vid-3" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="stage3-hard-video.mp4"></video>
+            </div>
+            <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">HARD</span>
+        </div>
+            </div>
+            <div class="flex items-center justify-center gap-4 w-full max-w-xl">
+                <button onclick="showIntroScreen()" class="px-6 py-3 bg-white/20 hover:bg-white/30 text-white border-2 border-white font-extrabold text-sm sm:text-base rounded-2xl transition flex items-center gap-2 backdrop-blur-sm font-bubble-title">
+                    <i class="fa-solid fa-play"></i> REPLAY INTRO
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- MAIN GAMEPLAY HEADER -->
+    <header id="game-header" class="w-full max-w-4xl flex items-center justify-between p-2.5 sm:p-3 bg-white/95 backdrop-blur-md rounded-2xl shadow-md border border-pink-100 mb-2 hidden">
+        <button onclick="goToStageSelect()" class="px-3.5 py-1.5 bg-[#5d223c] text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-[#461a2d] transition flex items-center gap-1.5 shadow">
+            <i class="fa-solid fa-house"></i> SELECT STAGE
+        </button>
+        <div id="stage-indicator" class="font-extrabold text-sm sm:text-xl font-bubble-title stage-title-bubbly tracking-wide text-center">STAGE BONUS: UNSHAKABLE</div>
+        <div class="flex items-center gap-3 sm:gap-5 text-xs sm:text-sm font-extrabold text-[#5d223c]">
+            <div class="flex items-center gap-1.5">
+                <i class="fa-solid fa-clock"></i>
+                <span id="timer-display">00:40</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <i class="fa-solid fa-paw"></i>
+                <span id="moves-display">10</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <button onclick="toggleSound()" class="w-8 h-8 rounded-xl bg-white flex items-center justify-center text-[#5d223c] shadow hover:bg-gray-50 transition border border-pink-100">
+                    <i id="sound-icon" class="fa-solid fa-volume-high"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    <main id="game-main-area" class="w-full max-w-4xl flex-1 flex flex-col items-center justify-center relative my-auto hidden">
+        <div id="preview-countdown-box" class="mb-5 sm:mb-8 px-5 py-2 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border-2 border-[#5d223c]/20 flex items-center gap-2 text-[#5d223c] font-black text-sm sm:text-base font-vietnamese hidden">
+            <span>Preview Time: </span>
+            <span id="preview-countdown" class="text-rose-600 text-lg font-black font-bubble-title">0s</span>
+        </div>
+        <div id="game-board" class="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 w-full max-w-2xl mx-auto p-3"></div>
+    </main>
+    <!-- STAGE TRANSITION & VICTORY MODAL -->
+    <div id="victory-modal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#fff7e6] rounded-3xl p-6 sm:p-8 max-w-lg w-full text-center shadow-2xl border-4 border-white flex flex-col items-center">
+            <div class="text-yellow-500 text-4xl mb-2">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <div class="text-xs font-bold text-emerald-600 tracking-widest uppercase mb-2 font-vietnamese">
+                Stage Cleared!
+            </div>
+            
+            <h2 id="victory-question" class="text-2xl sm:text-3xl font-black text-[#5d223c] mb-4 leading-snug px-2 font-bubble-title">IS SEONGHYEON A CAT?</h2>
+            <div id="victory-image-container" class="w-full max-h-52 my-3 flex items-center justify-center overflow-hidden">
+                <img id="victory-stage-img" src="" class="max-h-48 object-contain drop-shadow-lg" alt="Stage Victory Image">
+            </div>
+            <button id="victory-action-btn" onclick="handleVictoryNext()" class="w-full py-4 bg-[#5d223c] text-white font-black text-lg rounded-2xl shadow-lg hover:bg-[#461a2d] transition transform hover:scale-105 cursor-pointer mt-2 font-bubble-title hidden">ABSOLUTELY ➔</button>
+            <div id="bonus-choice-buttons" class="w-full flex items-center justify-center gap-4 mt-4">
+                <button onclick="handleBonusChoice('NO')" class="flex-1 py-4 bg-rose-500 hover:bg-rose-600 text-white font-black text-xl rounded-2xl shadow-lg transition transform hover:scale-105 border-2 border-white font-bubble-title">
+                    NO
+                </button>
+                <button onclick="handleBonusChoice('YES')" class="flex-1 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xl rounded-2xl shadow-lg transition transform hover:scale-105 border-2 border-white font-bubble-title">
+                    YES
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Final Result Media Display Modal with Comment Section -->
+    <div id="media-display-modal" class="fixed inset-0 bg-[#ba6085]/95 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="relative bg-[#fcebeb] p-4 sm:p-6 rounded-3xl max-w-lg w-full flex flex-col items-center justify-between border-4 border-white shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar transition-all duration-300">
+            <button onclick="closeMediaDisplayModal()" class="absolute top-3 right-3 w-9 h-9 bg-[#5d223c] text-white font-black rounded-full shadow-lg flex items-center justify-center hover:bg-[#461a2d] transition text-lg z-20">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <!-- Video / Media Frame -->
+            <div id="media-display-content" class="w-full flex items-center justify-center overflow-hidden rounded-2xl bg-black border-2 border-white shadow-xl transition-all duration-300"></div>
+            
+            <!-- Interactive Comment Section Container (Hidden Initially) -->
+            <div id="comment-section-box" class="w-full bg-white/95 rounded-2xl p-4 border-2 border-[#5d223c]/20 shadow-inner flex flex-col space-y-3 my-4 transition-all duration-300 hidden">
+                <h4 class="font-black text-sm text-[#5d223c] flex items-center gap-2 font-vietnamese">
+                    <i class="fa-solid fa-comments"></i> LIVE YOUR COMMENTS
+                </h4>
+                
+                <div class="flex flex-col gap-2 font-vietnamese">
+                    <input type="text" id="comment-name" placeholder="Your name..." class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-[#5d223c] font-bold focus:outline-none focus:ring-2 focus:ring-[#5d223c]">
+                    <div class="flex gap-2">
+                        <input type="text" id="comment-text" placeholder="Write a comment..." class="flex-1 px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-[#5d223c] focus:outline-none focus:ring-2 focus:ring-[#5d223c]">
+                        <button onclick="postUserComment()" class="px-4 py-2 bg-[#5d223c] text-white text-xs font-bold rounded-xl hover:bg-[#461a2d] transition shadow">
+                            Send
+                        </button>
+                    </div>
+                </div>
+                <div id="comments-list" class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col gap-3 text-left pt-2 border-t border-pink-100 font-vietnamese"></div>
+            </div>
+            <!-- Dynamic Action Button -->
+            <button id="result-action-button" onclick="handleResultActionButtonClick()" class="px-6.5 py-3.5 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-sm rounded-2xl transition shadow-md font-bubble-title transform hover:scale-105 border-2 border-white/40 w-auto px-6 mt-2">WHY NOT ME!?</button>
+        </div>
+    </div>
+    <!-- CONFIGURATION & UPLOAD MODAL -->
+    <div id="upload-config-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 hidden">
+        <div class="bg-[#18111e] text-white rounded-3xl max-w-4xl w-full h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-purple-900/50 font-vietnamese">
+            <div class="p-4 bg-[#23182d] border-b border-purple-900/40 flex items-center justify-between">
+                <h3 class="font-extrabold text-base sm:text-lg text-teal-300 flex items-center gap-2 tracking-wide">
+                    <i class="fa-solid fa-sliders"></i> GAME CONFIGURATION &amp; MEDIA UPLOAD
+                </h3>
+                <div class="flex items-center gap-3">
+                    <button onclick="closeUploadModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="flex border-b border-purple-900/40 bg-[#1e1525] p-2 gap-2 overflow-x-auto custom-scrollbar">
+                <button id="tab-btn-intro" onclick="setUploadTab('intro')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/15 whitespace-nowrap">
+                    Intro Video &amp; Level Hover
+                </button>
+                <button id="tab-btn-s1" onclick="setUploadTab('s1')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/15 whitespace-nowrap">
+                    Stage 1 (EASY)
+                </button>
+                <button id="tab-btn-s2" onclick="setUploadTab('s2')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/15 whitespace-nowrap">
+                    Stage 2 (MEDIUM)
+                </button>
+                <button id="tab-btn-s3" onclick="setUploadTab('s3')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/15 whitespace-nowrap">
+                    Stage 3 (HARD)
+                </button>
+                <button id="tab-btn-s4" onclick="setUploadTab('s4')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/15 whitespace-nowrap">
+                    Stage Bonus (BONUS)
+                </button>
+                <button id="tab-btn-result" onclick="setUploadTab('result')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-teal-400 text-stone-900 whitespace-nowrap shadow">
+                    Result (YES / NO)
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar space-y-6">
+                <div id="tab-sec-intro" class="space-y-5 hidden">
+                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
+                        <div class="space-y-2 flex-1">
+                            <span class="font-extrabold text-sm text-teal-300 block">1. Intro Video</span>
+                            <input type="file" accept="video/*" onchange="uploadIntroVideo(event)" class="text-xs text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                        </div>
+                        <button onclick="testRunSlide('intro')" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
+                            <i class="fa-solid fa-play"></i> Test Run Intro
+                        </button>
+                    </div>
+                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 space-y-4">
+                        <div class="flex items-center justify-between border-b border-purple-900/40 pb-2">
+                            <span class="font-extrabold text-sm text-teal-300 block">2. Select Stage Hover Media (Levels 1, 2, 3)</span>
+                            <button onclick="testRunSlide('stage-select')" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
+                                <i class="fa-solid fa-play"></i> Test Run Stage Select
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="p-3 bg-[#18111e] rounded-xl border border-purple-900/60 space-y-2">
+                                <span class="font-bold text-xs text-pink-300 block">EASY (Stage 1)</span>
+                                <div class="text-[11px] text-gray-400">Static Cover Image:
+                                    <input type="file" accept="image/*" onchange="uploadLevelHoverMedia(event, 1, 'img')" class="w-full text-[10px] mt-1">
+                                </div>
+                                <div class="text-[11px] text-gray-400">Hover Video (with sound):
+                                    <input type="file" accept="video/*" onchange="uploadLevelHoverMedia(event, 1, 'vid')" class="w-full text-[10px] mt-1">
+                                </div>
+                            </div>
+                            <div class="p-3 bg-[#18111e] rounded-xl border border-purple-900/60 space-y-2">
+                                <span class="font-bold text-xs text-pink-300 block">MEDIUM (Stage 2)</span>
+                                <div class="text-[11px] text-gray-400">Static Cover Image:
+                                    <input type="file" accept="image/*" onchange="uploadLevelHoverMedia(event, 2, 'img')" class="w-full text-[10px] mt-1">
+                                </div>
+                                <div class="text-[11px] text-gray-400">Hover Video (with sound):
+                                    <input type="file" accept="video/*" onchange="uploadLevelHoverMedia(event, 2, 'vid')" class="w-full text-[10px] mt-1">
+                                </div>
+                            </div>
+                            <div class="p-3 bg-[#18111e] rounded-xl border border-purple-900/60 space-y-2">
+                                <span class="font-bold text-xs text-pink-300 block">HARD (Stage 3)</span>
+                                <div class="text-[11px] text-gray-400">Static Cover Image:
+                                    <input type="file" accept="image/*" onchange="uploadLevelHoverMedia(event, 3, 'img')" class="w-full text-[10px] mt-1">
+                                </div>
+                                <div class="text-[11px] text-gray-400">Hover Video (with sound):
+                                    <input type="file" accept="video/*" onchange="uploadLevelHoverMedia(event, 3, 'vid')" class="w-full text-[10px] mt-1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-sec-s1" class="space-y-4 hidden">
+                    <div class="flex items-center justify-between">
+                        <div class="font-black text-teal-300 text-sm">STAGE 1: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
+                        <button onclick="testRunSlide('stage', 1)" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
+                            <i class="fa-solid fa-play"></i> Test Run Stage 1
+                        </button>
+                    </div>
+                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
+                        <div>
+                            <span class="font-bold text-xs text-teal-300 block">🎵 Stage 1 Background Music (BGM)</span>
+                            <span class="text-[11px] text-gray-400" id="bgm-label-1">Audio track loaded successfully ✅</span>
+                        </div>
+                        <input type="file" accept="audio/*" onchange="uploadStageBGM(event, 1)" class="text-xs text-gray-300 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                    </div>
+                    <div id="cards-grid-s1" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+                </div>
+                <div id="tab-sec-s2" class="space-y-4 hidden">
+                    <div class="flex items-center justify-between">
+                        <div class="font-black text-teal-300 text-sm">STAGE 2: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
+                        <button onclick="testRunSlide('stage', 2)" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
+                            <i class="fa-solid fa-play"></i> Test Run Stage 2
+                        </button>
+                    </div>
+                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
+                        <div>
+                            <span class="font-bold text-xs text-teal-300 block">🎵 Stage 2 Background Music (BGM)</span>
+                            <span class="text-[11px] text-gray-400" id="bgm-label-2">Audio track loaded successfully ✅</span>
+                        </div>
+                        <input type="file" accept="audio/*" onchange="uploadStageBGM(event, 2)" class="text-xs text-gray-300 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                    </div>
+                    <div id="cards-grid-s2" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+                </div>
+                <div id="tab-sec-s3" class="space-y-4 hidden">
+                    <div class="flex items-center justify-between">
+                        <div class="font-black text-teal-300 text-sm">STAGE 3: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
+                        <button onclick="testRunSlide('stage', 3)" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
+                            <i class="fa-solid fa-play"></i> Test Run Stage 3
+                        </button>
+                    </div>
+                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
+                        <div>
+                            <span class="font-bold text-xs text-teal-300 block">🎵 Stage 3 Background Music (BGM)</span>
+                            <span class="text-[11px] text-gray-400" id="bgm-label-3">Audio track loaded successfully ✅</span>
+                        </div>
+                        <input type="file" accept="audio/*" onchange="uploadStageBGM(event, 3)" class="text-xs text-gray-300 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                    </div>
+                    <div id="cards-grid-s3" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+                </div>
+                <div id="tab-sec-s4" class="space-y-4 hidden">
+                    <div class="flex items-center justify-between">
+                        <div class="font-black text-teal-300 text-sm">STAGE BONUS: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
+                        <button onclick="testRunSlide('stage', 4)" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
+                            <i class="fa-solid fa-play"></i> Test Run Stage Bonus
+                        </button>
+                    </div>
+                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
+                        <div>
+                            <span class="font-bold text-xs text-teal-300 block">🎵 Stage Bonus Background Music (BGM)</span>
+                            <span class="text-[11px] text-gray-400" id="bgm-label-4">Audio track loaded successfully ✅</span>
+                        </div>
+                        <input type="file" accept="audio/*" onchange="uploadStageBGM(event, 4)" class="text-xs text-gray-300 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                    </div>
+                    <div id="cards-grid-s4" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+                </div>
+                <div id="tab-sec-result" class="space-y-5">
+                    <div class="font-black text-teal-300 text-sm mb-2">RESULT CHOICE MEDIA CONFIGURATION (YES / NO)</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <!-- YES CONFIG -->
+                        <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 space-y-3">
+                            <div class="flex items-center justify-between border-b border-purple-900/40 pb-2">
+                                <span class="font-extrabold text-sm text-emerald-400 block">YES Button Media ("EM CHIP CAM ON")</span>
+                                <button onclick="testRunSlide('result-yes')" class="px-3 py-1 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-bold text-xs rounded-lg shadow">
+                                    Test YES Slide
+                                </button>
+                            </div>
+                            
+                            <div class="space-y-1">
+                                <label class="text-[11px] font-bold text-gray-300">Media Type:</label>
+                                <select id="result-type-yes" onchange="toggleResultMediaType('YES')" class="w-full bg-[#18111e] text-white text-xs p-2 rounded-xl border border-purple-900">
+                                    <option value="video">Video</option>
+                                    <option value="image">Image + Audio</option>
+                                </select>
+                            </div>
+                            <div id="result-vid-box-yes" class="space-y-1">
+                                <label class="text-[11px] font-bold text-gray-300">Upload Video:</label>
+                                <input type="file" accept="video/*" onchange="uploadResultMedia(event, 'YES', 'video')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-emerald-500 file:text-stone-900 file:font-bold">
+                            </div>
+                            <div id="result-img-box-yes" class="space-y-3 hidden">
+                                <div>
+                                    <label class="text-[11px] font-bold text-gray-300">Upload Image:</label>
+                                    <input type="file" accept="image/*" onchange="uploadResultMedia(event, 'YES', 'image')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-emerald-500 file:text-stone-900 file:font-bold">
+                                </div>
+                                <div>
+                                    <label class="text-[11px] font-bold text-gray-300">Upload Audio (BGM/Sound):</label>
+                                    <input type="file" accept="audio/*" onchange="uploadResultMedia(event, 'YES', 'audio')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- NO CONFIG -->
+                        <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 space-y-3">
+                            <div class="flex items-center justify-between border-b border-purple-900/40 pb-2">
+                                <span class="font-extrabold text-sm text-rose-400 block">NO Button Media ("WHY NOT ME!?")</span>
+                                <button onclick="testRunSlide('result-no')" class="px-3 py-1 bg-rose-500 hover:bg-rose-400 text-white font-bold text-xs rounded-lg shadow">
+                                    Test NO Slide
+                                </button>
+                            </div>
+                            
+                            <div class="space-y-1">
+                                <label class="text-[11px] font-bold text-gray-300">Media Type:</label>
+                                <select id="result-type-no" onchange="toggleResultMediaType('NO')" class="w-full bg-[#18111e] text-white text-xs p-2 rounded-xl border border-purple-900">
+                                    <option value="video">Video</option>
+                                    <option value="image">Image + Audio</option>
+                                </select>
+                            </div>
+                            <div id="result-vid-box-no" class="space-y-1">
+                                <label class="text-[11px] font-bold text-gray-300">Upload Video:</label>
+                                <input type="file" accept="video/*" onchange="uploadResultMedia(event, 'NO', 'video')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-rose-500 file:text-stone-900 file:font-bold">
+                            </div>
+                            <div id="result-img-box-no" class="space-y-3 hidden">
+                                <div>
+                                    <label class="text-[11px] font-bold text-gray-300">Upload Image:</label>
+                                    <input type="file" accept="image/*" onchange="uploadResultMedia(event, 'NO', 'image')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-rose-500 file:text-stone-900 file:font-bold">
+                                </div>
+                                <div>
+                                    <label class="text-[11px] font-bold text-gray-300">Upload Audio (BGM/Sound):</label>
+                                    <input type="file" accept="audio/*" onchange="uploadResultMedia(event, 'NO', 'audio')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 bg-[#18111e] border-t border-purple-900/40 flex justify-end">
+                <button onclick="closeUploadModal()" class="px-6 py-2.5 bg-teal-400 text-stone-900 font-extrabold text-xs rounded-xl shadow hover:bg-teal-300">
+                    Save &amp; Close (Done)
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Hidden Stage Audio Element -->
+    <audio id="stage-bgm-audio" loop=""></audio>
+    
+    <script>
+        let currentStage = 1;
+        let activeTabStage = 1;
+        let secondsElapsed = 0;
+        let movesCount = 0;
+        let timerInterval = null;
+        let previewInterval = null;
+        let soundEnabled = true;
+        let flippedCards = [];
+        let matchedPairsCount = 0;
+        let isProcessing = false;
+        let totalPairsInStage = 2;
+        let introVideoUrl = "intro-video.mp4";
+        let currentChoiceVote = 'YES';
+        
+        let levelHoverMedia = {
+            1: { img: 'stage1-easy-img.jpg', vid: 'stage1-easy-video.mp4' },
+            2: { img: 'stage2-medium-img.jpg', vid: 'stage2-medium-video.mp4' },
+            3: { img: 'stage3-hard-img.jpg', vid: 'stage3-hard-video.mp4' }
+        };
+        
+        let stageCovers = {
+            1: 'card-back-1-2-3-bonus.jpg',
+            2: 'card-back-1-2-3-bonus.jpg',
+            3: 'card-back-1-2-3-bonus.jpg',
+            4: 'card-back-1-2-3-bonus.jpg'
+        };
+        
+        let stageVictoryImages = { 
+            1: 'victory1-img.png', 
+            2: 'victory2-img.png', 
+            3: 'victory3-img.png', 
+            4: 'victory-bonus-img.png' 
+        };
+        
+        let stageBGMTracks = { 
+            1: 'stage1-audio.mp3', 
+            2: 'stage2-audio.mp3', 
+            3: 'stage3-audio.mp3', 
+            4: 'stage-bonus-audio.mp3' 
+        };
+        
+        let stageCardPhotos = {
+            1: [
+                'stage1-card-1.jpg', 
+                'stage1-card-2.jpg', 
+                'stage1-card-3.png', 
+                'stage1-card-4.jpg'
+            ],
+            2: [
+                'stage2-card-1.jpg', 'stage2-card-2.jpg', 'stage2-card-3.jpg', 'stage2-card-4.jpg', 
+                'stage2-card-5.jpg', 'stage2-card-6.jpg', 'stage2-card-7.jpg', 'stage2-card-8.jpg'
+            ],
+            3: [
+                'stage3-card-1.jpg', 'stage3-card-2.jpg', 'stage3-card-3.jpg', 'stage3-card-4.jpg', 
+                'stage3-card-5.jpg', 'stage3-card-6.jpg', 'stage3-card-7.jpg', 'stage3-card-8.jpg', 
+                'stage3-card-9.jpg', 'stage3-card-10.jpg', 'stage3-card-11.jpg', 'stage3-card-12.jpg'
+            ],
+            4: [
+                'bonus-card-1.jpg', 'bonus-card-2.jpg', 'bonus-card-3.jpg', 'bonus-card-4.jpg', 'bonus-card-5.png',
+                'bonus-card-6.jpg', 'bonus-card-7.jpg', 'bonus-card-8.jpg', 'bonus-card-9.jpg', 'bonus-card-10.png',
+                'bonus-card-11.jpg', 'bonus-card-12.jpg', 'bonus-card-13.png', 'bonus-card-14.jpg', 'bonus-card-15.png',
+                'bonus-card-16.jpg', 'bonus-card-17.jpg', 'bonus-card-18.jpg', 'bonus-card-19.jpg', 'bonus-card-20.jpg'
+            ]
         };
 
-        commentsData.unshift(newComment);
-        commentInput.value = '';
-        renderComments();
-    }
+        let stageMatchingPairs = {
+            1: { 0: 0, 3: 0, 1: 1, 2: 1 },
+            2: { 0: 0, 6: 0, 1: 1, 7: 1, 2: 2, 5: 2, 3: 3, 4: 3 },
+            3: { 0: 0, 6: 0, 1: 1, 8: 1, 2: 2, 11: 2, 3: 3, 4: 3, 5: 4, 10: 4, 7: 5, 9: 5 },
+            4: { 0: 0, 16: 0, 1: 1, 9: 1, 2: 2, 15: 2, 3: 3, 5: 3, 4: 4, 14: 4, 7: 5, 19: 5, 6: 6, 13: 6, 8: 7, 11: 7, 12: 8, 18: 8, 10: 9, 17: 9 }
+        };
+        
+        let resultChoiceMedia = {
+            YES: { type: 'video', video: 'yes-button-video.mp4', image: '', audio: '' },
+            NO: { type: 'video', video: 'no-button-video.mp4', image: '', audio: '' }
+        };
+        
+        let resultActionState = 0;
+        
+        const stageTitles = {
+            1: 'STAGE 1: SKEPTICAL',
+            2: 'STAGE 2: TENTATIVE',
+            3: 'STAGE 3: CONVINCED',
+            4: 'STAGE BONUS: UNSHAKABLE'
+        };
+        
+        const victoryQuestions = {
+            1: 'ARE YOU STILL SKEPTICAL?',
+            2: 'HAVE YOU STARTING TO BELIEVING?',
+            3: 'ARE YOU FULLY CONVINCED NOW?',
+            4: 'IS SEONGHYEON A CAT?'
+        };
+        
+        const victoryBtnLabels = {
+            1: 'NOT SURE ➔',
+            2: 'A LITTLE ➔',
+            3: 'ABSOLUTELY ➔'
+        };
+        
+        let userCommentsList = [];
 
-    function renderComments() {
-        const listContainer = document.getElementById('comments-list-container');
-        listContainer.innerHTML = '';
+        let audioUnlocked = false;
+        function unlockAudio() {
+            if (audioUnlocked) return;
+            audioUnlocked = true;
+            const ctx = getAudioContext();
+            if (ctx && ctx.state === 'suspended') {
+                ctx.resume();
+            }
+        }
+        window.addEventListener('click', unlockAudio, { once: true });
+        window.addEventListener('touchstart', unlockAudio, { once: true });
 
-        commentsData.forEach(c => {
-            const item = document.createElement('div');
-            item.className = 'comment-item';
-            
-            let repliesHtml = '';
-            if (c.replies && c.replies.length > 0) {
-                repliesHtml = '<div class="reply-container">';
-                c.replies.forEach((rep, rIndex) => {
-                    repliesHtml += `
-                        <div class="reply-item">
-                            <span><b>${rep.name}:</b> ${rep.text}</span>
-                            <button onclick="deleteReply(${c.id}, ${rIndex})" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-weight:bold;">✕</button>
+        function stopAllGlobalMedia() {
+            stopBGM();
+            stopIntroVideoCompletely();
+            [1, 2, 3].forEach(lvl => stopLevelHover(lvl));
+            closeMediaDisplayModal();
+        }
+
+        function stopIntroVideoCompletely() {
+            const wrapper = document.getElementById('intro-video-wrapper');
+            if (wrapper) wrapper.innerHTML = '';
+        }
+
+        function recreateIntroVideoElement() {
+            const wrapper = document.getElementById('intro-video-wrapper');
+            if (wrapper && !wrapper.querySelector('video')) {
+                const vid = document.createElement('video');
+                vid.id = 'main-intro-video';
+                vid.className = "w-full h-full object-cover";
+                vid.controls = true;
+                vid.autoplay = true;
+                vid.loop = true;
+                vid.playsInline = true;
+                vid.preload = "auto";
+                vid.oncanplay = function() {
+                    if (this.currentTime > 0.5) this.currentTime = 0;
+                };
+                if (introVideoUrl) vid.src = introVideoUrl;
+                wrapper.appendChild(vid);
+            }
+        }
+
+        let audioCtx = null;
+        function getAudioContext() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playCardFlipSound() {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(450, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(700, ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.1);
+            } catch (e) {}
+        }
+
+        function playMatchSuccessSound() {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                    gain.gain.setValueAtTime(0.2, now + idx * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + idx * 0.08);
+                    osc.stop(now + idx * 0.08 + 0.25);
+                });
+            } catch (e) {}
+        }
+
+        function playMatchFailSound() {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.setValueAtTime(160, now + 0.12);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(now + 0.25);
+            } catch (e) {}
+        }
+
+        function playVictoryFanfareSound() {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                const notes = [
+                    { f: 523.25, t: 0.0, d: 0.2 },
+                    { f: 659.25, t: 0.18, d: 0.2 },
+                    { f: 783.99, t: 0.36, d: 0.2 },
+                    { f: 1046.50, t: 0.54, d: 0.5 }
+                ];
+                notes.forEach(n => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(n.f, now + n.t);
+                    gain.gain.setValueAtTime(0.25, now + n.t);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + n.t + n.d);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + n.t);
+                    osc.stop(now + n.t + n.d);
+                });
+            } catch (e) {}
+        }
+
+        function playTickSound() {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, ctx.currentTime);
+                gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.15);
+            } catch (e) {}
+        }
+
+        // RENDER COMMENTS LIST (ENGLISH & FULL REPLY VOTE NAMES - FONT TIẾNG VIỆT BE VIETNAM PRO)
+        function renderCommentsList() {
+            const listContainer = document.getElementById('comments-list');
+            if (!listContainer) return;
+            if (userCommentsList.length === 0) {
+                listContainer.innerHTML = '<div class="text-[11px] text-gray-500 italic text-center py-2 font-vietnamese">No comments yet. Be the first one!</div>';
+                return;
+            }
+            listContainer.innerHTML = userCommentsList.map((c, index) => {
+                let voteBadge = c.vote ? ` voted ${c.vote}` : '';
+                let repliesHtml = (c.replies || []).map((rep, rIdx) => {
+                    let repVoteBadge = rep.vote ? ` voted ${rep.vote}` : '';
+                    return `
+                        <div class="bg-pink-100/60 p-2.5 rounded-xl border border-pink-200 mt-2 ml-4 flex flex-col gap-1 font-vietnamese">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-[11px] text-[#5d223c]">↳ ${rep.name || 'Anonymous'}<span class="text-rose-600 font-normal ml-1">${repVoteBadge}</span></span>
+                                <button onclick="deleteReply(${index}, ${rIdx})" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <div class="text-[11px] text-gray-700">${rep.text}</div>
                         </div>
                     `;
-                });
-                repliesHtml += '</div>';
+                }).join('');
+
+                return `
+                    <div class="bg-pink-50/80 p-3 rounded-2xl border border-pink-100 flex flex-col gap-2 relative font-vietnamese">
+                        <!-- Top Header info & 3 Dots Menu -->
+                        <div class="flex items-center justify-between">
+                            <div class="font-bold text-xs text-[#5d223c]">
+                                ${c.name || 'Anonymous'}<span class="text-rose-600 font-normal ml-1">${voteBadge}</span>
+                                <span class="text-[10px] text-gray-400 font-normal ml-2">Just now</span>
+                            </div>
+                            <div class="relative">
+                                <button onclick="toggleCommentMenu(${index})" class="w-7 h-7 flex items-center justify-center text-gray-500 hover:text-[#5d223c] rounded-full hover:bg-pink-100/50 transition">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
+                                <!-- Menu 3 Dots (Edit / Delete) -->
+                                <div id="comment-menu-${index}" class="absolute right-0 top-8 bg-white shadow-xl rounded-xl border border-pink-100 p-1.5 z-30 hidden flex flex-col w-28 text-xs font-vietnamese">
+                                    <button onclick="editComment(${index})" class="text-left px-3 py-1.5 text-teal-700 hover:bg-pink-50 rounded-lg flex items-center gap-1.5 font-bold">
+                                        <i class="fa-solid fa-pen text-[10px]"></i> Edit
+                                    </button>
+                                    <button onclick="deleteComment(${index})" class="text-left px-3 py-1.5 text-rose-600 hover:bg-pink-50 rounded-lg flex items-center gap-1.5 font-bold">
+                                        <i class="fa-solid fa-trash text-[10px]"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="text-xs text-gray-800">${c.text}</div>
+
+                        <!-- React & Reply Action Bar -->
+                        <div class="flex items-center gap-5 text-xs text-gray-600 pt-1 border-t border-pink-100/80 mt-1">
+                            <button onclick="toggleLikeComment(${index})" class="flex items-center gap-1.5 hover:text-rose-600 transition">
+                                <i class="${c.liked ? 'fa-solid text-rose-500' : 'fa-regular'} fa-heart"></i>
+                                <span class="font-bold">${c.likes || 0}</span>
+                            </button>
+                            <button onclick="toggleReplyBox(${index})" class="flex items-center gap-1.5 hover:text-[#5d223c] transition">
+                                <i class="fa-regular fa-comment"></i>
+                                <span class="font-bold">${(c.replies || []).length}</span>
+                            </button>
+                        </div>
+
+                        <!-- Reply Input Box (Hidden by default) -->
+                        <div id="reply-box-${index}" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-pink-200">
+                            <input type="text" id="reply-name-${index}" placeholder="Your name..." class="w-full px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5d223c] font-bold focus:outline-none focus:ring-1 focus:ring-[#5d223c]">
+                            <div class="flex gap-2">
+                                <input type="text" id="reply-input-${index}" placeholder="Write a reply..." class="flex-1 px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5d223c] focus:outline-none focus:ring-1 focus:ring-[#5d223c]">
+                                <button onclick="submitReply(${index})" class="px-3 py-1.5 bg-[#5d223c] text-white text-xs font-bold rounded-xl hover:bg-[#461a2d] transition shadow">Send</button>
+                            </div>
+                        </div>
+
+                        <!-- List of Replies -->
+                        <div class="space-y-1">
+                            ${repliesHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function postUserComment() {
+            const nameEl = document.getElementById('comment-name');
+            const textEl = document.getElementById('comment-text');
+            if (!textEl || !textEl.value.trim()) return;
+            
+            const newComment = {
+                name: nameEl && nameEl.value.trim() ? nameEl.value.trim() : 'Anonymous',
+                vote: currentChoiceVote,
+                text: textEl.value.trim(),
+                likes: 0,
+                liked: false,
+                replies: []
+            };
+            userCommentsList.unshift(newComment);
+            textEl.value = '';
+            renderCommentsList();
+        }
+
+        function toggleCommentMenu(index) {
+            document.querySelectorAll('[id^="comment-menu-"]').forEach((el, idx) => {
+                if (idx !== index) el.classList.add('hidden');
+            });
+            const menu = document.getElementById(`comment-menu-${index}`);
+            if (menu) menu.classList.toggle('hidden');
+        }
+
+        function deleteComment(index) {
+            userCommentsList.splice(index, 1);
+            renderCommentsList();
+        }
+
+        function editComment(index) {
+            const currentCmt = userCommentsList[index];
+            const newText = prompt("Edit your comment:", currentCmt.text);
+            if (newText !== null && newText.trim() !== "") {
+                userCommentsList[index].text = newText.trim();
+                renderCommentsList();
+            }
+        }
+
+        function toggleLikeComment(index) {
+            const cmt = userCommentsList[index];
+            if (cmt.liked) {
+                cmt.liked = false;
+                cmt.likes = Math.max(0, cmt.likes - 1);
+            } else {
+                cmt.liked = true;
+                cmt.likes = (cmt.likes || 0) + 1;
+            }
+            renderCommentsList();
+        }
+
+        function toggleReplyBox(index) {
+            const box = document.getElementById(`reply-box-${index}`);
+            if (box) {
+                box.classList.toggle('hidden');
+                if (!box.classList.contains('hidden')) {
+                    const nameInput = document.getElementById(`reply-name-${index}`);
+                    if (nameInput) nameInput.focus();
+                }
+            }
+        }
+
+        function submitReply(index) {
+            const nameInput = document.getElementById(`reply-name-${index}`);
+            const input = document.getElementById(`reply-input-${index}`);
+            if (!input || !input.value.trim()) return;
+            
+            if (!userCommentsList[index].replies) {
+                userCommentsList[index].replies = [];
+            }
+            userCommentsList[index].replies.push({
+                name: nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Anonymous',
+                vote: currentChoiceVote,
+                text: input.value.trim()
+            });
+            input.value = '';
+            renderCommentsList();
+        }
+
+        function deleteReply(cIndex, rIndex) {
+            userCommentsList[cIndex].replies.splice(rIndex, 1);
+            renderCommentsList();
+        }
+
+        function testRunSlide(slideType, stageNum) {
+            closeUploadModal();
+            stopAllGlobalMedia();
+            if (slideType === 'intro') {
+                showIntroScreen();
+            } else if (slideType === 'stage-select') {
+                skipIntroToStageSelect();
+            } else if (slideType === 'stage') {
+                startGame(stageNum || 1);
+            } else if (slideType === 'result-yes') {
+                handleBonusChoice('YES');
+            } else if (slideType === 'result-no') {
+                handleBonusChoice('NO');
+            }
+        }
+
+        function showIntroScreen() {
+            stopAllGlobalMedia();
+            recreateIntroVideoElement();
+            document.getElementById('intro-screen').classList.remove('hidden');
+            document.getElementById('stage-select-screen').classList.add('hidden');
+            document.getElementById('game-header').classList.add('hidden');
+            document.getElementById('game-main-area').classList.add('hidden');
+            
+            const vid = document.getElementById('main-intro-video');
+            if (vid) {
+                vid.currentTime = 0;
+                vid.play().catch(()=>{});
+            }
+        }
+
+        function skipIntroToStageSelect() {
+            stopAllGlobalMedia();
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('stage-select-screen').classList.remove('hidden');
+            document.getElementById('game-header').classList.add('hidden');
+            document.getElementById('game-main-area').classList.add('hidden');
+        }
+
+        function replayIntroMainVideo() {
+            recreateIntroVideoElement();
+            const vid = document.getElementById('main-intro-video');
+            if (vid && introVideoUrl) {
+                vid.src = introVideoUrl;
+                vid.currentTime = 0;
+                vid.play().catch(()=>{});
+            }
+        }
+
+        function goToStageSelect() {
+            stopTimer();
+            stopAllGlobalMedia();
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('stage-select-screen').classList.remove('hidden');
+            document.getElementById('game-header').classList.add('hidden');
+            document.getElementById('game-main-area').classList.add('hidden');
+            document.getElementById('victory-modal').classList.add('hidden');
+            document.getElementById('media-display-modal').classList.add('hidden');
+        }
+
+        function openUploadModal() {
+            renderUploadModalGrids();
+            document.getElementById('upload-config-modal').classList.remove('hidden');
+        }
+
+        function closeUploadModal() {
+            document.getElementById('upload-config-modal').classList.add('hidden');
+        }
+
+        function closeMediaDisplayModal() {
+            const container = document.getElementById('media-display-content');
+            if (container) {
+                const vid = container.querySelector('video');
+                if (vid) {
+                    vid.pause();
+                    vid.src = '';
+                }
+                const aud = container.querySelector('audio');
+                if (aud) {
+                    aud.pause();
+                    aud.src = '';
+                }
+                container.innerHTML = '';
+            }
+            document.getElementById('media-display-modal').classList.add('hidden');
+        }
+
+        function playLevelHover(lvl) {
+            [1, 2, 3].forEach(l => {
+                if (l !== lvl) stopLevelHover(l);
+            });
+            const vidEl = document.getElementById(`level-vid-${lvl}`);
+            if (vidEl && levelHoverMedia[lvl].vid) {
+                vidEl.classList.remove('hidden');
+                vidEl.muted = false;
+                vidEl.currentTime = 0;
+                vidEl.play().catch(()=>{});
+            }
+        }
+
+        function stopLevelHover(lvl) {
+            const vidEl = document.getElementById(`level-vid-${lvl}`);
+            if (vidEl) {
+                vidEl.pause();
+                vidEl.currentTime = 0;
+                vidEl.classList.add('hidden');
+            }
+        }
+
+        function startGame(stage) {
+            currentStage = stage;
+            stopAllGlobalMedia();
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('stage-select-screen').classList.add('hidden');
+            document.getElementById('game-header').classList.remove('hidden');
+            document.getElementById('game-main-area').classList.remove('hidden');
+            document.getElementById('victory-modal').classList.add('hidden');
+            document.getElementById('media-display-modal').classList.add('hidden');
+            document.getElementById('stage-indicator').innerText = stageTitles[stage];
+            
+            secondsElapsed = 0;
+            movesCount = 0;
+            updateHeaderStats();
+            stopTimer();
+            playBGM(stage);
+            setupBoard(stage);
+        }
+
+        function playBGM(stage) {
+            const bgm = document.getElementById('stage-bgm-audio');
+            if (bgm && stageBGMTracks[stage] && soundEnabled) {
+                bgm.src = stageBGMTracks[stage];
+                bgm.currentTime = 0;
+                bgm.play().catch(()=>{});
+            } else if (bgm) {
+                bgm.pause();
+            }
+        }
+
+        function stopBGM() {
+            const bgm = document.getElementById('stage-bgm-audio');
+            if (bgm) {
+                bgm.pause();
+                bgm.currentTime = 0;
+                bgm.src = '';
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high";
+                playBGM(currentStage);
+            } else {
+                icon.className = "fa-solid fa-volume-xmark";
+                stopBGM();
+            }
+        }
+
+        function startTimer() {
+            stopTimer();
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                updateHeaderStats();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            if (previewInterval) clearInterval(previewInterval);
+        }
+
+        function updateHeaderStats() {
+            const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+            const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+            document.getElementById('timer-display').innerText = `${mins}:${secs}`;
+            document.getElementById('moves-display').innerText = movesCount;
+        }
+
+        function setupBoard(stage) {
+            const board = document.getElementById('game-board');
+            if (!board) return;
+            board.innerHTML = '';
+            let deck = [];
+            const photos = stageCardPhotos[stage];
+            const pairsMap = stageMatchingPairs[stage];
+            
+            if (stage === 1) {
+                totalPairsInStage = 2;
+                board.className = "grid grid-cols-2 gap-6 w-full max-w-xl mx-auto p-4";
+            } else if (stage === 2) {
+                totalPairsInStage = 4;
+                board.className = "grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 w-full max-w-3xl mx-auto p-6";
+            } else if (stage === 3) {
+                totalPairsInStage = 6;
+                board.className = "grid grid-cols-3 sm:grid-cols-4 gap-5 sm:gap-6 w-full max-w-2xl mx-auto p-5";
+            } else if (stage === 4) {
+                totalPairsInStage = 10;
+                board.className = "grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 w-full max-w-2xl mx-auto p-3";
             }
 
-            item.innerHTML = `
-                <div class="comment-header">
-                    <span>${c.name}</span>
-                    <span class="voted-badge ${c.vote === 'no' ? 'no' : ''}">voted ${c.vote.toUpperCase()}</span>
-                    <span class="comment-time">${c.time}</span>
-                    <button class="comment-menu-btn" onclick="toggleCommentMenu(${c.id})">⋮</button>
-                    <div class="comment-dropdown" id="dropdown-${c.id}">
-                        <button onclick="editComment(${c.id})">Edit</button>
-                        <button onclick="deleteComment(${c.id})">Delete</button>
+            deck = photos.map((imgUrl, idx) => ({
+                index: idx,
+                img: imgUrl,
+                pairId: pairsMap[idx] !== undefined ? pairsMap[idx] : idx
+            }));
+
+            flippedCards = [];
+            matchedPairsCount = 0;
+            isProcessing = true;
+            const coverImage = stageCovers[stage] || stageCovers[1];
+            
+            deck.forEach((cardData) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = "perspective-1000 aspect-square w-full cursor-pointer select-none";
+                cardEl.dataset.index = cardData.index;
+                cardEl.dataset.pair = cardData.pairId;
+                cardEl.innerHTML = `
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-md">
+                        <div class="card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden flex items-center justify-center">
+                            <img src="${cardData.img}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-back absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#fff7e6] backface-hidden rotate-y-180 flex items-center justify-center">
+                            <img src="${coverImage}" class="w-full h-full object-cover">
+                        </div>
                     </div>
-                </div>
-                <div class="comment-body">${c.text}</div>
-                ${repliesHtml}
-                <div class="comment-footer-actions">
-                    <span class="action-like ${c.liked ? 'liked' : ''}" onclick="likeComment(${c.id})">❤️ ${c.likes}</span>
-                    <span class="action-reply" onclick="promptReply(${c.id})">Reply</span>
-                </div>
-            `;
-            listContainer.appendChild(item);
-        });
-    }
-
-    function toggleCommentMenu(id) {
-        const dropdown = document.getElementById(`dropdown-${id}`);
-        document.querySelectorAll('.comment-dropdown').forEach(d => { if(d !== dropdown) d.style.display = 'none'; });
-        dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
-    }
-
-    function deleteComment(id) {
-        commentsData = commentsData.filter(c => c.id !== id);
-        renderComments();
-    }
-
-    function editComment(id) {
-        const comment = commentsData.find(c => c.id === id);
-        const newText = prompt("Edit your comment:", comment.text);
-        if(newText !== null && newText.trim() !== '') {
-            comment.text = newText.trim();
-            renderComments();
-        }
-    }
-
-    function likeComment(id) {
-        const comment = commentsData.find(c => c.id === id);
-        if(comment.liked) {
-            comment.likes--;
-            comment.liked = false;
-        } else {
-            comment.likes++;
-            comment.liked = true;
-        }
-        renderComments();
-    }
-
-    function promptReply(id) {
-        const replyText = prompt("Write a reply:");
-        if(replyText && replyText.trim() !== '') {
-            const comment = commentsData.find(c => c.id === id);
-            if(!comment.replies) comment.replies = [];
-            comment.replies.push({
-                name: document.getElementById('user-name-input').value.trim() || "Guest",
-                text: replyText.trim()
+                `;
+                cardEl.onclick = () => handleCardClick(cardEl);
+                board.appendChild(cardEl);
             });
-            renderComments();
+
+            let previewSeconds = stage === 4 ? 5 : 3;
+            const previewEl = document.getElementById('preview-countdown');
+            const previewBox = document.getElementById('preview-countdown-box');
+            if (previewBox) previewBox.classList.remove('hidden');
+            if (previewEl) previewEl.innerText = `${previewSeconds}s`;
+            playTickSound();
+            clearInterval(previewInterval);
+            previewInterval = setInterval(() => {
+                previewSeconds--;
+                if (previewEl) previewEl.innerText = `${previewSeconds}s`;
+                if (previewSeconds > 0) {
+                    playTickSound();
+                }
+                if (previewSeconds <= 0) {
+                    clearInterval(previewInterval);
+                    if (previewBox) previewBox.classList.add('hidden');
+                    const allCards = board.querySelectorAll('.card-inner');
+                    allCards.forEach(c => c.classList.add('rotate-y-180'));
+                    isProcessing = false;
+                    startTimer();
+                }
+            }, 1200);
         }
-    }
 
-    function deleteReply(commentId, replyIndex) {
-        const comment = commentsData.find(c => c.id === commentId);
-        if(comment && comment.replies) {
-            comment.replies.splice(replyIndex, 1);
-            renderComments();
+        function handleCardClick(cardEl) {
+            if (isProcessing) return;
+            const inner = cardEl.querySelector('.card-inner');
+            if (!inner.classList.contains('rotate-y-180')) return;
+            inner.classList.remove('rotate-y-180');
+            playCardFlipSound();
+            flippedCards.push(cardEl);
+            if (flippedCards.length === 2) {
+                movesCount++;
+                updateHeaderStats();
+                isProcessing = true;
+                const c1 = flippedCards[0];
+                const c2 = flippedCards[1];
+                
+                const pair1 = c1.dataset.pair;
+                const pair2 = c2.dataset.pair;
+                const isMatch = (pair1 === pair2) && (c1.dataset.index !== c2.dataset.index);
+
+                if (isMatch) {
+                    matchedPairsCount++;
+                    playMatchSuccessSound();
+                    flippedCards = [];
+                    isProcessing = false;
+                    if (matchedPairsCount === totalPairsInStage) {
+                        setTimeout(() => handleStageVictory(), 600);
+                    }
+                } else {
+                    playMatchFailSound();
+                    setTimeout(() => {
+                        c1.querySelector('.card-inner').classList.add('rotate-y-180');
+                        c2.querySelector('.card-inner').classList.add('rotate-y-180');
+                        flippedCards = [];
+                        isProcessing = false;
+                    }, 800);
+                }
+            }
         }
-    }
 
-    window.addEventListener('keydown', (e) => {
-        if(e.shiftKey && e.key.toLowerCase() === 'u') {
-            document.getElementById('admin-modal').style.display = 'flex';
+        function handleStageVictory() {
+            stopTimer();
+            stopBGM();
+            playVictoryFanfareSound();
+            const modal = document.getElementById('victory-modal');
+            const questionEl = document.getElementById('victory-question');
+            const victoryImg = document.getElementById('victory-stage-img');
+            const actionBtn = document.getElementById('victory-action-btn');
+            const bonusBtns = document.getElementById('bonus-choice-buttons');
+            questionEl.innerText = victoryQuestions[currentStage] || victoryQuestions[1];
+            if (stageVictoryImages[currentStage] && stageVictoryImages[currentStage].trim() !== '') {
+                victoryImg.src = stageVictoryImages[currentStage];
+                victoryImg.classList.remove('hidden');
+            } else {
+                victoryImg.classList.add('hidden');
+            }
+            if (currentStage === 4) {
+                actionBtn.classList.add('hidden');
+                bonusBtns.classList.remove('hidden');
+            } else {
+                actionBtn.classList.remove('hidden');
+                bonusBtns.classList.add('hidden');
+                actionBtn.innerText = victoryBtnLabels[currentStage] || 'NEXT STAGE ➔';
+            }
+            modal.classList.remove('hidden');
         }
-    });
 
-    function closeAdmin() {
-        document.getElementById('admin-modal').style.display = 'none';
-    }
+        function handleVictoryNext() {
+            document.getElementById('victory-modal').classList.add('hidden');
+            if (currentStage === 1) startGame(2);
+            else if (currentStage === 2) startGame(3);
+            else if (currentStage === 3) startGame(4);
+        }
 
-    function switchAdminTab(index) {
-        const tabs = document.querySelectorAll('.admin-tab-btn');
-        const sections = document.querySelectorAll('.admin-section');
-        tabs.forEach((t, i) => {
-            t.classList.toggle('active', i === index);
-            sections[i].classList.toggle('active', i === index);
+        function handleBonusChoice(choice) {
+            document.getElementById('victory-modal').classList.add('hidden');
+            const modal = document.getElementById('media-display-modal');
+            const container = document.getElementById('media-display-content');
+            const actionBtn = document.getElementById('result-action-button');
+            const commentBox = document.getElementById('comment-section-box');
+            
+            currentChoiceVote = choice.toUpperCase(); 
+
+            const nameInput = document.getElementById('comment-name');
+            if (nameInput) nameInput.value = '';
+
+            container.innerHTML = '';
+            if (commentBox) commentBox.classList.add('hidden');
+            resultActionState = 0;
+            const key = choice.toUpperCase();
+            const mediaData = resultChoiceMedia[key];
+            
+            if (actionBtn) {
+                actionBtn.classList.remove('hidden');
+                if (key === 'NO') {
+                    actionBtn.innerText = "WHY NOT ME!?";
+                } else {
+                    actionBtn.innerText = "EM CHIP CAM ON";
+                }
+            }
+            if (mediaData && mediaData.type === 'video' && mediaData.video) {
+                container.innerHTML = `<video id="result-active-video" src="${mediaData.video}" class="w-full h-auto max-h-[50vh] object-contain rounded-xl" controls autoplay loop playsinline preload="auto" oncanplay="if(this.currentTime>0.5)this.currentTime=0;"></video>`;
+            } else if (mediaData && mediaData.image) {
+                let audioHtml = mediaData.audio ? `<audio id="result-active-audio" src="${mediaData.audio}" autoplay controls class="mt-2 w-full"></audio>` : '';
+                container.innerHTML = `<div class="w-full flex flex-col items-center justify-center"><img src="${mediaData.image}" class="w-full h-auto max-h-[50vh] object-contain rounded-xl">${audioHtml}</div>`;
+            } else {
+                container.innerHTML = `<div class="p-6 text-center text-[#5d223c] font-bold text-sm font-vietnamese">No media uploaded for choice ${choice}.</div>`;
+            }
+            renderCommentsList();
+            modal.classList.remove('hidden');
+        }
+
+        function handleResultActionButtonClick() {
+            if (resultActionState === 0) {
+                resultActionState = 1;
+                const commentBox = document.getElementById('comment-section-box');
+                const commentInput = document.getElementById('comment-text');
+                const actionBtn = document.getElementById('result-action-button');
+                if (commentBox) {
+                    commentBox.classList.remove('hidden');
+                    commentBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                if (actionBtn) {
+                    actionBtn.classList.remove('mt-4');
+                    actionBtn.classList.add('mt-2');
+                }
+                if (commentInput) {
+                    commentInput.focus();
+                }
+            } else {
+                closeMediaDisplayModal();
+                goToStageSelect();
+            }
+        }
+
+        function setUploadTab(tabKey) {
+            const tabs = ['intro', 's1', 's2', 's3', 's4', 'result'];
+            tabs.forEach(t => {
+                const sec = document.getElementById(`tab-sec-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (sec) sec.classList.add('hidden');
+                if (btn) btn.className = "px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/15 whitespace-nowrap";
+            });
+            const activeSec = document.getElementById(`tab-sec-${tabKey}`);
+            const activeBtn = document.getElementById(`tab-btn-${tabKey}`);
+            if (activeSec) activeSec.classList.remove('hidden');
+            if (activeBtn) activeBtn.className = "px-4 py-2 text-xs font-extrabold rounded-xl bg-teal-400 text-stone-900 whitespace-nowrap shadow";
+        }
+
+        function renderUploadModalGrids() {
+            [1, 2, 3, 4].forEach(s => {
+                const bgmLabel = document.getElementById(`bgm-label-${s}`);
+                if (bgmLabel && stageBGMTracks[s]) {
+                    bgmLabel.innerText = `Loaded: ${stageBGMTracks[s]} ✅`;
+                }
+                const grid = document.getElementById(`cards-grid-s${s}`);
+                if (!grid) return;
+                grid.innerHTML = '';
+                const coverCard = document.createElement('div');
+                coverCard.className = "p-3 bg-[#23182d] rounded-2xl border-2 border-teal-400 flex flex-col items-center justify-between gap-2 shadow-lg";
+                coverCard.innerHTML = `
+                    <div class="text-[11px] font-extrabold text-teal-300">🖼️ Card Back / Cover</div>
+                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                        <img src="${stageCovers[s]}" class="w-full h-full object-cover">
+                    </div>
+                    <input type="file" id="input-cover-${s}" accept="image/*" onchange="uploadCoverPhoto(event, ${s})" class="hidden">
+                    <button onclick="document.getElementById('input-cover-${s}').click()" class="w-full py-1.5 bg-teal-400 text-stone-900 font-extrabold text-xs rounded-xl shadow">Change Back</button>
+                `;
+                grid.appendChild(coverCard);
+                stageCardPhotos[s].forEach((photoUrl, i) => {
+                    const card = document.createElement('div');
+                    card.className = "p-3 bg-[#23182d] rounded-2xl border border-purple-900/50 flex flex-col items-center justify-between gap-2 shadow";
+                    card.innerHTML = `
+                        <div class="text-[11px] font-bold text-gray-300">🃏 Card #${i + 1}</div>
+                        <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center">
+                            <img src="${photoUrl}" class="w-full h-full object-cover">
+                        </div>
+                        <input type="file" id="input-card-${s}-${i}" accept="image/*" onchange="uploadCardPhoto(event, ${s}, ${i})" class="hidden">
+                        <button onclick="document.getElementById('input-card-${s}-${i}').click()" class="w-full py-1.5 bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    `;
+                    grid.appendChild(card);
+                });
+                const vicCard = document.createElement('div');
+                vicCard.className = "p-3 bg-[#23182d] rounded-2xl border border-amber-400/50 flex flex-col items-center justify-between gap-2 shadow";
+                vicCard.innerHTML = `
+                    <div class="text-[11px] font-extrabold text-amber-300">🏆 Victory Image</div>
+                    <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center p-1">
+                        <img src="${stageVictoryImages[s]}" class="w-full h-full object-contain">
+                    </div>
+                    <input type="file" id="input-vic-${s}" accept="image/*" onchange="uploadVictoryPhoto(event, ${s})" class="hidden">
+                    <button onclick="document.getElementById('input-vic-${s}').click()" class="w-full py-1.5 bg-amber-500 text-stone-900 font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                `;
+                grid.appendChild(vicCard);
+            });
+        }
+
+        function uploadIntroVideo(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            introVideoUrl = URL.createObjectURL(file);
+            const msg = document.getElementById('intro-placeholder-text');
+            if (msg) msg.classList.add('hidden');
+            recreateIntroVideoElement();
+        }
+
+        function uploadLevelHoverMedia(e, lvl, type) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
+            if (type === 'img') levelHoverMedia[lvl].img = url;
+            if (type === 'vid') levelHoverMedia[lvl].vid = url;
+        }
+
+        function uploadStageBGM(e, stage) {
+            const file = e.target.files[0];
+            if (!file) return;
+            stageBGMTracks[stage] = URL.createObjectURL(file);
+            const label = document.getElementById(`bgm-label-${stage}`);
+            if (label) label.innerText = `Loaded: ${file.name} ✅`;
+            if (currentStage === stage && soundEnabled) {
+                playBGM(stage);
+            }
+        }
+
+        function uploadCoverPhoto(e, stage) {
+            const file = e.target.files[0];
+            if (!file) return;
+            stageCovers[stage] = URL.createObjectURL(file);
+            renderUploadModalGrids();
+        }
+
+        function uploadCardPhoto(e, stage, idx) {
+            const file = e.target.files[0];
+            if (!file) return;
+            stageCardPhotos[stage][idx] = URL.createObjectURL(file);
+            renderUploadModalGrids();
+        }
+
+        function uploadVictoryPhoto(e, stage) {
+            const file = e.target.files[0];
+            if (!file) return;
+            stageVictoryImages[stage] = URL.createObjectURL(file);
+            renderUploadModalGrids();
+        }
+
+        function toggleResultMediaType(choiceKey) {
+            const key = choiceKey.toUpperCase();
+            const selectEl = document.getElementById(`result-type-${choiceKey.toLowerCase()}`);
+            if (!selectEl) return;
+            resultChoiceMedia[key].type = selectEl.value;
+            const vidBox = document.getElementById(`result-vid-box-${choiceKey.toLowerCase()}`);
+            const imgBox = document.getElementById(`result-img-box-${choiceKey.toLowerCase()}`);
+            if (selectEl.value === 'video') {
+                if (vidBox) vidBox.classList.remove('hidden');
+                if (imgBox) imgBox.classList.add('hidden');
+            } else {
+                if (vidBox) vidBox.classList.add('hidden');
+                if (imgBox) imgBox.classList.remove('hidden');
+            }
+        }
+
+        function uploadResultMedia(e, choiceKey, fileType) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const key = choiceKey.toUpperCase();
+            const url = URL.createObjectURL(file);
+            if (fileType === 'video') resultChoiceMedia[key].video = url;
+            if (fileType === 'image') resultChoiceMedia[key].image = url;
+            if (fileType === 'audio') resultChoiceMedia[key].audio = url;
+        }
+
+        window.onload = function() {
+            showIntroScreen();
+            renderCommentsList();
+        };
+
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'F2') {
+                const btn = document.getElementById('admin-floating-btn');
+                if (btn) btn.classList.toggle('hidden');
+            } else if (e.shiftKey && e.key.toUpperCase() === 'U') {
+                openUploadModal();
+            }
         });
-    }
-
-    window.onload = () => {
-        commentsData = [
-            { id: 1, name: "Chửng", text: "Hi", vote: "yes", time: "07:41", likes: 0, liked: false, replies: [] },
-            { id: 2, name: "Chửng", text: "Ble", vote: "yes", time: "07:41", likes: 1, liked: true, replies: [] }
-        ];
-    };
-</script>
-
-</body>
-</html>
+    </script>
+</body></html>
