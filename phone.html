@@ -726,7 +726,7 @@
     const db = firebase.database();
     
     // Đồng bộ cơ sở dữ liệu chung giữa PC và Phone
-    const commentsRef = db.ref('games/seonghyeon-cat/comments');
+    const commentsRef = db.ref('comments');
 
     // Tạo mã định danh phiên làm việc cho thiết bị (chỉ dùng để quản lý trạng thái Like cá nhân)
     let mySessionId = localStorage.getItem('seonghyeon_session_id');
