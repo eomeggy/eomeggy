@@ -108,7 +108,8 @@
             object-fit: cover;
         }
         .video-box {
-            width: 90%;
+            width: 100%;
+            max-height: 40vh;
             background: #000;
             border-radius: 15px;
             overflow: hidden;
@@ -117,11 +118,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
         .video-box video {
             width: 100%;
             height: auto;
-            max-height: 45vh;
+            max-height: 40vh;
             object-fit: contain;
         }
         .btn-group {
@@ -375,11 +377,13 @@
             width: 100%;
             background: #fff;
             border-radius: 18px;
-            padding: 12px;
+            padding: 10px;
             box-shadow: 0 6px 15px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
+            max-height: 38vh;
+            overflow-y: auto;
         }
         .comment-section-box h3 {
             font-family: 'Titan One', cursive;
@@ -389,11 +393,11 @@
         }
         .comment-input, .name-input {
             width: 100%;
-            padding: 8px 12px;
+            padding: 7px 10px;
             border-radius: 10px;
             border: 2px solid #f0d0d5;
             outline: none;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #333;
         }
         .comment-row-action {
@@ -404,18 +408,16 @@
             background-color: var(--dark-burgundy);
             color: #fff;
             border: none;
-            padding: 8px 16px;
+            padding: 7px 14px;
             border-radius: 10px;
             font-family: 'Titan One', cursive;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
         .comments-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            max-height: 220px;
-            overflow-y: auto;
+            gap: 6px;
         }
         .comment-item {
             background: #fff9fa;
@@ -430,7 +432,7 @@
         .comment-header {
             display: flex;
             align-items: center;
-            gap: 6px;
+            justify-content: space-between;
             font-size: 0.8rem;
             font-weight: 700;
             color: var(--dark-burgundy);
@@ -442,78 +444,67 @@
             padding: 2px 5px;
             border-radius: 5px;
             font-family: 'Titan One', cursive;
+            margin-left: 4px;
         }
         .voted-badge.no {
             background-color: #e74c3c;
         }
         .comment-body {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: #444;
         }
         .comment-footer-actions {
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: #666;
+            border-top: 1px solid #f5e1e5;
+            padding-top: 4px;
         }
         .action-like, .action-reply {
             cursor: pointer;
+            font-weight: 600;
         }
         .action-like.liked {
             color: #e74c3c;
         }
-        .comment-menu-btn {
-            position: absolute;
-            right: 8px;
-            top: 8px;
+        .delete-comment-btn {
             background: none;
             border: none;
-            font-weight: bold;
-            cursor: pointer;
-            color: #666;
-            font-size: 0.9rem;
-        }
-        .comment-dropdown {
-            position: absolute;
-            right: 8px;
-            top: 26px;
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            display: none;
-            flex-direction: column;
-            z-index: 5;
-        }
-        .comment-dropdown button {
-            background: none;
-            border: none;
-            padding: 5px 12px;
-            text-align: left;
+            color: #e74c3c;
             cursor: pointer;
             font-size: 0.75rem;
-        }
-        .comment-dropdown button:hover {
-            background: #f0f0f0;
+            font-weight: bold;
         }
         .reply-container {
-            margin-top: 6px;
-            padding-left: 10px;
+            margin-top: 4px;
+            padding-left: 8px;
             border-left: 2px solid #e2a2b3;
             display: flex;
             flex-direction: column;
             gap: 4px;
         }
         .reply-item {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: #555;
             background: #fce8ec;
             padding: 4px 6px;
             border-radius: 6px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
+        }
+        .reply-input-box {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px dashed #f0d0d5;
+        }
+        .reply-input-box.active {
+            display: flex;
         }
         /* ADMIN MODAL */
         #admin-modal {
@@ -644,13 +635,13 @@
         <div class="victory-buttons" id="victory-buttons-container"></div>
     </div>
     <!-- 5. RESULT MEDIA & COMMENT SCREEN (YES/NO) -->
-    <div id="result-media-screen" class="screen">
-        <div class="video-box" id="result-video-box" style="width: 100%;">
+    <div id="result-media-screen" class="screen" style="justify-content: flex-start; padding-top: 10px;">
+        <div class="video-box" id="result-video-box">
             <video id="result-video-player" controls autoplay loop playsinline></video>
         </div>
         <!-- Khung bình luận hiện ra ở giữa Video và Nút bấm khi bấm nút lần 1 -->
         <div class="comment-section-box" id="comment-box-elem" style="display: none;">
-            <h3 class="title-exact-match" style="font-size: 0.95rem;">LEAVE YOUR COMMENTS</h3>
+            <h3 class="title-exact-match">LEAVE YOUR COMMENTS</h3>
             <input type="text" id="user-name-input" class="name-input font-vietnamese" placeholder="YOUR NAME">
             <div class="comment-row-action">
                 <input type="text" id="user-comment-input" class="comment-input font-vietnamese" placeholder="WRITE COMMENTS…">
@@ -709,11 +700,12 @@
             </div>
         </div>
         <div class="admin-section">
-            <p style="font-size:0.8rem;">Quản lý và Xóa riêng lẻ bình luận người chơi:</p>
-            <div id="admin-comments-manage-list" style="display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto;"></div>
+            <p style="font-size:0.8rem;">Quản lý và Xóa bình luận & phản hồi của người chơi:</p>
+            <div id="admin-comments-manage-list" style="display:flex; flex-direction:column; gap:6px; max-height:220px; overflow-y:auto;"></div>
         </div>
     </div>
 </div>
+
 <script>
     // ==========================================
     // FIREBASE INITIALIZATION & DATABASE CONFIG
@@ -737,7 +729,7 @@
             cards: [
                 { id: 1, img: "stage1-card-1-phone.jpg" },
                 { id: 2, img: "stage1-card-2-phone.jpg" },
-                { id: 3, img: "stage1-card-3-phone.jpg" }, // <-- ĐÃ SỬA .png THÀNH .jpg KHỚP VỚI GITHUB
+                { id: 3, img: "stage1-card-3-phone.jpg" },
                 { id: 4, img: "stage1-card-4-phone.jpg" }
             ],
             pairs: [[1, 4], [2, 3]]
@@ -809,6 +801,7 @@
             pairs: [[1, 14], [2, 8], [3, 18], [4, 5], [6, 16], [7, 10], [9, 20], [11, 17], [12, 15], [13, 19]]
         }
     };
+
     let currentStageId = 1;
     let gameTimer = null;
     let secondsElapsed = 0;
@@ -823,7 +816,16 @@
     let actionClickCount = 0;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    // Lắng nghe dữ liệu bình luận realtime từ Firebase Realtime Database
+    function getMySessionId() {
+        let id = localStorage.getItem('seonghyeon_user_session_id');
+        if (!id) {
+            id = 'user_' + Math.random().toString(36).substring(2, 9);
+            localStorage.setItem('seonghyeon_user_session_id', id);
+        }
+        return id;
+    }
+    const mySessionId = getMySessionId();
+
     commentsRef.on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -879,409 +881,570 @@
                 const g = audioCtx.createGain();
                 o.connect(g);
                 g.connect(audioCtx.destination);
-                o.frequency.setValueAtTime(freq, now + idx * 0.12);
-                g.gain.setValueAtTime(0.2, now + idx * 0.12);
-                g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.12 + 0.3);
-                o.start(now + idx * 0.12);
-                o.stop(now + idx * 0.12 + 0.3);
+                o.type = 'triangle';
+                o.frequency.setValueAtTime(freq, now + idx * 0.08);
+                g.gain.setValueAtTime(0.2, now + idx * 0.08);
+                g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
+                o.start(now + idx * 0.08);
+                o.stop(now + idx * 0.08 + 0.25);
             });
         }
     }
 
     function goToScreen(screenId) {
+        playSoundEffect('click');
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
-        if(screenId !== 'gameplay-screen' && currentBgmAudio) {
-            currentBgmAudio.pause();
+        if (screenId !== 'intro-screen') {
+            const introVid = document.getElementById('intro-video');
+            if (introVid) introVid.pause();
+        }
+        if (screenId !== 'gameplay-screen') {
+            stopStageAudio();
         }
     }
 
     function replayIntro() {
+        playSoundEffect('click');
         const vid = document.getElementById('intro-video');
         vid.currentTime = 0;
         vid.play();
     }
 
     function goToSelectStage() {
-        stopAllStageVideos();
+        stopStageAudio();
+        stopGameTimer();
         goToScreen('select-screen');
     }
 
     function toggleStageVideo(stageId, event) {
         event.stopPropagation();
-        const img = document.getElementById(`stage-img-${stageId}`);
-        const video = document.getElementById(`stage-vid-${stageId}`);
-
+        playSoundEffect('click');
+        const imgElem = document.getElementById(`stage-img-${stageId}`);
+        const vidElem = document.getElementById(`stage-vid-${stageId}`);
+        
         if (activeStageVideoId && activeStageVideoId !== stageId) {
-            stopAllStageVideos();
+            const prevImg = document.getElementById(`stage-img-${activeStageVideoId}`);
+            const prevVid = document.getElementById(`stage-vid-${activeStageVideoId}`);
+            if (prevVid && prevImg) {
+                prevVid.pause();
+                prevVid.style.display = 'none';
+                prevImg.style.display = 'block';
+            }
         }
 
-        if (video.paused && video.style.display !== 'block') {
-            img.style.display = 'none';
-            video.style.display = 'block';
-            video.muted = false;
-            video.play().catch(e => {});
+        if (vidElem.style.display === 'none' || !vidElem.style.display) {
+            imgElem.style.display = 'none';
+            vidElem.style.display = 'block';
+            vidElem.currentTime = 0;
+            vidElem.play().catch(e => console.log(e));
             activeStageVideoId = stageId;
         } else {
-            stopAllStageVideos();
+            vidElem.pause();
+            vidElem.style.display = 'none';
+            imgElem.style.display = 'block';
+            activeStageVideoId = null;
         }
-    }
-
-    function stopAllStageVideos() {
-        [1, 2, 3].forEach(id => {
-            const img = document.getElementById(`stage-img-${id}`);
-            const video = document.getElementById(`stage-vid-${id}`);
-            if (video) {
-                video.pause();
-                video.currentTime = 0;
-                video.style.display = 'none';
-            }
-            if (img) {
-                img.style.display = 'block';
-            }
-        });
-        activeStageVideoId = null;
     }
 
     function handleScreenClick(event) {
-        if (!event.target.closest('.stage-media-wrapper')) {
-            stopAllStageVideos();
+        if (!event.target.closest('.stage-media-wrapper') && activeStageVideoId) {
+            const prevImg = document.getElementById(`stage-img-${activeStageVideoId}`);
+            const prevVid = document.getElementById(`stage-vid-${activeStageVideoId}`);
+            if (prevVid && prevImg) {
+                prevVid.pause();
+                prevVid.style.display = 'none';
+                prevImg.style.display = 'block';
+            }
+            activeStageVideoId = null;
+        }
+    }
+
+    function startStage(stageId) {
+        playSoundEffect('click');
+        currentStageId = stageId;
+        const stageData = stagesData[stageId];
+        
+        document.getElementById('game-stage-title').innerText = stageData.name;
+        goToScreen('gameplay-screen');
+        
+        playStageAudio(stageData.audio);
+        setupCardsBoard(stageData);
+    }
+
+    function playStageAudio(audioSrc) {
+        stopStageAudio();
+        if (audioSrc) {
+            currentBgmAudio = new Audio(audioSrc);
+            currentBgmAudio.loop = true;
+            currentBgmAudio.muted = isAudioMuted;
+            currentBgmAudio.play().catch(e => console.log("Audio play blocked", e));
+        }
+    }
+
+    function stopStageAudio() {
+        if (currentBgmAudio) {
+            currentBgmAudio.pause();
+            currentBgmAudio = null;
         }
     }
 
     function toggleStageAudio() {
         isAudioMuted = !isAudioMuted;
         const btn = document.getElementById('audio-toggle-btn');
+        btn.innerText = isAudioMuted ? '🔇' : '🔊';
         if (currentBgmAudio) {
             currentBgmAudio.muted = isAudioMuted;
         }
-        btn.innerText = isAudioMuted ? "🔇" : "🔊";
     }
 
-    function startStage(stageId) {
-        stopAllStageVideos();
-        currentStageId = stageId;
-        const stage = stagesData[stageId];
-        goToScreen('gameplay-screen');
-
-        document.getElementById('game-stage-title').innerText = stage.name;
-        document.getElementById('matches-display').innerText = `🐾 0`;
+    function setupCardsBoard(stageData) {
+        const container = document.getElementById('cards-grid-container');
+        container.className = 'cards-grid';
+        if (currentStageId === 1) container.classList.add('grid-stage-1');
+        else if (currentStageId === 2) container.classList.add('grid-stage-2');
+        else if (currentStageId === 3) container.classList.add('grid-stage-3');
+        else if (currentStageId === 4) container.classList.add('grid-stage-bonus');
+        
+        container.innerHTML = '';
         matchesCount = 0;
-        secondsElapsed = 0;
+        firstSelectedCard = null;
         canInteract = false;
 
-        if(currentBgmAudio) currentBgmAudio.pause();
-        currentBgmAudio = new Audio(stage.audio);
-        currentBgmAudio.volume = 0.8;
-        currentBgmAudio.loop = true;
-        currentBgmAudio.muted = isAudioMuted;
-        currentBgmAudio.play().catch(e => {});
+        let deck = [];
+        stageData.pairs.forEach(pair => {
+            const cardAData = stageData.cards.find(c => c.id === pair[0]);
+            const cardBData = stageData.cards.find(c => c.id === pair[1]);
+            deck.push({ pairId: pair[0], img: cardAData.img });
+            deck.push({ pairId: pair[0], img: cardBData.img });
+        });
+        deck.sort(() => Math.random() - 0.5);
 
-        if(gameTimer) clearInterval(gameTimer);
-        gameTimer = setInterval(() => {
-            secondsElapsed++;
-            let mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
-            let secs = String(secondsElapsed % 60).padStart(2, '0');
-            document.getElementById('timer-display').innerText = `⏱️ ${mins}:${secs}`;
-        }, 1000);
-
-        const gridContainer = document.getElementById('cards-grid-container');
-        gridContainer.className = `cards-grid grid-stage-${stageId === 4 ? 'bonus' : stageId}`;
-        gridContainer.innerHTML = '';
-
-        stage.cards.forEach((card) => {
+        deck.forEach((item, index) => {
             const cardElem = document.createElement('div');
-            cardElem.className = 'card flipped'; 
-            cardElem.dataset.id = card.id;
-
+            cardElem.className = 'card flipped';
+            cardElem.dataset.pairId = item.pairId;
+            cardElem.dataset.index = index;
+            
             cardElem.innerHTML = `
                 <div class="card-inner">
-                    <div class="card-front">
-                        <img src="${card.img}" alt="card">
-                    </div>
-                    <div class="card-back">
-                        <img src="card-back-1-2-3-bonus-phone.jpg" alt="back">
-                    </div>
+                    <div class="card-back"><img src="card-back-phone.jpg" alt="Back"></div>
+                    <div class="card-front"><img src="${item.img}" alt="Front"></div>
                 </div>
             `;
-            cardElem.addEventListener('click', () => onCardClick(cardElem));
-            gridContainer.appendChild(cardElem);
+            cardElem.onclick = () => onCardClick(cardElem);
+            container.appendChild(cardElem);
         });
 
-        let previewSec = stage.previewTime;
-        document.getElementById('preview-banner-box').style.display = 'block';
+        let previewSec = stageData.previewTime;
         document.getElementById('preview-sec').innerText = previewSec;
+        document.getElementById('preview-banner-box').style.display = 'block';
 
-        let previewInterval = setInterval(() => {
+        let countdown = setInterval(() => {
             previewSec--;
             document.getElementById('preview-sec').innerText = previewSec;
-            if(previewSec <= 0) {
-                clearInterval(previewInterval);
+            if (previewSec <= 0) {
+                clearInterval(countdown);
                 document.getElementById('preview-banner-box').style.display = 'none';
                 document.querySelectorAll('.card').forEach(c => c.classList.remove('flipped'));
                 canInteract = true;
+                startTickingTimer();
             }
         }, 1000);
     }
 
-    function onCardClick(cardElem) {
-        if(!canInteract || cardElem.classList.contains('flipped') || cardElem.classList.contains('matched')) return;
+    function startTickingTimer() {
+        stopGameTimer();
+        secondsElapsed = 0;
+        updateTimerDisplay();
+        gameTimer = setInterval(() => {
+            secondsElapsed++;
+            updateTimerDisplay();
+        }, 1000);
+    }
 
+    function stopGameTimer() {
+        if (gameTimer) {
+            clearInterval(gameTimer);
+            gameTimer = null;
+        }
+    }
+
+    function updateTimerDisplay() {
+        const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+        const secs = String(secondsElapsed % 60).padStart(2, '0');
+        document.getElementById('timer-display').innerText = `⏱️ ${mins}:${secs}`;
+    }
+
+    function onCardClick(cardElem) {
+        if (!canInteract || cardElem.classList.contains('flipped') || cardElem.classList.contains('matched')) return;
+        
         playSoundEffect('click');
         cardElem.classList.add('flipped');
 
-        if(!firstSelectedCard) {
+        if (!firstSelectedCard) {
             firstSelectedCard = cardElem;
         } else {
             canInteract = false;
-            let id1 = parseInt(firstSelectedCard.dataset.id);
-            let id2 = parseInt(cardElem.dataset.id);
-            let stage = stagesData[currentStageId];
+            const card1 = firstSelectedCard;
+            const card2 = cardElem;
+            firstSelectedCard = null;
 
-            let isMatch = stage.pairs.some(pair => (pair[0] === id1 && pair[1] === id2) || (pair[0] === id2 && pair[1] === id1));
-
-            if(isMatch) {
+            if (card1.dataset.pairId === card2.dataset.pairId && card1.dataset.index !== card2.dataset.index) {
                 playSoundEffect('match');
-                setTimeout(() => {
-                    firstSelectedCard.classList.add('matched');
-                    cardElem.classList.add('matched');
-                    firstSelectedCard = null;
-                    matchesCount++;
-                    document.getElementById('matches-display').innerText = `🐾 ${matchesCount}`;
-                    canInteract = true;
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                matchesCount++;
+                document.getElementById('matches-display').innerText = `🐾 ${matchesCount}`;
+                canInteract = true;
 
-                    if(matchesCount === stage.pairs.length) {
-                        clearInterval(gameTimer);
-                        if(currentBgmAudio) currentBgmAudio.pause();
-                        playSoundEffect('victory');
-                        setTimeout(showVictoryScreen, 500);
-                    }
-                }, 300);
+                const totalPairsNeeded = stagesData[currentStageId].pairs.length;
+                if (matchesCount === totalPairsNeeded) {
+                    stopGameTimer();
+                    setTimeout(showVictoryScreen, 500);
+                }
             } else {
                 playSoundEffect('wrong');
                 setTimeout(() => {
-                    firstSelectedCard.classList.remove('flipped');
-                    cardElem.classList.remove('flipped');
-                    firstSelectedCard = null;
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
                     canInteract = true;
-                }, 700);
+                }, 800);
             }
         }
     }
 
     function showVictoryScreen() {
-        const stage = stagesData[currentStageId];
-        goToScreen('victory-screen');
+        playSoundEffect('victory');
+        stopStageAudio();
+        const stageData = stagesData[currentStageId];
 
-        document.getElementById('victory-title-text').innerText = (currentStageId === 4) ? "STAGE BONUS CLEARED!" : `STAGE ${currentStageId} CLEARED!`;
-        document.getElementById('victory-img-elem').src = stage.victoryImg;
-        document.getElementById('victory-question-text').innerText = stage.question;
+        document.getElementById('victory-title-text').innerText = `${stageData.levelName} CLEARED!`;
+        document.getElementById('victory-img-elem').src = stageData.victoryImg;
+        document.getElementById('victory-question-text').innerText = stageData.question;
 
-        const btnContainer = document.getElementById('victory-buttons-container');
-        
-        if (currentStageId === 4) {
-            btnContainer.innerHTML = `
-                <button class="custom-btn btn-no" onclick="showResultScreen('no')">NO</button>
-                <button class="custom-btn btn-yes" onclick="showResultScreen('yes')">YES</button>
+        const buttonsContainer = document.getElementById('victory-buttons-container');
+        buttonsContainer.innerHTML = '';
+
+        if (stageData.isBonus) {
+            buttonsContainer.innerHTML = `
+                <button class="btn-no" onclick="showResultScreen('no')">NO</button>
+                <button class="btn-yes" onclick="showResultScreen('yes')">YES</button>
             `;
         } else {
-            btnContainer.innerHTML = `
-                <button class="custom-btn primary" style="flex:1; padding: 12px; border-radius: 16px;" onclick="nextStageOrResult()">
-                    ${stage.buttonText}
-                </button>
+            buttonsContainer.innerHTML = `
+                <button class="btn-yes" onclick="advanceToNextStage()"> ${stageData.buttonText} </button>
             `;
         }
+        goToScreen('victory-screen');
     }
 
-    function nextStageOrResult() {
-        if (currentStageId === 1) {
-            startStage(2);
-        } else if (currentStageId === 2) {
-            startStage(3);
-        } else if (currentStageId === 3) {
-            startStage(4);
+    function advanceToNextStage() {
+        playSoundEffect('click');
+        if (currentStageId < 4) {
+            startStage(currentStageId + 1);
+        } else {
+            goToSelectStage();
         }
     }
 
     function showResultScreen(choice) {
+        playSoundEffect('click');
+        stopStageAudio();
         currentVoteChoice = choice;
         actionClickCount = 0;
-        goToScreen('result-media-screen');
 
         const vidPlayer = document.getElementById('result-video-player');
-        vidPlayer.src = choice === 'yes' ? 'yes-button-video-phone.mp4' : 'no-button-video-phone.mp4';
-        vidPlayer.play().catch(e => {});
+        vidPlayer.src = choice === 'yes' ? 'yes-button-video.mp4' : 'no-button-video.mp4';
+        vidPlayer.play().catch(e => console.log(e));
 
         document.getElementById('comment-box-elem').style.display = 'none';
-        const bottomBtn = document.getElementById('bottom-action-btn');
-        bottomBtn.innerText = choice === 'yes' ? 'EM CHIP CAM ON' : 'WHY NOT ME!?';
+        const actionBtn = document.getElementById('bottom-action-btn');
+        actionBtn.innerText = choice === 'yes' ? "EM CHIP CAM ON" : "WHY NOT ME!?";
+
+        goToScreen('result-media-screen');
+        renderComments();
     }
 
+    // Khi click lần 1: Mở khung bình luận. Khi click lần 2: Đóng màn hình và về thẳng INTRO SCREEN
     function handleBottomAction() {
-        actionClickCount++;
+        playSoundEffect('click');
         const commentBox = document.getElementById('comment-box-elem');
-        const bottomBtn = document.getElementById('bottom-action-btn');
+        const actionBtn = document.getElementById('bottom-action-btn');
 
-        if(actionClickCount === 1) {
+        if (actionClickCount === 0) {
+            actionClickCount = 1;
             commentBox.style.display = 'flex';
-            bottomBtn.innerText = currentVoteChoice === 'yes' ? 'REPLAY INTRO' : 'REPLAY INTRO';
+            actionBtn.innerText = "DONE / INTRO";
+            commentBox.scrollIntoView({ behavior: 'smooth' });
         } else {
-            actionClickCount = 0;
-            goToScreen('intro-screen');
+            const vidPlayer = document.getElementById('result-video-player');
+            vidPlayer.pause();
+            goToScreen('intro-screen'); // Chuyển thẳng về màn hình Intro như yêu cầu
         }
     }
 
-    // Đẩy bình luận mới lên Firebase Realtime Database
     function postComment() {
         const nameInput = document.getElementById('user-name-input');
         const commentInput = document.getElementById('user-comment-input');
+        const text = commentInput.value.trim();
+        if (!text) return;
 
-        if(!nameInput.value.trim() || !commentInput.value.trim()) return;
-
+        const name = nameInput.value.trim() || 'Anonymous';
         const newComment = {
-            id: Date.now(),
-            name: nameInput.value.trim(),
-            text: commentInput.value.trim(),
-            vote: currentVoteChoice,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            authorId: mySessionId,
+            name: name,
+            vote: currentVoteChoice.toUpperCase(),
+            text: text,
             likes: 0,
-            liked: false,
-            replies: []
+            likedUsers: {},
+            replies: {}
         };
 
         commentsRef.push(newComment);
         commentInput.value = '';
+        playSoundEffect('click');
     }
 
-    function renderComments() {
-        const listContainer = document.getElementById('comments-list-container');
-        if (!listContainer) return;
-        listContainer.innerHTML = '';
+    function toggleLike(firebaseId) {
+        playSoundEffect('click');
+        const commentRef = commentsRef.child(firebaseId);
+        commentRef.once('value', snapshot => {
+            const val = snapshot.val();
+            if (!val) return;
+            let likedUsers = val.likedUsers || {};
+            let likes = val.likes || 0;
 
-        commentsData.forEach(c => {
-            const item = document.createElement('div');
-            item.className = 'comment-item';
-            
-            let repliesHtml = '';
-            if (c.replies && c.replies.length > 0) {
-                repliesHtml = '<div class="reply-container">';
-                c.replies.forEach((rep, rIndex) => {
-                    repliesHtml += `
-                        <div class="reply-item">
-                            <span><b>${rep.name}:</b> ${rep.text}</span>
-                            <button onclick="deleteReply('${c.firebaseId}', ${rIndex})" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-weight:bold;">✕</button>
-                        </div>
-                    `;
-                });
-                repliesHtml += '</div>';
+            if (likedUsers[mySessionId]) {
+                delete likedUsers[mySessionId];
+                likes = Math.max(0, likes - 1);
+            } else {
+                likedUsers[mySessionId] = true;
+                likes += 1;
             }
-
-            item.innerHTML = `
-                <div class="comment-header">
-                    <span>${c.name}</span>
-                    <span class="voted-badge ${c.vote === 'no' ? 'no' : ''}">voted ${c.vote.toUpperCase()}</span>
-                    <span class="comment-time">${c.time || ''}</span>
-                    <button class="comment-menu-btn" onclick="toggleCommentMenu('${c.firebaseId}')">⋮</button>
-                    <div class="comment-dropdown" id="dropdown-${c.firebaseId}">
-                        <button onclick="editComment('${c.firebaseId}')">Edit</button>
-                        <button onclick="deleteComment('${c.firebaseId}')">Delete</button>
-                    </div>
-                </div>
-                <div class="comment-body">${c.text}</div>
-                ${repliesHtml}
-                <div class="comment-footer-actions">
-                    <span class="action-like ${c.liked ? 'liked' : ''}" onclick="likeComment('${c.firebaseId}')">❤️ ${c.likes || 0}</span>
-                    <span class="action-reply" onclick="promptReply('${c.firebaseId}')">Reply</span>
-                </div>
-            `;
-            listContainer.appendChild(item);
+            commentRef.update({ likes, likedUsers });
         });
     }
 
-    function toggleCommentMenu(firebaseId) {
-        const dropdown = document.getElementById(`dropdown-${firebaseId}`);
-        document.querySelectorAll('.comment-dropdown').forEach(d => { if(d !== dropdown) d.style.display = 'none'; });
-        dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+    function toggleReplyLike(firebaseId, replyKey) {
+        playSoundEffect('click');
+        const replyRef = commentsRef.child(`${firebaseId}/replies/${replyKey}`);
+        replyRef.once('value', snapshot => {
+            const val = snapshot.val();
+            if (!val) return;
+            let likedUsers = val.likedUsers || {};
+            let likes = val.likes || 0;
+
+            if (likedUsers[mySessionId]) {
+                delete likedUsers[mySessionId];
+                likes = Math.max(0, likes - 1);
+            } else {
+                likedUsers[mySessionId] = true;
+                likes += 1;
+            }
+            replyRef.update({ likes, likedUsers });
+        });
+    }
+
+    function toggleReplyBox(containerId) {
+        playSoundEffect('click');
+        const box = document.getElementById(containerId);
+        if (box) {
+            box.classList.toggle('active');
+        }
+    }
+
+    function postReply(firebaseId, targetAuthorName) {
+        const nameInput = document.getElementById(`reply-name-${firebaseId}`);
+        const textInput = document.getElementById(`reply-text-${firebaseId}`);
+        const text = textInput.value.trim();
+        if (!text) return;
+
+        const name = nameInput.value.trim() || 'Anonymous';
+        const newReply = {
+            authorId: mySessionId,
+            name: name,
+            vote: currentVoteChoice.toUpperCase(),
+            replyTo: targetAuthorName,
+            text: text,
+            likes: 0,
+            likedUsers: {}
+        };
+
+        commentsRef.child(`${firebaseId}/replies`).push(newReply);
+        textInput.value = '';
+        playSoundEffect('click');
     }
 
     function deleteComment(firebaseId) {
-        commentsRef.child(firebaseId).remove();
-    }
-
-    function editComment(firebaseId) {
-        const comment = commentsData.find(c => c.firebaseId === firebaseId);
-        const newText = prompt("Edit your comment:", comment.text);
-        if(newText !== null && newText.trim() !== '') {
-            commentsRef.child(firebaseId).update({ text: newText.trim() });
+        if (confirm("Bạn có chắc chắn muốn xóa bình luận này không?")) {
+            commentsRef.child(firebaseId).remove();
+            playSoundEffect('click');
         }
     }
 
-    function likeComment(firebaseId) {
-        const comment = commentsData.find(c => c.firebaseId === firebaseId);
-        let newLikes = comment.liked ? (comment.likes || 1) - 1 : (comment.likes || 0) + 1;
-        let newLikedState = !comment.liked;
-        commentsRef.child(firebaseId).update({ 
-            likes: newLikes,
-            liked: newLikedState
-        });
-    }
-
-    function promptReply(firebaseId) {
-        const replyText = prompt("Write a reply:");
-        if(replyText && replyText.trim() !== '') {
-            const comment = commentsData.find(c => c.firebaseId === firebaseId);
-            let replies = comment.replies ? [...comment.replies] : [];
-            replies.push({
-                name: document.getElementById('user-name-input').value.trim() || "Guest",
-                text: replyText.trim()
-            });
-            commentsRef.child(firebaseId).update({ replies: replies });
+    function deleteReply(firebaseId, replyKey) {
+        if (confirm("Bạn có chắc chắn muốn xóa phản hồi này không?")) {
+            commentsRef.child(`${firebaseId}/replies/${replyKey}`).remove();
+            playSoundEffect('click');
         }
     }
 
-    function deleteReply(firebaseId, replyIndex) {
-        const comment = commentsData.find(c => c.firebaseId === firebaseId);
-        if(comment && comment.replies) {
-            let replies = [...comment.replies];
-            replies.splice(replyIndex, 1);
-            commentsRef.child(firebaseId).update({ replies: replies });
-        }
-    }
+    function renderComments() {
+        const container = document.getElementById('comments-list-container');
+        if (!container) return;
 
-    function renderAdminCommentsList() {
-        const adminList = document.getElementById('admin-comments-manage-list');
-        if (!adminList) return;
-        adminList.innerHTML = '';
-        commentsData.forEach(c => {
-            const row = document.createElement('div');
-            row.style.cssText = "display:flex; justify-content:space-between; align-items:center; background:#3b1a26; padding:6px 10px; border-radius:6px; font-size:0.75rem;";
-            row.innerHTML = `
-                <span><b>${c.name}:</b> ${c.text}</span>
-                <button onclick="deleteComment('${c.firebaseId}')" style="background:#e74c3c; color:#fff; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Xóa</button>
+        if (commentsData.length === 0) {
+            container.innerHTML = '<div style="font-size:0.75rem; color:#777; text-align:center;">Chưa có bình luận nào. Hãy là người đầu tiên!</div>';
+            return;
+        }
+
+        container.innerHTML = commentsData.map(item => {
+            const isMyComment = item.authorId === mySessionId;
+            const likedUsers = item.likedUsers || {};
+            const isLiked = !!likedUsers[mySessionId];
+            const badgeClass = item.vote === 'NO' ? 'voted-badge no' : 'voted-badge';
+
+            let repliesHtml = '';
+            if (item.replies) {
+                repliesHtml = Object.keys(item.replies).map(rKey => {
+                    const rep = item.replies[rKey];
+                    const isMyReply = rep.authorId === mySessionId;
+                    const repLikedUsers = rep.likedUsers || {};
+                    const isRepLiked = !!repLikedUsers[mySessionId];
+
+                    return `
+                        <div class="reply-item">
+                            <div style="display:flex; flex-direction:column; gap:2px; flex:1;">
+                                <div style="font-weight:700; color:var(--dark-burgundy);">${rep.name}</div>
+                                <div style="color:#333;"><span style="font-weight:600; color:var(--dark-burgundy); margin-right:4px;">@${rep.replyTo}</span>${rep.text}</div>
+                                <div style="display:flex; gap:10px; font-size:0.68rem; color:#666; margin-top:2px;">
+                                    <span class="action-like ${isRepLiked ? 'liked' : ''}" onclick="toggleReplyLike('${item.firebaseId}', '${rKey}')">❤️ ${rep.likes || 0}</span>
+                                    <span class="action-reply" onclick="toggleReplyBox('reply-box-${item.firebaseId}')">Phản hồi</span>
+                                </div>
+                            </div>
+                            ${isMyReply ? `<button class="delete-comment-btn" onclick="deleteReply('${item.firebaseId}', '${rKey}')">✕</button>` : ''}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            return `
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span>${item.name} <span class="${badgeClass}">${item.vote}</span></span>
+                        ${isMyComment ? `<button class="delete-comment-btn" onclick="deleteComment('${item.firebaseId}')">Xóa</button>` : ''}
+                    </div>
+                    <div class="comment-body">${item.text}</div>
+                    <div class="comment-footer-actions">
+                        <span class="action-like ${isLiked ? 'liked' : ''}" onclick="toggleLike('${item.firebaseId}')">❤️ ${item.likes || 0}</span>
+                        <span class="action-reply" onclick="toggleReplyBox('reply-box-${item.firebaseId}')">Phản hồi</span>
+                    </div>
+                    
+                    ${repliesHtml ? `<div class="reply-container">${repliesHtml}</div>` : ''}
+
+                    <div class="reply-input-box" id="reply-box-${item.firebaseId}">
+                        <input type="text" id="reply-name-${item.firebaseId}" class="name-input" placeholder="Tên của bạn..." style="font-size:0.75rem; padding:5px 8px;">
+                        <div style="display:flex; gap:6px;">
+                            <input type="text" id="reply-text-${item.firebaseId}" class="comment-input" placeholder="Phản hồi @${item.name}..." style="font-size:0.75rem; padding:5px 8px;">
+                            <button class="send-btn" onclick="postReply('${item.firebaseId}', '${item.name}')" style="padding:5px 10px; font-size:0.7rem;">Gửi</button>
+                        </div>
+                    </div>
+                </div>
             `;
-            adminList.appendChild(row);
-        });
+        }).join('');
     }
 
-    window.addEventListener('keydown', (e) => {
-        if(e.shiftKey && e.key.toLowerCase() === 'u') {
-            document.getElementById('admin-modal').style.display = 'flex';
-        }
-    });
+    function openAdmin() {
+        playSoundEffect('click');
+        document.getElementById('admin-modal').style.display = 'flex';
+        renderAdminCommentsList();
+    }
 
     function closeAdmin() {
+        playSoundEffect('click');
         document.getElementById('admin-modal').style.display = 'none';
     }
 
     function switchAdminTab(index) {
-        const tabs = document.querySelectorAll('.admin-tab-btn');
+        playSoundEffect('click');
+        const buttons = document.querySelectorAll('.admin-tab-btn');
         const sections = document.querySelectorAll('.admin-section');
-        tabs.forEach((t, i) => {
-            t.classList.toggle('active', i === index);
-            sections[i].classList.toggle('active', i === index);
+        
+        buttons.forEach((btn, idx) => {
+            if (idx === index) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+
+        sections.forEach((sec, idx) => {
+            if (idx === index) sec.classList.add('active');
+            else sec.classList.remove('active');
         });
     }
-</script>
 
+    function renderAdminCommentsList() {
+        const container = document.getElementById('admin-comments-manage-list');
+        if (!container) return;
+
+        if (commentsData.length === 0) {
+            container.innerHTML = '<div style="font-size:0.75rem; color:#aaa;">Không có bình luận nào trong hệ thống.</div>';
+            return;
+        }
+
+        container.innerHTML = commentsData.map(item => {
+            let adminRepliesHtml = '';
+            if (item.replies) {
+                adminRepliesHtml = Object.keys(item.replies).map(rKey => {
+                    const rep = item.replies[rKey];
+                    return `
+                        <div style="background:#18111e; padding:6px; border-radius:8px; margin-top:4px; display:flex; justify-content:space-between; align-items:center; font-size:0.7rem;">
+                            <div><span style="color:#d87a93; font-weight:bold;">↳ ${rep.name}</span>: ${rep.text}</div>
+                            <button onclick="adminDeleteReply('${item.firebaseId}', '${rKey}')" style="background:#e74c3c; color:#fff; border:none; padding:3px 6px; border-radius:4px; cursor:pointer;">Xóa Reply</button>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            return `
+                <div style="background:#23182d; padding:8px 10px; border-radius:10px; border:1px solid #4a2533; display:flex; flex-direction:column; gap:6px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem;">
+                        <span style="font-weight:bold; color:#4ecca3;">${item.name} (${item.vote})</span>
+                        <button onclick="adminDeleteComment('${item.firebaseId}')" style="background:#e74c3c; color:#fff; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-size:0.7rem;">Xóa Cmt</button>
+                    </div>
+                    <div style="font-size:0.75rem; color:#ddd;">${item.text}</div>
+                    ${adminRepliesHtml}
+                </div>
+            `;
+        }).join('');
+    }
+
+    function adminDeleteComment(firebaseId) {
+        if (confirm("Admin: Bạn có chắc chắn muốn xóa bình luận này?")) {
+            commentsRef.child(firebaseId).remove();
+            playSoundEffect('click');
+        }
+    }
+
+    function adminDeleteReply(firebaseId, replyKey) {
+        if (confirm("Admin: Bạn có chắc chắn muốn xóa phản hồi này?")) {
+            commentsRef.child(`${firebaseId}/replies/${replyKey}`).remove();
+            playSoundEffect('click');
+        }
+    }
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'F2') {
+            const adminModal = document.getElementById('admin-modal');
+            if (adminModal.style.display === 'flex') closeAdmin();
+            else openAdmin();
+        } else if (e.shiftKey && e.key.toUpperCase() === 'U') {
+            openAdmin();
+        }
+    });
+
+    window.onload = () => {
+        goToScreen('intro-screen');
+    };
+</script>
 </body>
 </html>
