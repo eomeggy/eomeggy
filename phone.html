@@ -455,6 +455,7 @@
             gap: 12px;
             font-size: 0.75rem;
             color: #666;
+            margin-top: 2px;
         }
         .action-like, .action-reply {
             cursor: pointer;
@@ -497,22 +498,22 @@
             background: #f0f0f0;
         }
         .reply-container {
-            margin-top: 6px;
-            padding-left: 10px;
+            margin-top: 4px;
+            padding-left: 8px;
             border-left: 2px solid #e2a2b3;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
         }
         .reply-item {
             font-size: 0.75rem;
             color: #555;
             background: #fce8ec;
-            padding: 4px 6px;
-            border-radius: 6px;
+            padding: 6px 8px;
+            border-radius: 8px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 4px;
         }
         /* ADMIN MODAL */
         #admin-modal {
@@ -647,7 +648,7 @@
         <div class="video-box" id="result-video-box" style="width: 100%;">
             <video id="result-video-player" controls autoplay loop playsinline></video>
         </div>
-        <!-- Khung bình luận ban đầu ẩn, khi bấm nút lần 1 sẽ xuất hiện ở giữa -->
+        <!-- Khung bình luận ban đầu ẩn -->
         <div class="comment-section-box" id="comment-box-elem" style="display: none; width: 100%;">
             <h3 class="title-exact-match" style="font-size: 0.95rem;">LEAVE YOUR COMMENTS</h3>
             <input type="text" id="user-name-input" class="name-input font-vietnamese" placeholder="YOUR NAME">
@@ -657,7 +658,6 @@
             </div>
             <div class="comments-list font-vietnamese" id="comments-list-container"></div>
         </div>
-        <!-- Nút bấm ban đầu nằm ở giữa, khi bấm lần 1 sẽ đổi vị trí xuống dưới và hiển thị khung bình luận -->
         <button class="custom-btn primary" id="bottom-action-btn" onclick="handleBottomAction()" style="width: 100%; flex-shrink: 0;">EM CHIP CAM ON</button>
     </div>
 </div>
@@ -709,7 +709,7 @@
             </div>
         </div>
         <div class="admin-section">
-            <p style="font-size:0.8rem;">Quản lý và Xóa bình luận của người chơi (Đồng bộ từ PC & Phone):</p>
+            <p style="font-size:0.8rem;">Quản lý và Xóa bình luận của người chơi:</p>
             <div id="admin-comments-manage-list" style="display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto;"></div>
         </div>
     </div>
@@ -724,8 +724,15 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
-    // Sử dụng chung nhánh cơ sở dữ liệu để đồng bộ hoàn toàn giữa PC và Phone[cite: 12]
+    // Đồng bộ nhánh cơ sở dữ liệu chung giữa PC và Phone[cite: 12]
     const commentsRef = db.ref('games/seonghyeon-cat/comments');
+
+    // Tạo mã định danh riêng cho thiết bị/session hiện tại để quản lý trạng thái Like cá nhân
+    let mySessionId = localStorage.getItem('seonghyeon_session_id');
+    if (!mySessionId) {
+        mySessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('seonghyeon_session_id', mySessionId);
+    }
 
     const stagesData = {
         1: {
@@ -825,7 +832,7 @@
     let actionClickCount = 0;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    // Lắng nghe dữ liệu bình luận realtime từ Firebase (đồng bộ cho cả PC và Phone)[cite: 12]
+    // Lắng nghe dữ liệu bình luận realtime từ Firebase[cite: 12]
     commentsRef.on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -1096,7 +1103,6 @@
         vidPlayer.src = choice === 'yes' ? 'yes-button-video-phone.mp4' : 'no-button-video-phone.mp4';
         vidPlayer.play().catch(e => {});
         
-        // Đảm bảo ban đầu khung bình luận ẩn, màn hình giữ nguyên ở giữa theo đúng yêu cầu 1
         document.getElementById('comment-box-elem').style.display = 'none';
         const screenDiv = document.getElementById('result-media-screen');
         screenDiv.style.justifyContent = 'center';
@@ -1106,7 +1112,6 @@
         bottomBtn.innerText = choice === 'yes' ? 'EM CHIP CAM ON' : 'WHY NOT ME!?';
     }
 
-    // Luồng xử lý bấm nút ở màn hình kết quả theo 2 bước chính xác yêu cầu 1
     function handleBottomAction() {
         actionClickCount++;
         const commentBox = document.getElementById('comment-box-elem');
@@ -1114,13 +1119,11 @@
         const screenDiv = document.getElementById('result-media-screen');
 
         if(actionClickCount === 1) {
-            // Lần bấm thứ 1: Tách video và nút ra, hiển thị khung bình luận ở giữa, nút chuyển xuống dưới
             screenDiv.style.justifyContent = 'flex-start';
             commentBox.style.display = 'flex';
             bottomBtn.style.marginTop = 'auto';
             bottomBtn.innerText = 'REPLAY INTRO';
         } else {
-            // Lần bấm thứ 2: Chuyển về màn hình Intro
             actionClickCount = 0;
             goToScreen('intro-screen');
         }
@@ -1138,14 +1141,14 @@
             vote: currentVoteChoice,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             likes: 0,
-            liked: false,
+            likedUsers: {},
             replies: []
         };
         commentsRef.push(newComment);
         commentInput.value = '';
     }
 
-    // Render danh sách bình luận kèm định dạng Threads và hỗ trợ thả tim/phản hồi cho cả reply
+    // Render danh sách bình luận với cấu trúc bố cục chuẩn, nút Like cá nhân và khung Reply trực tiếp
     function renderComments() {
         const listContainer = document.getElementById('comments-list-container');
         if (!listContainer) return;
@@ -1154,20 +1157,28 @@
             const item = document.createElement('div');
             item.className = 'comment-item';
             
+            const likedUsers = c.likedUsers || {};
+            const isLiked = !!likedUsers[mySessionId];
+
             let repliesHtml = '';
             if (c.replies && c.replies.length > 0) {
                 repliesHtml = '<div class="reply-container">';
                 c.replies.forEach((rep, rIndex) => {
-                    let repLikedClass = rep.liked ? 'liked' : '';
+                    const repLikedUsers = rep.likedUsers || {};
+                    const isRepLiked = !!repLikedUsers[mySessionId];
                     repliesHtml += `
-                        <div class="reply-item" style="flex-direction:column; align-items:flex-start; gap:4px;">
-                            <div style="display:flex; justify-content:space-width; width:100%; justify-content:space-between;">
-                                <span><b>${rep.name}:</b> <span style="color:#d87a93; font-weight:600;">@${rep.replyTo || c.name}</span> ${rep.text}</span>
-                                <button onclick="deleteReply('${c.firebaseId}', ${rIndex})" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-weight:bold;">✕</button>
+                        <div class="reply-item">
+                            <div><b>${rep.name}:</b> <span style="color:#d87a93; font-weight:600;">@${rep.replyTo || c.name}</span> ${rep.text}</div>
+                            <div style="display:flex; gap:12px; font-size:0.7rem; color:#666; margin-top:2px;">
+                                <span class="action-like ${isRepLiked ? 'liked' : ''}" onclick="likeReply('${c.firebaseId}', ${rIndex})">❤️ ${rep.likes || 0}</span>
+                                <span class="action-reply" onclick="toggleReplyBox('${c.firebaseId}', ${rIndex})">Reply</span>
                             </div>
-                            <div style="display:flex; gap:12px; font-size:0.7rem; color:#666;">
-                                <span class="action-like ${repLikedClass}" onclick="likeReply('${c.firebaseId}', ${rIndex})">❤️ ${rep.likes || 0}</span>
-                                <span class="action-reply" onclick="promptReplyToReply('${c.firebaseId}', '${rep.name}')">Reply</span>
+                            <div class="reply-input-inline" id="reply-inline-${c.firebaseId}-${rIndex}" style="display:none; flex-direction:column; gap:4px; margin-top:4px;">
+                                <input type="text" id="inline-name-${c.firebaseId}-${rIndex}" class="name-input" placeholder="Your name..." style="font-size:0.75rem; padding:4px 8px;">
+                                <div style="display:flex; gap:6px;">
+                                    <input type="text" id="inline-text-${c.firebaseId}-${rIndex}" class="comment-input" placeholder="Reply to @${rep.name}..." style="font-size:0.75rem; padding:4px 8px;">
+                                    <button class="send-btn" onclick="postInlineReply('${c.firebaseId}', ${rIndex}, '${rep.name}')" style="padding:4px 8px; font-size:0.7rem;">Send</button>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -1179,19 +1190,25 @@
                 <div class="comment-header">
                     <span>${c.name}</span>
                     <span class="voted-badge ${c.vote === 'no' ? 'no' : ''}">voted ${c.vote.toUpperCase()}</span>
-                    <span class="comment-time">${c.time || ''}</span>
+                    <span class="comment-time" style="font-weight:normal; color:#777; font-size:0.7rem;">${c.time || ''}</span>
                     <button class="comment-menu-btn" onclick="toggleCommentMenu('${c.firebaseId}')">⋮</button>
                     <div class="comment-dropdown" id="dropdown-${c.firebaseId}">
                         <button onclick="editComment('${c.firebaseId}')">Edit</button>
-                        <button onclick="deleteComment('${c.firebaseId}')">Delete</button>
                     </div>
                 </div>
                 <div class="comment-body">${c.text}</div>
-                ${repliesHtml}
                 <div class="comment-footer-actions">
-                    <span class="action-like ${c.liked ? 'liked' : ''}" onclick="likeComment('${c.firebaseId}')">❤️ ${c.likes || 0}</span>
-                    <span class="action-reply" onclick="promptReply('${c.firebaseId}', '${c.name}')">Reply</span>
+                    <span class="action-like ${isLiked ? 'liked' : ''}" onclick="likeComment('${c.firebaseId}')">❤️ ${c.likes || 0}</span>
+                    <span class="action-reply" onclick="toggleRootReplyBox('${c.firebaseId}')">Reply</span>
                 </div>
+                <div class="reply-input-inline" id="reply-root-${c.firebaseId}" style="display:none; flex-direction:column; gap:4px; margin-top:6px;">
+                    <input type="text" id="root-name-${c.firebaseId}" class="name-input" placeholder="Your name..." style="font-size:0.75rem; padding:5px 8px;">
+                    <div style="display:flex; gap:6px;">
+                        <input type="text" id="root-text-${c.firebaseId}" class="comment-input" placeholder="Reply to @${c.name}..." style="font-size:0.75rem; padding:5px 8px;">
+                        <button class="send-btn" onclick="postRootReply('${c.firebaseId}', '${c.name}')" style="padding:5px 10px; font-size:0.7rem;">Send</button>
+                    </div>
+                </div>
+                ${repliesHtml}
             `;
             listContainer.appendChild(item);
         });
@@ -1203,10 +1220,6 @@
         dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    function deleteComment(firebaseId) {
-        commentsRef.child(firebaseId).remove();
-    }
-
     function editComment(firebaseId) {
         const comment = commentsData.find(c => c.firebaseId === firebaseId);
         const newText = prompt("Edit your comment:", comment.text);
@@ -1215,57 +1228,99 @@
         }
     }
 
+    // Like bình luận chính với logic kiểm tra session cá nhân và cộng dồn số lượng tim chuẩn xác
     function likeComment(firebaseId) {
-        const comment = commentsData.find(c => c.firebaseId === firebaseId);
-        let newLikes = comment.liked ? (comment.likes || 1) - 1 : (comment.likes || 0) + 1;
-        let newLikedState = !comment.liked;
-        commentsRef.child(firebaseId).update({ 
-            likes: newLikes,
-            liked: newLikedState
+        const commentRef = commentsRef.child(firebaseId);
+        commentRef.once('value', snapshot => {
+            const val = snapshot.val();
+            if(!val) return;
+            let likedUsers = val.likedUsers || {};
+            let likes = val.likes || 0;
+
+            if (likedUsers[mySessionId]) {
+                delete likedUsers[mySessionId];
+                likes = Math.max(0, likes - 1);
+            } else {
+                likedUsers[mySessionId] = true;
+                likes += 1;
+            }
+            commentRef.update({ likes, likedUsers });
         });
     }
 
-    function promptReply(firebaseId, targetName) {
-        const replyText = prompt(`Write a reply to @${targetName}:`);
-        if(replyText && replyText.trim() !== '') {
-            const comment = commentsData.find(c => c.firebaseId === firebaseId);
-            let replies = comment.replies ? [...comment.replies] : [];
-            replies.push({
-                name: document.getElementById('user-name-input').value.trim() || "Guest",
-                replyTo: targetName,
-                text: replyText.trim(),
-                likes: 0,
-                liked: false
-            });
-            commentsRef.child(firebaseId).update({ replies: replies });
+    function toggleRootReplyBox(firebaseId) {
+        const box = document.getElementById(`reply-root-${firebaseId}`);
+        if(box) {
+            box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
         }
     }
 
-    function promptReplyToReply(firebaseId, targetName) {
-        promptReply(firebaseId, targetName);
+    function postRootReply(firebaseId, targetName) {
+        const nameInput = document.getElementById(`root-name-${firebaseId}`);
+        const textInput = document.getElementById(`root-text-${firebaseId}`);
+        if(!nameInput.value.trim() || !textInput.value.trim()) return;
+
+        const comment = commentsData.find(c => c.firebaseId === firebaseId);
+        let replies = comment.replies ? [...comment.replies] : [];
+        replies.push({
+            name: nameInput.value.trim(),
+            replyTo: targetName,
+            text: textInput.value.trim(),
+            likes: 0,
+            likedUsers: {}
+        });
+        commentsRef.child(firebaseId).update({ replies: replies });
+    }
+
+    function toggleReplyBox(firebaseId, rIndex) {
+        const box = document.getElementById(`reply-inline-${firebaseId}-${rIndex}`);
+        if(box) {
+            box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+        }
+    }
+
+    function postInlineReply(firebaseId, rIndex, targetName) {
+        const nameInput = document.getElementById(`inline-name-${firebaseId}-${rIndex}`);
+        const textInput = document.getElementById(`inline-text-${firebaseId}-${rIndex}`);
+        if(!nameInput.value.trim() || !textInput.value.trim()) return;
+
+        const comment = commentsData.find(c => c.firebaseId === firebaseId);
+        let replies = comment.replies ? [...comment.replies] : [];
+        replies.push({
+            name: nameInput.value.trim(),
+            replyTo: targetName,
+            text: textInput.value.trim(),
+            likes: 0,
+            likedUsers: {}
+        });
+        commentsRef.child(firebaseId).update({ replies: replies });
     }
 
     function likeReply(firebaseId, replyIndex) {
-        const comment = commentsData.find(c => c.firebaseId === firebaseId);
-        if(comment && comment.replies && comment.replies[replyIndex]) {
-            let replies = [...comment.replies];
+        const commentRef = commentsRef.child(firebaseId);
+        commentRef.once('value', snapshot => {
+            const val = snapshot.val();
+            if(!val || !val.replies || !val.replies[replyIndex]) return;
+            let replies = [...val.replies];
             let rep = replies[replyIndex];
-            rep.liked = !rep.liked;
-            rep.likes = rep.liked ? (rep.likes || 0) + 1 : Math.max(0, (rep.likes || 1) - 1);
-            commentsRef.child(firebaseId).update({ replies: replies });
-        }
+            let likedUsers = rep.likedUsers || {};
+            let likes = rep.likes || 0;
+
+            if (likedUsers[mySessionId]) {
+                delete likedUsers[mySessionId];
+                likes = Math.max(0, likes - 1);
+            } else {
+                likedUsers[mySessionId] = true;
+                likes += 1;
+            }
+            rep.likes = likes;
+            rep.likedUsers = likedUsers;
+
+            commentRef.update({ replies: replies });
+        });
     }
 
-    function deleteReply(firebaseId, replyIndex) {
-        const comment = commentsData.find(c => c.firebaseId === firebaseId);
-        if(comment && comment.replies) {
-            let replies = [...comment.replies];
-            replies.splice(replyIndex, 1);
-            commentsRef.child(firebaseId).update({ replies: replies });
-        }
-    }
-
-    // Bảng quản lý Admin hiển thị thống nhất toàn bộ bình luận từ cả Phone và PC[cite: 12]
+    // Bảng quản lý Admin: Chỉ giữ lại quyền xóa cmt tại đây[cite: 12]
     function renderAdminCommentsList() {
         const adminList = document.getElementById('admin-comments-manage-list');
         if (!adminList) return;
@@ -1275,10 +1330,16 @@
             row.style.cssText = "display:flex; justify-content:space-between; align-items:center; background:#3b1a26; padding:6px 10px; border-radius:6px; font-size:0.75rem;";
             row.innerHTML = `
                 <span><b>${c.name}:</b> ${c.text}</span>
-                <button onclick="deleteComment('${c.firebaseId}')" style="background:#e74c3c; color:#fff; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Xóa</button>
+                <button onclick="adminDeleteComment('${c.firebaseId}')" style="background:#e74c3c; color:#fff; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Xóa</button>
             `;
             adminList.appendChild(row);
         });
+    }
+
+    function adminDeleteComment(firebaseId) {
+        if(confirm("Admin: Bạn có chắc chắn muốn xóa bình luận này không?")) {
+            commentsRef.child(firebaseId).remove();
+        }
     }
 
     window.addEventListener('keydown', (e) => {
