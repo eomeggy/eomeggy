@@ -4,14 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IS SEONGHYEON A CAT?</title>
-    <!-- Google Fonts: Titan One (có hỗ trợ subset Korean) & Be Vietnam Pro -->
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Titan+One&display=swap&subset=korean" rel="stylesheet">
+    <!-- Google Fonts: Titan One, Black Han Sans & Be Vietnam Pro -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Black+Han+Sans&family=Titan+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Firebase SDK (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <style>
+        /* Nhúng trực tiếp font 야놀자 야체 (Yanolja Yache) chuẩn như hình 1 */
+        @font-face {
+            font-family: 'YanoljaYacheR';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/YanoljaYacheR.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         :root {
             --bg-pink: #f8d7da;
             --main-pink: #d87a93;
@@ -130,13 +138,13 @@
             justify-content: center;
         }
         .custom-btn, #bottom-action-btn {
-            font-family: 'Titan One', cursive !important;
+            font-family: 'Titan One', 'YanoljaYacheR', 'Black Han Sans', cursive !important;
             background-color: #fff;
             color: var(--dark-burgundy);
             border: none;
             padding: 12px 18px;
             border-radius: 15px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
             transition: transform 0.1s;
@@ -144,6 +152,13 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+        }
+        /* Class riêng cho chữ Hàn ㅋㅋㅋㅋㅋㅋ để hiển thị nét tròn mập giống hình 1 & 2 */
+        .korean-laugh-font {
+            font-family: 'YanoljaYacheR', 'Black Han Sans', sans-serif !important;
+            font-size: 1.15rem !important;
+            letter-spacing: 2px;
+            font-weight: 900;
         }
         .custom-btn:active {
             transform: scale(0.96);
@@ -460,12 +475,20 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 0.75rem;
-            color: #666;
+            font-size: 0.78rem;
+            color: #555e68;
             margin-top: 2px;
         }
         .action-like, .action-reply {
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            transition: color 0.15s ease, transform 0.1s ease;
+        }
+        .action-like:active {
+            transform: scale(1.15);
         }
         .action-like.liked {
             color: #e74c3c;
@@ -666,7 +689,7 @@
             </div>
             <div class="comments-list font-vietnamese" id="comments-list-container"></div>
         </div>
-        <button class="custom-btn primary" id="bottom-action-btn" onclick="handleBottomAction()" style="width: 100%; flex-shrink: 0; font-family: 'Titan One', cursive !important;">ㅋㅋㅋㅋㅋㅋ</button>
+        <button class="custom-btn primary" id="bottom-action-btn" onclick="handleBottomAction()" style="width: 100%; flex-shrink: 0;">ㅋㅋㅋㅋㅋㅋ</button>
     </div>
 </div>
 <!-- ADMIN CONFIGURATION MODAL -->
@@ -909,18 +932,15 @@
     }
     // Tự động dừng và tắt tiếng toàn bộ media (audio + video) khi chuyển sang slide khác
     function stopAllMediaAssets() {
-        // 1. Dừng nhạc nền (BGM) màn chơi
         if (currentBgmAudio) {
             currentBgmAudio.pause();
             currentBgmAudio.currentTime = 0;
         }
-        // 2. Dừng video Intro
         const introVid = document.getElementById('intro-video');
         if (introVid) {
             introVid.pause();
             introVid.muted = true;
         }
-        // 3. Dừng video Kết quả (YES / NO)
         const resultVid = document.getElementById('result-video-player');
         if (resultVid) {
             resultVid.pause();
@@ -929,16 +949,13 @@
             resultVid.removeAttribute('src');
             resultVid.load();
         }
-        // 4. Dừng toàn bộ video preview trong Select Stage
         stopAllStageVideos();
     }
     function goToScreen(screenId) {
-        // Ngắt toàn bộ âm thanh và video của slide cũ trước khi kích hoạt slide mới
         stopAllMediaAssets();
         
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
-        // Nếu quay lại màn Intro, tự động phát lại video Intro (chế độ muted để tránh tự phát âm thanh ngoài ý muốn)
         if (screenId === 'intro-screen') {
             const introVid = document.getElementById('intro-video');
             if (introVid) {
@@ -1130,6 +1147,16 @@
             startStage(4);
         }
     }
+    function updateBottomButtonLabel() {
+        const bottomBtn = document.getElementById('bottom-action-btn');
+        if (currentVoteChoice === 'yes') {
+            bottomBtn.innerText = 'ㅋㅋㅋㅋㅋㅋ';
+            bottomBtn.classList.add('korean-laugh-font');
+        } else {
+            bottomBtn.innerText = 'aniyaaa~';
+            bottomBtn.classList.remove('korean-laugh-font');
+        }
+    }
     function showResultScreen(choice) {
         currentVoteChoice = choice;
         actionClickCount = 0;
@@ -1146,8 +1173,7 @@
         
         const bottomBtn = document.getElementById('bottom-action-btn');
         bottomBtn.style.marginTop = '0px';
-        bottomBtn.style.fontFamily = "'Titan One', cursive";
-        bottomBtn.innerText = choice === 'yes' ? 'ㅋㅋㅋㅋㅋㅋ' : 'aniyaaa~';
+        updateBottomButtonLabel();
     }
     function handleBottomAction() {
         actionClickCount++;
@@ -1158,8 +1184,7 @@
             screenDiv.style.justifyContent = 'flex-start';
             commentBox.style.display = 'flex';
             bottomBtn.style.marginTop = 'auto';
-            bottomBtn.style.fontFamily = "'Titan One', cursive";
-            bottomBtn.innerText = (currentVoteChoice === 'yes') ? 'ㅋㅋㅋㅋㅋㅋ' : 'aniyaaa~';
+            updateBottomButtonLabel();
         } else {
             actionClickCount = 0;
             goToScreen('intro-screen');
@@ -1183,7 +1208,7 @@
         commentsRef.push(newComment);
         commentInput.value = '';
     }
-    // Render danh sách bình luận với kiểm tra trạng thái Like chuẩn xác
+    // Render danh sách bình luận với icon tim rỗng khi chưa like và tim đỏ khi đã like
     function renderComments() {
         const listContainer = document.getElementById('comments-list-container');
         if (!listContainer) return;
@@ -1194,17 +1219,25 @@
             
             const likedUsers = c.likedUsers || {};
             const isLiked = likedUsers[mySessionId] === true;
+            const heartIconHtml = isLiked 
+                ? '<i class="fa-solid fa-heart"></i>' 
+                : '<i class="fa-regular fa-heart"></i>';
+
             let repliesHtml = '';
             if (c.replies && c.replies.length > 0) {
                 repliesHtml = '<div class="reply-container">';
                 c.replies.forEach((rep, rIndex) => {
                     const repLikedUsers = rep.likedUsers || {};
                     const isRepLiked = repLikedUsers[mySessionId] === true;
+                    const repHeartIconHtml = isRepLiked 
+                        ? '<i class="fa-solid fa-heart"></i>' 
+                        : '<i class="fa-regular fa-heart"></i>';
+
                     repliesHtml += `
                         <div class="reply-item">
                             <div><b>${rep.name}:</b> <span style="color:#d87a93; font-weight:600;">@${rep.replyTo || c.name}</span> ${rep.text}</div>
-                            <div style="display:flex; gap:12px; font-size:0.7rem; color:#666; margin-top:2px;">
-                                <span class="action-like ${isRepLiked ? 'liked' : ''}" onclick="likeReply('${c.firebaseId}', ${rIndex})">❤️ ${rep.likes || 0}</span>
+                            <div style="display:flex; gap:12px; font-size:0.74rem; color:#555e68; margin-top:2px;">
+                                <span class="action-like ${isRepLiked ? 'liked' : ''}" onclick="likeReply('${c.firebaseId}', ${rIndex})">${repHeartIconHtml} ${rep.likes || 0}</span>
                                 <span class="action-reply" onclick="toggleReplyBox('${c.firebaseId}', ${rIndex})">Reply</span>
                             </div>
                             <div class="reply-input-inline" id="reply-inline-${c.firebaseId}-${rIndex}" style="display:none; flex-direction:column; gap:4px; margin-top:4px;">
@@ -1231,7 +1264,7 @@
                 </div>
                 <div class="comment-body">${c.text}</div>
                 <div class="comment-footer-actions">
-                    <span class="action-like ${isLiked ? 'liked' : ''}" onclick="likeComment('${c.firebaseId}')">❤️ ${c.likes || 0}</span>
+                    <span class="action-like ${isLiked ? 'liked' : ''}" onclick="likeComment('${c.firebaseId}')">${heartIconHtml} ${c.likes || 0}</span>
                     <span class="action-reply" onclick="toggleRootReplyBox('${c.firebaseId}')">Reply</span>
                 </div>
                 <div class="reply-input-inline" id="reply-root-${c.firebaseId}" style="display:none; flex-direction:column; gap:4px; margin-top:6px;">
