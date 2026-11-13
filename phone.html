@@ -153,7 +153,7 @@
             justify-content: center;
             gap: 8px;
         }
-        /* Tối ưu hóa hiển thị chữ ㅋㅋㅋㅋㅋㅋ: to hơn 2 mức, thu hẹp khoảng cách chữ nhưng giữ nguyên chiều cao nút */
+        /* Yêu cầu: Tăng cỡ chữ lên 2 mức, thu hẹp khoảng cách chữ (0px) nhưng giữ nguyên chiều cao nút bấm */
         .korean-laugh-font {
             font-family: 'YanoljaYacheR', 'Black Han Sans', sans-serif !important;
             font-size: 1.45rem !important;
@@ -617,7 +617,8 @@
     <div id="intro-screen" class="screen active">
         <h1 class="title-exact-match">IS SEONGHYEON A CAT?</h1>
         <div class="video-box-intro">
-            <video id="intro-video" src="intro-video-phone.mp4" autoplay loop muted playsinline controls></video>
+            <!-- Đã bổ sung đầy đủ autoplay, loop, playsinline để không bị đơ trên mobile -->
+            <video id="intro-video" src="intro-video-phone.mp4" autoplay loop muted playsinline></video>
         </div>
         <div class="btn-group">
             <button class="custom-btn" onclick="replayIntro()">REPLAY INTRO</button>
@@ -679,12 +680,11 @@
     <!-- 5. RESULT MEDIA & COMMENT SCREEN (YES/NO) -->
     <div id="result-media-screen" class="screen" style="justify-content: center; gap: 15px;">
         <div class="video-box" id="result-video-box" style="width: 100%;">
-            <video id="result-video-player" controls autoplay loop playsinline></video>
+            <video id="result-video-player" autoplay loop playsinline></video>
         </div>
         <!-- Khung bình luận ban đầu ẩn -->
         <div class="comment-section-box" id="comment-box-elem" style="display: none; width: 100%;">
             <h3 class="title-exact-match" style="font-size: 0.95rem;">LEAVE YOUR COMMENTS</h3>
-            <!-- Khung nhập tên luôn trống, không lưu lịch sử hay gợi ý -->
             <input type="text" id="user-name-input" class="name-input font-vietnamese" placeholder="Your name..." autocomplete="off">
             <div class="comment-row-action">
                 <input type="text" id="user-comment-input" class="comment-input font-vietnamese" placeholder="Write a comment..." autocomplete="off">
@@ -712,55 +712,39 @@
             <button class="admin-tab-btn" onclick="switchAdminTab(6)">Comments</button>
         </div>
         <div class="admin-section active">
-            <div style="background:#23182d; padding:10px; border-radius:12px;">
-                <p style="font-size:0.8rem; margin-bottom:5px;">1. Intro Video</p>
-                <input type="file" accept="video/*" style="font-size:0.75rem;">
-            </div>
             <button class="custom-btn primary" onclick="goToScreen('intro-screen')">Test Run Intro</button>
             <button class="custom-btn primary" onclick="goToScreen('select-screen')">Test Run Stage Select</button>
         </div>
         <div class="admin-section">
-            <p style="font-size:0.8rem;">Stage 1 BGM & Card Configuration</p>
             <button class="custom-btn primary" onclick="startStage(1)">Test Run Stage 1</button>
         </div>
         <div class="admin-section">
-            <p style="font-size:0.8rem;">Stage 2 BGM & Card Configuration</p>
             <button class="custom-btn primary" onclick="startStage(2)">Test Run Stage 2</button>
         </div>
         <div class="admin-section">
-            <p style="font-size:0.8rem;">Stage 3 BGM & Card Configuration</p>
             <button class="custom-btn primary" onclick="startStage(3)">Test Run Stage 3</button>
         </div>
         <div class="admin-section">
-            <p style="font-size:0.8rem;">Stage Bonus BGM & Card Configuration</p>
             <button class="custom-btn primary" onclick="startStage(4)">Test Run Stage Bonus</button>
         </div>
         <div class="admin-section">
-            <p style="font-size:0.8rem;">Test nhanh Video Kết Quả:</p>
             <div style="display:flex; gap:10px;">
                 <button class="custom-btn primary" onclick="showResultScreen('yes')">Test YES Slide</button>
                 <button class="custom-btn primary" onclick="showResultScreen('no')">Test NO Slide</button>
             </div>
         </div>
         <div class="admin-section">
-            <p style="font-size:0.8rem;">Quản lý và Xóa bình luận của người chơi:</p>
             <div id="admin-comments-manage-list" style="display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto;"></div>
         </div>
     </div>
 </div>
 <script>
-    // ==========================================
-    // FIREBASE INITIALIZATION & DATABASE CONFIG
-    // ==========================================
     const firebaseConfig = {
         databaseURL: "https://seonghyeon-cat-game-default-rtdb.firebaseio.com/"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    
-    // Đồng bộ cơ sở dữ liệu chung giữa PC và Phone
     const commentsRef = db.ref('comments');
-    // Tạo mã định danh phiên làm việc cho thiết bị (chỉ dùng để quản lý trạng thái Like cá nhân)
     let mySessionId = localStorage.getItem('seonghyeon_session_id');
     if (!mySessionId) {
         mySessionId = 'session_' + Math.random().toString(36).substr(2, 9);
@@ -776,10 +760,8 @@
             question: "ARE YOU STILL SKEPTICAL?",
             buttonText: "NOT SURE ➔",
             cards: [
-                { id: 1, img: "stage1-card-1-phone.jpg" },
-                { id: 2, img: "stage1-card-2-phone.jpg" },
-                { id: 3, img: "stage1-card-3-phone.jpg" },
-                { id: 4, img: "stage1-card-4-phone.jpg" }
+                { id: 1, img: "stage1-card-1-phone.jpg" }, { id: 2, img: "stage1-card-2-phone.jpg" },
+                { id: 3, img: "stage1-card-3-phone.jpg" }, { id: 4, img: "stage1-card-4-phone.jpg" }
             ],
             pairs: [[1, 4], [2, 3]]
         },
@@ -792,14 +774,10 @@
             question: "HAVE YOU STARTED TO BELIEVE?",
             buttonText: "A LITTLE ➔",
             cards: [
-                { id: 1, img: "stage2-card-1-phone.jpg" },
-                { id: 2, img: "stage2-card-2-phone.jpg" },
-                { id: 3, img: "stage2-card-3-phone.jpg" },
-                { id: 4, img: "stage2-card-4-phone.jpg" },
-                { id: 5, img: "stage2-card-5-phone.jpg" },
-                { id: 6, img: "stage2-card-6-phone.jpg" },
-                { id: 7, img: "stage2-card-7-phone.jpg" },
-                { id: 8, img: "stage2-card-8-phone.jpg" }
+                { id: 1, img: "stage2-card-1-phone.jpg" }, { id: 2, img: "stage2-card-2-phone.jpg" },
+                { id: 3, img: "stage2-card-3-phone.jpg" }, { id: 4, img: "stage2-card-4-phone.jpg" },
+                { id: 5, img: "stage2-card-5-phone.jpg" }, { id: 6, img: "stage2-card-6-phone.jpg" },
+                { id: 7, img: "stage2-card-7-phone.jpg" }, { id: 8, img: "stage2-card-8-phone.jpg" }
             ],
             pairs: [[1, 6], [2, 7], [3, 8], [4, 5]]
         },
@@ -812,18 +790,12 @@
             question: "ARE YOU FULLY CONVINCED NOW?",
             buttonText: "ABSOLUTELY ➔",
             cards: [
-                { id: 1, img: "stage3-card-1-phone.jpg" },
-                { id: 2, img: "stage3-card-2-phone.jpg" },
-                { id: 3, img: "stage3-card-3-phone.jpg" },
-                { id: 4, img: "stage3-card-4-phone.jpg" },
-                { id: 5, img: "stage3-card-5-phone.jpg" },
-                { id: 6, img: "stage3-card-6-phone.jpg" },
-                { id: 7, img: "stage3-card-7-phone.jpg" },
-                { id: 8, img: "stage3-card-8-phone.jpg" },
-                { id: 9, img: "stage3-card-9-phone.jpg" },
-                { id: 10, img: "stage3-card-10-phone.jpg" },
-                { id: 11, img: "stage3-card-11-phone.jpg" },
-                { id: 12, img: "stage3-card-12-phone.jpg" }
+                { id: 1, img: "stage3-card-1-phone.jpg" }, { id: 2, img: "stage3-card-2-phone.jpg" },
+                { id: 3, img: "stage3-card-3-phone.jpg" }, { id: 4, img: "stage3-card-4-phone.jpg" },
+                { id: 5, img: "stage3-card-5-phone.jpg" }, { id: 6, img: "stage3-card-6-phone.jpg" },
+                { id: 7, img: "stage3-card-7-phone.jpg" }, { id: 8, img: "stage3-card-8-phone.jpg" },
+                { id: 9, img: "stage3-card-9-phone.jpg" }, { id: 10, img: "stage3-card-10-phone.jpg" },
+                { id: 11, img: "stage3-card-11-phone.jpg" }, { id: 12, img: "stage3-card-12-phone.jpg" }
             ],
             pairs: [[1, 6], [2, 7], [3, 12], [4, 9], [5, 11], [8, 10]]
         },
@@ -864,14 +836,10 @@
     let actionClickCount = 0;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     
-    // Lắng nghe dữ liệu bình luận realtime từ Firebase
     commentsRef.on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
-            commentsData = Object.keys(data).map(key => ({
-                firebaseId: key,
-                ...data[key]
-            })).reverse();
+            commentsData = Object.keys(data).map(key => ({ firebaseId: key, ...data[key] })).reverse();
         } else {
             commentsData = [];
         }
@@ -881,9 +849,7 @@
 
     function playSoundEffect(type) {
         if (isAudioMuted) return;
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
+        if (audioCtx.state === 'suspended') audioCtx.resume();
         const osc = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
         osc.connect(gainNode);
@@ -936,7 +902,6 @@
         }
     }
 
-    // Tự động dừng và tắt tiếng toàn bộ media khi chuyển màn
     function stopAllMediaAssets() {
         if (currentBgmAudio) {
             currentBgmAudio.pause();
@@ -945,13 +910,12 @@
         const introVid = document.getElementById('intro-video');
         if (introVid) {
             introVid.pause();
-            introVid.muted = true;
+            introVid.currentTime = 0;
         }
         const resultVid = document.getElementById('result-video-player');
         if (resultVid) {
             resultVid.pause();
             resultVid.currentTime = 0;
-            resultVid.muted = true;
             resultVid.removeAttribute('src');
             resultVid.load();
         }
@@ -966,7 +930,6 @@
             const introVid = document.getElementById('intro-video');
             if (introVid) {
                 introVid.currentTime = 0;
-                introVid.muted = true;
                 introVid.play().catch(e => {});
             }
         }
@@ -975,7 +938,6 @@
     function replayIntro() {
         const vid = document.getElementById('intro-video');
         vid.currentTime = 0;
-        vid.muted = false;
         vid.play();
     }
 
@@ -1008,12 +970,9 @@
             if (video) {
                 video.pause();
                 video.currentTime = 0;
-                video.muted = true;
                 video.style.display = 'none';
             }
-            if (img) {
-                img.style.display = 'block';
-            }
+            if (img) img.style.display = 'block';
         });
         activeStageVideoId = null;
     }
@@ -1027,9 +986,7 @@
     function toggleStageAudio() {
         isAudioMuted = !isAudioMuted;
         const btn = document.getElementById('audio-toggle-btn');
-        if (currentBgmAudio) {
-            currentBgmAudio.muted = isAudioMuted;
-        }
+        if (currentBgmAudio) currentBgmAudio.muted = isAudioMuted;
         btn.innerText = isAudioMuted ? "🔇" : "🔊";
     }
 
@@ -1065,12 +1022,8 @@
             cardElem.dataset.id = card.id;
             cardElem.innerHTML = `
                 <div class="card-inner">
-                    <div class="card-front">
-                        <img src="${card.img}" alt="card">
-                    </div>
-                    <div class="card-back">
-                        <img src="card-back-1-2-3-bonus-phone.jpg" alt="back">
-                    </div>
+                    <div class="card-front"><img src="${card.img}" alt="card"></div>
+                    <div class="card-back"><img src="card-back-1-2-3-bonus-phone.jpg" alt="back"></div>
                 </div>
             `;
             cardElem.addEventListener('click', () => onCardClick(cardElem));
@@ -1155,13 +1108,9 @@
     }
 
     function nextStageOrResult() {
-        if (currentStageId === 1) {
-            startStage(2);
-        } else if (currentStageId === 2) {
-            startStage(3);
-        } else if (currentStageId === 3) {
-            startStage(4);
-        }
+        if (currentStageId === 1) startStage(2);
+        else if (currentStageId === 2) startStage(3);
+        else if (currentStageId === 3) startStage(4);
     }
 
     function updateBottomButtonLabel() {
@@ -1182,7 +1131,6 @@
         
         const vidPlayer = document.getElementById('result-video-player');
         vidPlayer.src = choice === 'yes' ? 'yes-button-video-phone.mp4' : 'no-button-video-phone.mp4';
-        vidPlayer.muted = false;
         vidPlayer.play().catch(e => {});
         
         document.getElementById('comment-box-elem').style.display = 'none';
@@ -1210,7 +1158,6 @@
         }
     }
 
-    // Đẩy bình luận mới lên Firebase Realtime Database
     function postComment() {
         const nameInput = document.getElementById('user-name-input');
         const commentInput = document.getElementById('user-comment-input');
@@ -1229,7 +1176,6 @@
         commentInput.value = '';
     }
 
-    // Render danh sách bình luận với icon tim rỗng khi chưa like và tim đỏ khi đã like
     function renderComments() {
         const listContainer = document.getElementById('comments-list-container');
         if (!listContainer) return;
@@ -1240,9 +1186,7 @@
             
             const likedUsers = c.likedUsers || {};
             const isLiked = likedUsers[mySessionId] === true;
-            const heartIconHtml = isLiked 
-                ? '<i class="fa-solid fa-heart"></i>' 
-                : '<i class="fa-regular fa-heart"></i>';
+            const heartIconHtml = isLiked ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
 
             let repliesHtml = '';
             if (c.replies && c.replies.length > 0) {
@@ -1250,9 +1194,7 @@
                 c.replies.forEach((rep, rIndex) => {
                     const repLikedUsers = rep.likedUsers || {};
                     const isRepLiked = repLikedUsers[mySessionId] === true;
-                    const repHeartIconHtml = isRepLiked 
-                        ? '<i class="fa-solid fa-heart"></i>' 
-                        : '<i class="fa-regular fa-heart"></i>';
+                    const repHeartIconHtml = isRepLiked ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
 
                     repliesHtml += `
                         <div class="reply-item">
@@ -1337,9 +1279,7 @@
     function toggleRootReplyBox(firebaseId) {
         playSoundEffect('click');
         const box = document.getElementById(`reply-root-${firebaseId}`);
-        if(box) {
-            box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
-        }
+        if(box) box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
     }
 
     function postRootReply(firebaseId, targetName) {
@@ -1362,9 +1302,7 @@
     function toggleReplyBox(firebaseId, rIndex) {
         playSoundEffect('click');
         const box = document.getElementById(`reply-inline-${firebaseId}-${rIndex}`);
-        if(box) {
-            box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
-        }
+        if(box) box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
     }
 
     function postInlineReply(firebaseId, rIndex, targetName) {
@@ -1414,4 +1352,42 @@
         commentsData.forEach(c => {
             const row = document.createElement('div');
             row.style.cssText = "display:flex; justify-content:space-between; align-items:center; background:#3b1a26; padding:6px 10px; border-radius:6px; font-size:0.75rem;";
-            row
+            row.innerHTML = `
+                <span><b>${c.name}:</b> ${c.text}</span>
+                <button onclick="adminDeleteComment('${c.firebaseId}')" style="background:#e74c3c; color:#fff; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Xóa</button>
+            `;
+            adminList.appendChild(row);
+        });
+    }
+
+    function adminDeleteComment(firebaseId) {
+        if(confirm("Admin: Bạn có chắc chắn muốn xóa bình luận này không?")) {
+            commentsRef.child(firebaseId).remove();
+        }
+    }
+
+    window.addEventListener('keydown', (e) => {
+        if(e.shiftKey && e.key.toLowerCase() === 'u') {
+            document.getElementById('admin-modal').style.display = 'flex';
+        }
+    });
+
+    function closeAdmin() {
+        document.getElementById('admin-modal').style.display = 'none';
+    }
+
+    function switchAdminTab(index) {
+        const tabs = document.querySelectorAll('.admin-tab-btn');
+        const sections = document.querySelectorAll('.admin-section');
+        tabs.forEach((t, i) => {
+            t.classList.toggle('active', i === index);
+            sections[i].classList.toggle('active', i === index);
+        });
+    }
+
+    window.onload = function() {
+        goToScreen('intro-screen');
+    };
+</script>
+</body>
+</html>
