@@ -168,32 +168,34 @@
             color: #fff;
         }
         
-        /* SELECT STAGE SCREEN MỚI (CHỈ HIỆN 1 LEVEL TRONG KHUNG VÀ ẨN THANH CUỘN) */
+        /* SELECT STAGE SCREEN CHUẨN TỶ LỆ MẪU */
         #select-screen {
             padding: 20px 15px;
-            overflow: hidden !important; /* Ẩn toàn bộ thanh cuộn dọc */
+            overflow: hidden !important;
             justify-content: flex-start;
             align-items: center;
         }
         .select-stage-title-container {
+            margin-top: 15px;
             margin-bottom: 25px;
             flex-shrink: 0;
         }
         .select-stage-viewport {
             width: 100%;
-            max-width: 340px;
+            max-width: 370px;
             flex-grow: 1;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
+            margin-bottom: 30px;
         }
         .stage-card-item {
             width: 100%;
             background: #fff;
-            border-radius: 20px;
-            padding: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+            border-radius: 22px;
+            padding: 16px;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.18);
             text-align: center;
             position: absolute;
             opacity: 0;
@@ -226,8 +228,8 @@
         .stage-card-item h3 {
             font-family: 'Titan One', cursive;
             color: var(--dark-burgundy);
-            margin-top: 12px;
-            font-size: 1.2rem;
+            margin-top: 14px;
+            font-size: 1.35rem;
             cursor: pointer;
         }
 
@@ -639,10 +641,10 @@
         </div>
     </div>
 
-    <!-- 2. SELECT STAGE SCREEN (GIAO DIỆN 1 LEVEL ĐƠN LẺ VỚI HIỆU ỨNG FADE MƯỢT MÀ) -->
+    <!-- 2. SELECT STAGE SCREEN -->
     <div id="select-screen" class="screen" onclick="handleScreenClick(event)">
         <div class="select-stage-title-container">
-            <h2 class="title-exact-match" style="font-size: 1.8rem;">SELECT STAGE</h2>
+            <h2 class="title-exact-match" style="font-size: 2.1rem; letter-spacing: 0.5px;">SELECT STAGE</h2>
         </div>
         <div class="select-stage-viewport" id="select-viewport">
             <!-- EASY (Stage 1) -->
@@ -857,7 +859,6 @@
     let actionClickCount = 0;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     
-    // Logic quản lý chuyển stage lướt dọc (Mặc định bắt đầu ở Level 2: MEDIUM)
     let currentSelectLevel = 2; 
     let isTransitioning = false;
 
@@ -958,7 +959,6 @@
                 introVid.play().catch(e => {});
             }
         } else if (screenId === 'select-screen') {
-            // Mặc định luôn bật ở level MEDIUM (2) khi chuyển vào màn hình Select Stage
             currentSelectLevel = 2;
             updateSelectStageDisplay();
         }
@@ -974,7 +974,6 @@
         goToScreen('select-screen');
     }
 
-    // Cập nhật hiển thị level kèm hiệu ứng mờ dần (Fade) chỉ trong khung chứa ảnh/video
     function updateSelectStageDisplay() {
         [1, 2, 3].forEach(lvl => {
             const cardElem = document.getElementById(`stage-card-${lvl}`);
@@ -982,7 +981,6 @@
                 cardElem.classList.add('active-level');
             } else {
                 cardElem.classList.remove('active-level');
-                // Tắt video ẩn nếu lướt qua level khác
                 const img = document.getElementById(`stage-img-${lvl}`);
                 const video = document.getElementById(`stage-vid-${lvl}`);
                 if (video) {
@@ -995,7 +993,6 @@
         });
     }
 
-    // Xử lý sự kiện lướt dọc (Wheel trên PC & Touch trên Mobile) ở màn hình Select Stage
     let touchStartY = 0;
     const selectViewport = document.getElementById('select-viewport');
 
@@ -1008,15 +1005,13 @@
         let touchEndY = e.changedTouches[0].clientY;
         let diff = touchStartY - touchEndY;
         
-        if (Math.abs(diff) > 30) { // Ngưỡng vuốt tối thiểu
+        if (Math.abs(diff) > 30) {
             if (diff > 0) {
-                // Vuốt lên -> Tăng level (MEDIUM -> HARD)
                 if (currentSelectLevel < 3) {
                     currentSelectLevel++;
                     triggerLevelTransition();
                 }
             } else {
-                // Vuốt xuống -> Giảm level (MEDIUM -> EASY)
                 if (currentSelectLevel > 1) {
                     currentSelectLevel--;
                     triggerLevelTransition();
@@ -1029,13 +1024,11 @@
         e.preventDefault();
         if (isTransitioning) return;
         if (e.deltaY > 20) {
-            // Cuộn xuống -> Tăng level
             if (currentSelectLevel < 3) {
                 currentSelectLevel++;
                 triggerLevelTransition();
             }
         } else if (e.deltaY < -20) {
-            // Cuộn lên -> Giảm level
             if (currentSelectLevel > 1) {
                 currentSelectLevel--;
                 triggerLevelTransition();
@@ -1048,7 +1041,7 @@
         updateSelectStageDisplay();
         setTimeout(() => {
             isTransitioning = false;
-        }, 400); // Khớp với thời gian transition CSS
+        }, 400);
     }
 
     function toggleStageVideo(stageId, event) {
