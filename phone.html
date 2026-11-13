@@ -775,6 +775,7 @@
             levelName: "EASY",
             previewTime: 3,
             audio: "stage1-audio-phone.mp3",
+            selectSound: "stage1-easy-sound-phone.mp3",
             victoryImg: "victory1-img-phone.png",
             question: "ARE YOU STILL SKEPTICAL?",
             buttonText: "NOT SURE ➔",
@@ -789,6 +790,7 @@
             levelName: "MEDIUM",
             previewTime: 3,
             audio: "stage2-audio-phone.mp3",
+            selectSound: "stage2-medium-sound-phone.mp3",
             victoryImg: "victory2-img-phone.png",
             question: "HAVE YOU STARTED TO BELIEVE?",
             buttonText: "A LITTLE ➔",
@@ -805,6 +807,7 @@
             levelName: "HARD",
             previewTime: 3,
             audio: "stage3-audio-phone.mp3",
+            selectSound: "stage3-hard-sound-phone.mp3",
             victoryImg: "victory3-img-phone.png",
             question: "ARE YOU FULLY CONVINCED NOW?",
             buttonText: "ABSOLUTELY ➔",
@@ -848,6 +851,7 @@
     let firstSelectedCard = null;
     let canInteract = false;
     let currentBgmAudio = null;
+    let currentSelectSoundAudio = null; // Quản lý sound effect khi chọn stage
     let isAudioMuted = false;
     let currentVoteChoice = 'yes';
     let commentsData = [];
@@ -929,6 +933,10 @@
             currentBgmAudio.pause();
             currentBgmAudio.currentTime = 0;
         }
+        if (currentSelectSoundAudio) {
+            currentSelectSoundAudio.pause();
+            currentSelectSoundAudio.currentTime = 0;
+        }
         const introVid = document.getElementById('intro-video');
         if (introVid) {
             introVid.pause();
@@ -944,6 +952,20 @@
         stopAllStageVideos();
     }
 
+    function playSelectStageSound(stageId) {
+        if (currentSelectSoundAudio) {
+            currentSelectSoundAudio.pause();
+            currentSelectSoundAudio.currentTime = 0;
+        }
+        const soundFile = stagesData[stageId].selectSound;
+        if (soundFile) {
+            currentSelectSoundAudio = new Audio(soundFile);
+            currentSelectSoundAudio.volume = 0.9;
+            currentSelectSoundAudio.muted = isAudioMuted;
+            currentSelectSoundAudio.play().catch(e => {});
+        }
+    }
+
     function goToScreen(screenId) {
         stopAllMediaAssets();
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -957,6 +979,7 @@
         } else if (screenId === 'select-screen') {
             currentSelectLevel = 2;
             updateSelectStageDisplay();
+            playSelectStageSound(currentSelectLevel);
         }
     }
 
@@ -1035,6 +1058,7 @@
     function triggerLevelTransition() {
         isTransitioning = true;
         updateSelectStageDisplay();
+        playSelectStageSound(currentSelectLevel); // Phát sound effect tương ứng khi level mới hiện lên
         setTimeout(() => {
             isTransitioning = false;
         }, 400);
@@ -1082,10 +1106,15 @@
         isAudioMuted = !isAudioMuted;
         const btn = document.getElementById('audio-toggle-btn');
         if (currentBgmAudio) currentBgmAudio.muted = isAudioMuted;
+        if (currentSelectSoundAudio) currentSelectSoundAudio.muted = isAudioMuted;
         btn.innerText = isAudioMuted ? "🔇" : "🔊";
     }
 
     function startStage(stageId) {
+        if (currentSelectSoundAudio) {
+            currentSelectSoundAudio.pause();
+            currentSelectSoundAudio.currentTime = 0;
+        }
         currentStageId = stageId;
         const stage = stagesData[stageId];
         goToScreen('gameplay-screen');
@@ -1278,211 +1307,3 @@
         commentsData.forEach(c => {
             const item = document.createElement('div');
             item.className = 'comment-item';
-            
-            const likedUsers = c.likedUsers || {};
-            const isLiked = likedUsers[mySessionId] === true;
-            const heartIconHtml = isLiked ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
-
-            let repliesHtml = '';
-            if (c.replies && c.replies.length > 0) {
-                repliesHtml = '<div class="reply-container">';
-                c.replies.forEach((rep, rIndex) => {
-                    const repLikedUsers = rep.likedUsers || {};
-                    const isRepLiked = repLikedUsers[mySessionId] === true;
-                    const repHeartIconHtml = isRepLiked ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
-
-                    repliesHtml += `
-                        <div class="reply-item">
-                            <div><b>${rep.name}:</b> <span style="color:#d87a93; font-weight:600;">@${rep.replyTo || c.name}</span> ${rep.text}</div>
-                            <div style="display:flex; gap:12px; font-size:0.74rem; color:#555e68; margin-top:2px;">
-                                <span class="action-like ${isRepLiked ? 'liked' : ''}" onclick="likeReply('${c.firebaseId}', ${rIndex})">${repHeartIconHtml} ${rep.likes || 0}</span>
-                                <span class="action-reply" onclick="toggleReplyBox('${c.firebaseId}', ${rIndex})">Reply</span>
-                            </div>
-                            <div class="reply-input-inline" id="reply-inline-${c.firebaseId}-${rIndex}" style="display:none; flex-direction:column; gap:4px; margin-top:4px;">
-                                <input type="text" id="inline-name-${c.firebaseId}-${rIndex}" class="name-input" placeholder="Your name..." autocomplete="off" style="font-size:0.75rem; padding:4px 8px;">
-                                <div style="display:flex; gap:6px;">
-                                    <input type="text" id="inline-text-${c.firebaseId}-${rIndex}" class="comment-input" placeholder="Reply to @${rep.name}..." autocomplete="off" style="font-size:0.75rem; padding:4px 8px;">
-                                    <button class="send-btn" onclick="postInlineReply('${c.firebaseId}', ${rIndex}, '${rep.name}')" style="padding:4px 8px; font-size:0.7rem;">Send</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                repliesHtml += '</div>';
-            }
-            item.innerHTML = `
-                <div class="comment-header">
-                    <span>${c.name}</span>
-                    <span class="voted-badge ${c.vote === 'no' ? 'no' : ''}">voted ${c.vote.toUpperCase()}</span>
-                    <span class="comment-time" style="font-weight:normal; color:#777; font-size:0.7rem;">${c.time || ''}</span>
-                    <button class="comment-menu-btn" onclick="toggleCommentMenu('${c.firebaseId}')">⋮</button>
-                    <div class="comment-dropdown" id="dropdown-${c.firebaseId}">
-                        <button onclick="editComment('${c.firebaseId}')">Edit</button>
-                    </div>
-                </div>
-                <div class="comment-body">${c.text}</div>
-                <div class="comment-footer-actions">
-                    <span class="action-like ${isLiked ? 'liked' : ''}" onclick="likeComment('${c.firebaseId}')">${heartIconHtml} ${c.likes || 0}</span>
-                    <span class="action-reply" onclick="toggleRootReplyBox('${c.firebaseId}')">Reply</span>
-                </div>
-                <div class="reply-input-inline" id="reply-root-${c.firebaseId}" style="display:none; flex-direction:column; gap:4px; margin-top:6px;">
-                    <input type="text" id="root-name-${c.firebaseId}" class="name-input" placeholder="Your name..." autocomplete="off" style="font-size:0.75rem; padding:5px 8px;">
-                    <div style="display:flex; gap:6px;">
-                        <input type="text" id="root-text-${c.firebaseId}" class="comment-input" placeholder="Reply to @${c.name}..." autocomplete="off" style="font-size:0.75rem; padding:5px 8px;">
-                        <button class="send-btn" onclick="postRootReply('${c.firebaseId}', '${c.name}')" style="padding:5px 10px; font-size:0.7rem;">Send</button>
-                    </div>
-                </div>
-                ${repliesHtml}
-            `;
-            listContainer.appendChild(item);
-        });
-    }
-
-    function toggleCommentMenu(firebaseId) {
-        const dropdown = document.getElementById(`dropdown-${firebaseId}`);
-        document.querySelectorAll('.comment-dropdown').forEach(d => { if(d !== dropdown) d.style.display = 'none'; });
-        dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
-    }
-
-    function editComment(firebaseId) {
-        const comment = commentsData.find(c => c.firebaseId === firebaseId);
-        const newText = prompt("Edit your comment:", comment.text);
-        if(newText !== null && newText.trim() !== '') {
-            commentsRef.child(firebaseId).update({ text: newText.trim() });
-        }
-    }
-
-    function likeComment(firebaseId) {
-        playSoundEffect('click');
-        const commentRef = commentsRef.child(firebaseId);
-        commentRef.once('value', snapshot => {
-            const val = snapshot.val();
-            if(!val) return;
-            let likedUsers = val.likedUsers || {};
-            let likes = val.likes || 0;
-            if (likedUsers[mySessionId]) {
-                delete likedUsers[mySessionId];
-                likes = Math.max(0, likes - 1);
-            } else {
-                likedUsers[mySessionId] = true;
-                likes += 1;
-            }
-            commentRef.update({ likes, likedUsers });
-        });
-    }
-
-    function toggleRootReplyBox(firebaseId) {
-        playSoundEffect('click');
-        const box = document.getElementById(`reply-root-${firebaseId}`);
-        if(box) box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
-    }
-
-    function postRootReply(firebaseId, targetName) {
-        const nameInput = document.getElementById(`root-name-${firebaseId}`);
-        const textInput = document.getElementById(`root-text-${firebaseId}`);
-        if(!nameInput.value.trim() || !textInput.value.trim()) return;
-        const comment = commentsData.find(c => c.firebaseId === firebaseId);
-        let replies = comment.replies ? [...comment.replies] : [];
-        replies.push({
-            name: nameInput.value.trim(),
-            replyTo: targetName,
-            text: textInput.value.trim(),
-            likes: 0,
-            likedUsers: {}
-        });
-        commentsRef.child(firebaseId).update({ replies: replies });
-        playSoundEffect('click');
-    }
-
-    function toggleReplyBox(firebaseId, rIndex) {
-        playSoundEffect('click');
-        const box = document.getElementById(`reply-inline-${firebaseId}-${rIndex}`);
-        if(box) box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
-    }
-
-    function postInlineReply(firebaseId, rIndex, targetName) {
-        const nameInput = document.getElementById(`inline-name-${firebaseId}-${rIndex}`);
-        const textInput = document.getElementById(`inline-text-${firebaseId}-${rIndex}`);
-        if(!nameInput.value.trim() || !textInput.value.trim()) return;
-        const comment = commentsData.find(c => c.firebaseId === firebaseId);
-        let replies = comment.replies ? [...comment.replies] : [];
-        replies.push({
-            name: nameInput.value.trim(),
-            replyTo: targetName,
-            text: textInput.value.trim(),
-            likes: 0,
-            likedUsers: {}
-        });
-        commentsRef.child(firebaseId).update({ replies: replies });
-        playSoundEffect('click');
-    }
-
-    function likeReply(firebaseId, replyIndex) {
-        playSoundEffect('click');
-        const commentRef = commentsRef.child(firebaseId);
-        commentRef.once('value', snapshot => {
-            const val = snapshot.val();
-            if(!val || !val.replies || !val.replies[replyIndex]) return;
-            let replies = [...val.replies];
-            let rep = replies[replyIndex];
-            let likedUsers = rep.likedUsers || {};
-            let likes = rep.likes || 0;
-            if (likedUsers[mySessionId]) {
-                delete likedUsers[mySessionId];
-                likes = Math.max(0, likes - 1);
-            } else {
-                likedUsers[mySessionId] = true;
-                likes += 1;
-            }
-            rep.likes = likes;
-            rep.likedUsers = likedUsers;
-            commentRef.update({ replies: replies });
-        });
-    }
-
-    function renderAdminCommentsList() {
-        const adminList = document.getElementById('admin-comments-manage-list');
-        if (!adminList) return;
-        adminList.innerHTML = '';
-        commentsData.forEach(c => {
-            const row = document.createElement('div');
-            row.style.cssText = "display:flex; justify-content:space-between; align-items:center; background:#3b1a26; padding:6px 10px; border-radius:6px; font-size:0.75rem;";
-            row.innerHTML = `
-                <span><b>${c.name}:</b> ${c.text}</span>
-                <button onclick="adminDeleteComment('${c.firebaseId}')" style="background:#e74c3c; color:#fff; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Xóa</button>
-            `;
-            adminList.appendChild(row);
-        });
-    }
-
-    function adminDeleteComment(firebaseId) {
-        if(confirm("Admin: Bạn có chắc chắn muốn xóa bình luận này không?")) {
-            commentsRef.child(firebaseId).remove();
-        }
-    }
-
-    window.addEventListener('keydown', (e) => {
-        if(e.shiftKey && e.key.toLowerCase() === 'u') {
-            document.getElementById('admin-modal').style.display = 'flex';
-        }
-    });
-
-    function closeAdmin() {
-        document.getElementById('admin-modal').style.display = 'none';
-    }
-
-    function switchAdminTab(index) {
-        const tabs = document.querySelectorAll('.admin-tab-btn');
-        const sections = document.querySelectorAll('.admin-section');
-        tabs.forEach((t, i) => {
-            t.classList.toggle('active', i === index);
-            sections[i].classList.toggle('active', i === index);
-        });
-    }
-
-    window.onload = function() {
-        goToScreen('intro-screen');
-    };
-</script>
-</body>
-</html>
