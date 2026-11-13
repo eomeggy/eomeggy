@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IS SEONGHYEON A CAT?</title>
-    <!-- Google Fonts: Titan One & Be Vietnam Pro -->
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Titan+One&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Titan One (có hỗ trợ subset Korean) & Be Vietnam Pro -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Titan+One&display=swap&subset=korean" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Firebase SDK (Compat Version) -->
@@ -129,8 +129,8 @@
             width: 90%;
             justify-content: center;
         }
-        .custom-btn {
-            font-family: 'Titan One', cursive;
+        .custom-btn, #bottom-action-btn {
+            font-family: 'Titan One', cursive !important;
             background-color: #fff;
             color: var(--dark-burgundy);
             border: none;
@@ -236,15 +236,22 @@
             font-weight: 700;
             color: var(--dark-burgundy);
         }
-        .preview-banner {
+        .preview-banner, .preview-banner span {
             background: #fff;
             padding: 6px 16px;
             border-radius: 15px;
-            font-family: 'Titan One', cursive;
+            font-family: 'Titan One', cursive !important;
             color: var(--dark-burgundy);
             margin-bottom: 10px;
             font-size: 0.85rem;
             box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        .preview-banner span {
+            padding: 0;
+            background: transparent;
+            box-shadow: none;
+            border-radius: 0;
+            margin: 0;
         }
         /* GRID CARDS LAYOUT */
         .cards-grid {
@@ -659,7 +666,7 @@
             </div>
             <div class="comments-list font-vietnamese" id="comments-list-container"></div>
         </div>
-        <button class="custom-btn primary" id="bottom-action-btn" onclick="handleBottomAction()" style="width: 100%; flex-shrink: 0;">EM CHIP CAM ON</button>
+        <button class="custom-btn primary" id="bottom-action-btn" onclick="handleBottomAction()" style="width: 100%; flex-shrink: 0; font-family: 'Titan One', cursive !important;">ㅋㅋㅋㅋㅋㅋ</button>
     </div>
 </div>
 <!-- ADMIN CONFIGURATION MODAL -->
@@ -900,20 +907,54 @@
             });
         }
     }
+    // Tự động dừng và tắt tiếng toàn bộ media (audio + video) khi chuyển sang slide khác
+    function stopAllMediaAssets() {
+        // 1. Dừng nhạc nền (BGM) màn chơi
+        if (currentBgmAudio) {
+            currentBgmAudio.pause();
+            currentBgmAudio.currentTime = 0;
+        }
+        // 2. Dừng video Intro
+        const introVid = document.getElementById('intro-video');
+        if (introVid) {
+            introVid.pause();
+            introVid.muted = true;
+        }
+        // 3. Dừng video Kết quả (YES / NO)
+        const resultVid = document.getElementById('result-video-player');
+        if (resultVid) {
+            resultVid.pause();
+            resultVid.currentTime = 0;
+            resultVid.muted = true;
+            resultVid.removeAttribute('src');
+            resultVid.load();
+        }
+        // 4. Dừng toàn bộ video preview trong Select Stage
+        stopAllStageVideos();
+    }
     function goToScreen(screenId) {
+        // Ngắt toàn bộ âm thanh và video của slide cũ trước khi kích hoạt slide mới
+        stopAllMediaAssets();
+        
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
-        if(screenId !== 'gameplay-screen' && currentBgmAudio) {
-            currentBgmAudio.pause();
+        // Nếu quay lại màn Intro, tự động phát lại video Intro (chế độ muted để tránh tự phát âm thanh ngoài ý muốn)
+        if (screenId === 'intro-screen') {
+            const introVid = document.getElementById('intro-video');
+            if (introVid) {
+                introVid.currentTime = 0;
+                introVid.muted = true;
+                introVid.play().catch(e => {});
+            }
         }
     }
     function replayIntro() {
         const vid = document.getElementById('intro-video');
         vid.currentTime = 0;
+        vid.muted = false;
         vid.play();
     }
     function goToSelectStage() {
-        stopAllStageVideos();
         goToScreen('select-screen');
     }
     function toggleStageVideo(stageId, event) {
@@ -940,6 +981,7 @@
             if (video) {
                 video.pause();
                 video.currentTime = 0;
+                video.muted = true;
                 video.style.display = 'none';
             }
             if (img) {
@@ -962,7 +1004,6 @@
         btn.innerText = isAudioMuted ? "🔇" : "🔊";
     }
     function startStage(stageId) {
-        stopAllStageVideos();
         currentStageId = stageId;
         const stage = stagesData[stageId];
         goToScreen('gameplay-screen');
@@ -971,12 +1012,13 @@
         matchesCount = 0;
         secondsElapsed = 0;
         canInteract = false;
-        if(currentBgmAudio) currentBgmAudio.pause();
+        
         currentBgmAudio = new Audio(stage.audio);
         currentBgmAudio.volume = 0.8;
         currentBgmAudio.loop = true;
         currentBgmAudio.muted = isAudioMuted;
         currentBgmAudio.play().catch(e => {});
+        
         if(gameTimer) clearInterval(gameTimer);
         gameTimer = setInterval(() => {
             secondsElapsed++;
@@ -1092,8 +1134,10 @@
         currentVoteChoice = choice;
         actionClickCount = 0;
         goToScreen('result-media-screen');
+        
         const vidPlayer = document.getElementById('result-video-player');
         vidPlayer.src = choice === 'yes' ? 'yes-button-video-phone.mp4' : 'no-button-video-phone.mp4';
+        vidPlayer.muted = false;
         vidPlayer.play().catch(e => {});
         
         document.getElementById('comment-box-elem').style.display = 'none';
@@ -1102,7 +1146,7 @@
         
         const bottomBtn = document.getElementById('bottom-action-btn');
         bottomBtn.style.marginTop = '0px';
-        // Đổi tên nút tùy theo lựa chọn YES / NO
+        bottomBtn.style.fontFamily = "'Titan One', cursive";
         bottomBtn.innerText = choice === 'yes' ? 'ㅋㅋㅋㅋㅋㅋ' : 'aniyaaa~';
     }
     function handleBottomAction() {
@@ -1114,7 +1158,7 @@
             screenDiv.style.justifyContent = 'flex-start';
             commentBox.style.display = 'flex';
             bottomBtn.style.marginTop = 'auto';
-            // Khi bấm lần đầu để mở khung bình luận, đổi tên nút dưới khung bình luận theo lựa chọn YES / NO tương ứng
+            bottomBtn.style.fontFamily = "'Titan One', cursive";
             bottomBtn.innerText = (currentVoteChoice === 'yes') ? 'ㅋㅋㅋㅋㅋㅋ' : 'aniyaaa~';
         } else {
             actionClickCount = 0;
