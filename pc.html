@@ -2,7 +2,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
         const firebaseConfig = {
     apiKey: "AIzaSyCY640ZkYMIA9t8TAFwuznAPA-liPYBYrU",
     authDomain: "seonghyeon-cat-game.firebaseapp.com",
@@ -13,16 +12,13 @@
     appId: "1:126426060136:web:bf0d19b46871b6d9a5f2dd",
     measurementId: "G-2D9C0R6GL0"
 };
-
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-
         window.db = db;
         window.dbRef = ref;
         window.dbPush = push;
         window.dbSet = set;
         window.dbOnValue = onValue;
-
         if (typeof window.initFirebaseComments === 'function') {
             window.initFirebaseComments();
         }
@@ -89,7 +85,7 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-between p-2 sm:p-4 select-none bg-[#c96b92]">
-    <!-- ADMIN QUICK ACCESS BUTTON (ĐÃ ẨN MẶC ĐỊNH CHO NGƯỜI CHƠI) -->
+    <!-- ADMIN QUICK ACCESS BUTTON -->
     <div id="admin-floating-btn" class="fixed top-3 right-3 z-50 flex items-center gap-2 hidden">
         <button onclick="openUploadModal()" class="px-3.5 py-2 bg-[#5d223c] text-white font-extrabold text-xs sm:text-sm rounded-2xl shadow-xl hover:bg-[#461a2d] transition border-2 border-white/40 flex items-center gap-2">
             <i class="fa-solid fa-gear text-teal-300"></i> Admin Upload (⚙️)
@@ -226,14 +222,13 @@
             <!-- Video / Media Frame -->
             <div id="media-display-content" class="w-full flex items-center justify-center overflow-hidden rounded-2xl bg-black border-2 border-white shadow-xl transition-all duration-300"></div>
             
-            <!-- Interactive Comment Section Container (Hidden Initially) -->
+            <!-- Interactive Comment Section Container -->
             <div id="comment-section-box" class="w-full bg-white/95 rounded-2xl p-4 border-2 border-[#5d223c]/20 shadow-inner flex flex-col space-y-3 my-4 transition-all duration-300 hidden">
                 <h4 class="font-black text-sm text-[#5d223c] flex items-center gap-2 font-vietnamese">
                     <i class="fa-solid fa-comments"></i> LIVE YOUR COMMENTS
                 </h4>
                 
                 <div class="flex flex-col gap-2 font-vietnamese">
-                    <!-- Khung nhập tên luôn trống hoàn toàn, không gợi ý hoặc ghi nhớ sau F5 -->
                     <input type="text" id="comment-name" placeholder="Your name..." autocomplete="off" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-[#5d223c] font-bold focus:outline-none focus:ring-2 focus:ring-[#5d223c]">
                     <div class="flex gap-2">
                         <input type="text" id="comment-text" placeholder="Write a comment..." autocomplete="off" class="flex-1 px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-[#5d223c] focus:outline-none focus:ring-2 focus:ring-[#5d223c]">
@@ -296,29 +291,39 @@
                     <div id="admin-comments-manage-list" class="space-y-3"></div>
                 </div>
                 <div id="tab-sec-intro" class="space-y-5 hidden">
-                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
-                        <div class="space-y-2 flex-1">
-                            <span class="font-extrabold text-sm text-teal-300 block">1. Intro Video</span>
-                            <input type="file" accept="video/*" onchange="uploadIntroVideo(event)" class="text-xs text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 space-y-3">
+                        <span class="font-extrabold text-sm text-teal-300 block">1. Intro Video (Chọn bản để Test)</span>
+                        <div class="flex items-center justify-between gap-4">
+                            <input type="file" accept="video/*" onchange="uploadIntroVideo(event, 'pc')" class="text-xs text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                            <div class="flex gap-2">
+                                <button onclick="testRunSlide('intro', 1, 'pc')" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1.5">
+                                    <i class="fa-solid fa-desktop"></i> Run PC
+                                </button>
+                                <button onclick="testRunSlide('intro', 1, 'phone')" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1.5">
+                                    <i class="fa-solid fa-mobile-screen"></i> Run Phone
+                                </button>
+                            </div>
                         </div>
-                        <button onclick="testRunSlide('intro')" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
-                            <i class="fa-solid fa-play"></i> Test Run Intro
-                        </button>
                     </div>
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 space-y-4">
                         <div class="flex items-center justify-between border-b border-purple-900/40 pb-2">
                             <span class="font-extrabold text-sm text-teal-300 block">2. Select Stage Hover Media (Levels 1, 2, 3)</span>
-                            <button onclick="testRunSlide('stage-select')" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
-                                <i class="fa-solid fa-play"></i> Test Run Stage Select
-                            </button>
+                            <div class="flex gap-2">
+                                <button onclick="testRunSlide('stage-select', 1, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
+                                    <i class="fa-solid fa-desktop"></i> Run PC
+                                </button>
+                                <button onclick="testRunSlide('stage-select', 1, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
+                                    <i class="fa-solid fa-mobile-screen"></i> Run Phone
+                                </button>
+                            </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div class="p-3 bg-[#18111e] rounded-xl border border-purple-900/60 space-y-2">
                                 <span class="font-bold text-xs text-pink-300 block">EASY (Stage 1)</span>
-                                <div class="text-[11px] text-gray-400">Static Cover Image:
+                                <div class="text-[11px] text-gray-400">Static Cover Image (PC/Phone):
                                     <input type="file" accept="image/*" onchange="uploadLevelHoverMedia(event, 1, 'img')" class="w-full text-[10px] mt-1">
                                 </div>
-                                <div class="text-[11px] text-gray-400">Hover Video (with sound):
+                                <div class="text-[11px] text-gray-400">Hover Video:
                                     <input type="file" accept="video/*" onchange="uploadLevelHoverMedia(event, 1, 'vid')" class="w-full text-[10px] mt-1">
                                 </div>
                             </div>
@@ -327,7 +332,7 @@
                                 <div class="text-[11px] text-gray-400">Static Cover Image:
                                     <input type="file" accept="image/*" onchange="uploadLevelHoverMedia(event, 2, 'img')" class="w-full text-[10px] mt-1">
                                 </div>
-                                <div class="text-[11px] text-gray-400">Hover Video (with sound):
+                                <div class="text-[11px] text-gray-400">Hover Video:
                                     <input type="file" accept="video/*" onchange="uploadLevelHoverMedia(event, 2, 'vid')" class="w-full text-[10px] mt-1">
                                 </div>
                             </div>
@@ -336,19 +341,25 @@
                                 <div class="text-[11px] text-gray-400">Static Cover Image:
                                     <input type="file" accept="image/*" onchange="uploadLevelHoverMedia(event, 3, 'img')" class="w-full text-[10px] mt-1">
                                 </div>
-                                <div class="text-[11px] text-gray-400">Hover Video (with sound):
+                                <div class="text-[11px] text-gray-400">Hover Video:
                                     <input type="file" accept="video/*" onchange="uploadLevelHoverMedia(event, 3, 'vid')" class="w-full text-[10px] mt-1">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- TAB STAGE 1 -->
                 <div id="tab-sec-s1" class="space-y-4 hidden">
                     <div class="flex items-center justify-between">
                         <div class="font-black text-teal-300 text-sm">STAGE 1: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
-                        <button onclick="testRunSlide('stage', 1)" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
-                            <i class="fa-solid fa-play"></i> Test Run Stage 1
-                        </button>
+                        <div class="flex gap-2">
+                            <button onclick="testRunSlide('stage', 1, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
+                                <i class="fa-solid fa-desktop"></i> Run PC
+                            </button>
+                            <button onclick="testRunSlide('stage', 1, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
+                                <i class="fa-solid fa-mobile-screen"></i> Run Phone
+                            </button>
+                        </div>
                     </div>
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
                         <div>
@@ -359,12 +370,18 @@
                     </div>
                     <div id="cards-grid-s1" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
                 </div>
+                <!-- TAB STAGE 2 -->
                 <div id="tab-sec-s2" class="space-y-4 hidden">
                     <div class="flex items-center justify-between">
                         <div class="font-black text-teal-300 text-sm">STAGE 2: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
-                        <button onclick="testRunSlide('stage', 2)" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
-                            <i class="fa-solid fa-play"></i> Test Run Stage 2
-                        </button>
+                        <div class="flex gap-2">
+                            <button onclick="testRunSlide('stage', 2, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
+                                <i class="fa-solid fa-desktop"></i> Run PC
+                            </button>
+                            <button onclick="testRunSlide('stage', 2, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
+                                <i class="fa-solid fa-mobile-screen"></i> Run Phone
+                            </button>
+                        </div>
                     </div>
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
                         <div>
@@ -375,12 +392,18 @@
                     </div>
                     <div id="cards-grid-s2" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
                 </div>
+                <!-- TAB STAGE 3 -->
                 <div id="tab-sec-s3" class="space-y-4 hidden">
                     <div class="flex items-center justify-between">
                         <div class="font-black text-teal-300 text-sm">STAGE 3: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
-                        <button onclick="testRunSlide('stage', 3)" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
-                            <i class="fa-solid fa-play"></i> Test Run Stage 3
-                        </button>
+                        <div class="flex gap-2">
+                            <button onclick="testRunSlide('stage', 3, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
+                                <i class="fa-solid fa-desktop"></i> Run PC
+                            </button>
+                            <button onclick="testRunSlide('stage', 3, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
+                                <i class="fa-solid fa-mobile-screen"></i> Run Phone
+                            </button>
+                        </div>
                     </div>
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
                         <div>
@@ -391,12 +414,18 @@
                     </div>
                     <div id="cards-grid-s3" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
                 </div>
+                <!-- TAB STAGE BONUS -->
                 <div id="tab-sec-s4" class="space-y-4 hidden">
                     <div class="flex items-center justify-between">
                         <div class="font-black text-teal-300 text-sm">STAGE BONUS: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
-                        <button onclick="testRunSlide('stage', 4)" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-black text-xs rounded-xl shadow flex items-center gap-1.5">
-                            <i class="fa-solid fa-play"></i> Test Run Stage Bonus
-                        </button>
+                        <div class="flex gap-2">
+                            <button onclick="testRunSlide('stage', 4, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
+                                <i class="fa-solid fa-desktop"></i> Run PC
+                            </button>
+                            <button onclick="testRunSlide('stage', 4, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
+                                <i class="fa-solid fa-mobile-screen"></i> Run Phone
+                            </button>
+                        </div>
                     </div>
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
                         <div>
@@ -407,16 +436,18 @@
                     </div>
                     <div id="cards-grid-s4" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
                 </div>
+                <!-- TAB RESULT -->
                 <div id="tab-sec-result" class="space-y-5 hidden">
                     <div class="font-black text-teal-300 text-sm mb-2">RESULT CHOICE MEDIA CONFIGURATION (YES / NO)</div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <!-- YES CONFIG -->
                         <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 space-y-3">
                             <div class="flex items-center justify-between border-b border-purple-900/40 pb-2">
-                                <span class="font-extrabold text-sm text-emerald-400 block">YES Button Media ("EM CHIP CAM ON")</span>
-                                <button onclick="testRunSlide('result-yes')" class="px-3 py-1 bg-emerald-500 hover:bg-emerald-400 text-stone-900 font-bold text-xs rounded-lg shadow">
-                                    Test YES Slide
-                                </button>
+                                <span class="font-extrabold text-sm text-emerald-400 block">YES Button Media</span>
+                                <div class="flex gap-1">
+                                    <button onclick="testRunSlide('result-yes', 1, 'pc')" class="px-2 py-1 bg-blue-600 text-white font-bold text-[10px] rounded shadow">Run PC</button>
+                                    <button onclick="testRunSlide('result-yes', 1, 'phone')" class="px-2 py-1 bg-purple-600 text-white font-bold text-[10px] rounded shadow">Run Phone</button>
+                                </div>
                             </div>
                             
                             <div class="space-y-1">
@@ -436,7 +467,7 @@
                                     <input type="file" accept="image/*" onchange="uploadResultMedia(event, 'YES', 'image')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-emerald-500 file:text-stone-900 file:font-bold">
                                 </div>
                                 <div>
-                                    <label class="text-[11px] font-bold text-gray-300">Upload Audio (BGM/Sound):</label>
+                                    <label class="text-[11px] font-bold text-gray-300">Upload Audio:</label>
                                     <input type="file" accept="audio/*" onchange="uploadResultMedia(event, 'YES', 'audio')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
                                 </div>
                             </div>
@@ -444,10 +475,11 @@
                         <!-- NO CONFIG -->
                         <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 space-y-3">
                             <div class="flex items-center justify-between border-b border-purple-900/40 pb-2">
-                                <span class="font-extrabold text-sm text-rose-400 block">NO Button Media ("WHY NOT ME!?")</span>
-                                <button onclick="testRunSlide('result-no')" class="px-3 py-1 bg-rose-500 hover:bg-rose-400 text-white font-bold text-xs rounded-lg shadow">
-                                    Test NO Slide
-                                </button>
+                                <span class="font-extrabold text-sm text-rose-400 block">NO Button Media</span>
+                                <div class="flex gap-1">
+                                    <button onclick="testRunSlide('result-no', 1, 'pc')" class="px-2 py-1 bg-blue-600 text-white font-bold text-[10px] rounded shadow">Run PC</button>
+                                    <button onclick="testRunSlide('result-no', 1, 'phone')" class="px-2 py-1 bg-purple-600 text-white font-bold text-[10px] rounded shadow">Run Phone</button>
+                                </div>
                             </div>
                             
                             <div class="space-y-1">
@@ -467,7 +499,7 @@
                                     <input type="file" accept="image/*" onchange="uploadResultMedia(event, 'NO', 'image')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-rose-500 file:text-stone-900 file:font-bold">
                                 </div>
                                 <div>
-                                    <label class="text-[11px] font-bold text-gray-300">Upload Audio (BGM/Sound):</label>
+                                    <label class="text-[11px] font-bold text-gray-300">Upload Audio:</label>
                                     <input type="file" accept="audio/*" onchange="uploadResultMedia(event, 'NO', 'audio')" class="w-full text-xs text-gray-300 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
                                 </div>
                             </div>
@@ -498,6 +530,7 @@
         let isProcessing = false;
         let totalPairsInStage = 2;
         let introVideoUrl = "intro-video.mp4";
+        let phoneIntroVideoUrl = "intro-video-phone.mp4"; // Biến lưu bản phone ver
         let currentChoiceVote = 'YES';
         
         let levelHoverMedia = {
@@ -528,27 +561,10 @@
         };
         
         let stageCardPhotos = {
-            1: [
-                'stage1-card-1.jpg', 
-                'stage1-card-2.jpg', 
-                'stage1-card-3.png', 
-                'stage1-card-4.jpg'
-            ],
-            2: [
-                'stage2-card-1.jpg', 'stage2-card-2.jpg', 'stage2-card-3.jpg', 'stage2-card-4.jpg', 
-                'stage2-card-5.jpg', 'stage2-card-6.jpg', 'stage2-card-7.jpg', 'stage2-card-8.jpg'
-            ],
-            3: [
-                'stage3-card-1.jpg', 'stage3-card-2.jpg', 'stage3-card-3.jpg', 'stage3-card-4.jpg', 
-                'stage3-card-5.jpg', 'stage3-card-6.jpg', 'stage3-card-7.jpg', 'stage3-card-8.jpg', 
-                'stage3-card-9.jpg', 'stage3-card-10.jpg', 'stage3-card-11.jpg', 'stage3-card-12.jpg'
-            ],
-            4: [
-                'bonus-card-1.jpg', 'bonus-card-2.jpg', 'bonus-card-3.jpg', 'bonus-card-4.jpg', 'bonus-card-5.png',
-                'bonus-card-6.jpg', 'bonus-card-7.jpg', 'bonus-card-8.jpg', 'bonus-card-9.jpg', 'bonus-card-10.png',
-                'bonus-card-11.jpg', 'bonus-card-12.jpg', 'bonus-card-13.png', 'bonus-card-14.jpg', 'bonus-card-15.png',
-                'bonus-card-16.jpg', 'bonus-card-17.jpg', 'bonus-card-18.jpg', 'bonus-card-19.jpg', 'bonus-card-20.jpg'
-            ]
+            1: ['stage1-card-1.jpg', 'stage1-card-2.jpg', 'stage1-card-3.png', 'stage1-card-4.jpg'],
+            2: ['stage2-card-1.jpg', 'stage2-card-2.jpg', 'stage2-card-3.jpg', 'stage2-card-4.jpg', 'stage2-card-5.jpg', 'stage2-card-6.jpg', 'stage2-card-7.jpg', 'stage2-card-8.jpg'],
+            3: ['stage3-card-1.jpg', 'stage3-card-2.jpg', 'stage3-card-3.jpg', 'stage3-card-4.jpg', 'stage3-card-5.jpg', 'stage3-card-6.jpg', 'stage3-card-7.jpg', 'stage3-card-8.jpg', 'stage3-card-9.jpg', 'stage3-card-10.jpg', 'stage3-card-11.jpg', 'stage3-card-12.jpg'],
+            4: ['bonus-card-1.jpg', 'bonus-card-2.jpg', 'bonus-card-3.jpg', 'bonus-card-4.jpg', 'bonus-card-5.png', 'bonus-card-6.jpg', 'bonus-card-7.jpg', 'bonus-card-8.jpg', 'bonus-card-9.jpg', 'bonus-card-10.png', 'bonus-card-11.jpg', 'bonus-card-12.jpg', 'bonus-card-13.png', 'bonus-card-14.jpg', 'bonus-card-15.png', 'bonus-card-16.jpg', 'bonus-card-17.jpg', 'bonus-card-18.jpg', 'bonus-card-19.jpg', 'bonus-card-20.jpg']
         };
         let stageMatchingPairs = {
             1: { 0: 0, 3: 0, 1: 1, 2: 1 },
@@ -586,7 +602,6 @@
         
         let userCommentsList = [];
         
-        // USER SESSION ID FOR INDIVIDUAL OWNERSHIP
         function getMySessionId() {
             let id = localStorage.getItem('seonghyeon_user_session_id');
             if (!id) {
@@ -617,9 +632,10 @@
             const wrapper = document.getElementById('intro-video-wrapper');
             if (wrapper) wrapper.innerHTML = '';
         }
-        function recreateIntroVideoElement() {
+        function recreateIntroVideoElement(isPhone = false) {
             const wrapper = document.getElementById('intro-video-wrapper');
-            if (wrapper && !wrapper.querySelector('video')) {
+            if (wrapper) {
+                wrapper.innerHTML = '';
                 const vid = document.createElement('video');
                 vid.id = 'main-intro-video';
                 vid.className = "w-full h-full object-cover";
@@ -631,7 +647,7 @@
                 vid.oncanplay = function() {
                     if (this.currentTime > 0.5) this.currentTime = 0;
                 };
-                if (introVideoUrl) vid.src = introVideoUrl;
+                vid.src = isPhone ? phoneIntroVideoUrl : introVideoUrl;
                 wrapper.appendChild(vid);
             }
         }
@@ -736,44 +752,33 @@
                 osc.stop(ctx.currentTime + 0.15);
             } catch (e) {}
         }
-
-        // Sắp xếp ưu tiên: Tym nhiều nhất trước, sau đó đến thời gian mới nhất
         function sortCommentsData() {
             userCommentsList.sort((a, b) => {
                 const likesA = a.likes || 0;
                 const likesB = b.likes || 0;
-                if (likesB !== likesA) {
-                    return likesB - likesA;
-                }
+                if (likesB !== likesA) return likesB - likesA;
                 const timeA = a.timestamp || a.id || 0;
                 const timeB = b.timestamp || b.id || 0;
                 return timeB - timeA;
             });
         }
-
-        // RENDER COMMENTS LIST (WITH THREADS STYLE & REPLY LIKES)
         function renderCommentsList() {
             const listContainer = document.getElementById('comments-list');
             if (!listContainer) return;
-            
             sortCommentsData();
-
             if (userCommentsList.length === 0) {
                 listContainer.innerHTML = '<div class="text-[11px] text-gray-500 italic text-center py-2 font-vietnamese">No comments yet. Be the first one!</div>';
                 return;
             }
-            listContainer.innerHTML = userCommentsList.map((c, index) => {
+            listContainer.innerHTML = userCommentsList.map((c) => {
                 let voteBadge = c.vote ? ` voted ${c.vote}` : '';
                 let isMyComment = (c.authorId === mySessionId);
-                
                 let likedUsers = c.likedUsers || {};
                 let isLikedByMe = likedUsers[mySessionId] === true;
-
                 let repliesHtml = (c.replies || []).map((rep, rIdx) => {
                     let repVoteBadge = rep.vote ? ` voted ${rep.vote}` : '';
                     let repLikedUsers = rep.likedUsers || {};
                     let isRepLikedByMe = repLikedUsers[mySessionId] === true;
-
                     return `
                         <div class="bg-pink-100/60 p-2.5 rounded-xl border-l-2 border-pink-400 mt-2 ml-4 flex flex-col gap-1.5 font-vietnamese relative">
                             <div class="flex items-center justify-between">
@@ -782,7 +787,6 @@
                             <div class="text-[11px] text-gray-700">
                                 <span class="font-bold text-[#5d223c] mr-1">@${rep.replyTo || c.name}</span>${rep.text}
                             </div>
-                            <!-- Phần tym và nút reply sát bên dưới reply -->
                             <div class="flex items-center gap-4 text-[10px] text-gray-600 pt-1 border-t border-pink-200/60">
                                 <button onclick="toggleReplyLike('${c.id}', ${rIdx})" class="flex items-center gap-1 hover:text-rose-600 transition">
                                     <i class="${isRepLikedByMe ? 'fa-solid text-rose-500' : 'fa-regular'} fa-heart"></i>
@@ -790,7 +794,6 @@
                                 </button>
                                 <button onclick="toggleReplyToReplyBox('${c.id}', '${rep.name}', ${rIdx})" class="hover:text-[#5d223c] font-bold transition">Reply</button>
                             </div>
-                            <!-- Khung nhập Reply trực tiếp ngay bên dưới -->
                             <div id="reply-to-reply-box-${c.id}-${rIdx}" class="hidden flex flex-col gap-1.5 mt-1 pt-1 border-t border-pink-200">
                                 <input type="text" id="r2r-name-${c.id}-${rIdx}" placeholder="Your name..." autocomplete="off" class="w-full px-2.5 py-1 bg-white border border-pink-200 rounded-lg text-[11px] text-[#5d223c] font-bold focus:outline-none">
                                 <div class="flex gap-1.5">
@@ -814,7 +817,6 @@
                                 <button onclick="toggleCommentMenu('${c.id}')" class="w-7 h-7 flex items-center justify-center text-gray-500 hover:text-[#5d223c] rounded-full hover:bg-pink-100/50 transition">
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
-                                <!-- Menu 3 chấm chỉ có tính năng Edit, bỏ tính năng xóa ở ngoài -->
                                 <div id="comment-menu-${c.id}" class="absolute right-0 top-8 bg-white shadow-xl rounded-xl border border-pink-100 p-1.5 z-30 hidden flex flex-col w-28 text-xs font-vietnamese">
                                     <button onclick="editComment('${c.id}')" class="text-left px-3 py-1.5 text-teal-700 hover:bg-pink-50 rounded-lg flex items-center gap-1.5 font-bold">
                                         <i class="fa-solid fa-pen text-[10px]"></i> Edit
@@ -823,7 +825,6 @@
                             </div>
                         </div>
                         <div class="text-xs text-gray-800">${c.text}</div>
-                        <!-- Phần tym và reply sát ngay dưới bình luận chính -->
                         <div class="flex items-center gap-5 text-xs text-gray-600 pt-1 border-t border-pink-100/80 mt-1">
                             <button onclick="toggleLikeComment('${c.id}')" class="flex items-center gap-1.5 hover:text-rose-600 transition">
                                 <i class="${isLikedByMe ? 'fa-solid text-rose-500' : 'fa-regular'} fa-heart"></i>
@@ -834,7 +835,6 @@
                                 <span class="font-bold">${(c.replies || []).length}</span>
                             </button>
                         </div>
-                        <!-- Khung nhập Reply trực tiếp cho comment chính (giống hình 3) -->
                         <div id="reply-box-${c.id}" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-pink-200">
                             <input type="text" id="reply-name-${c.id}" placeholder="Your name..." autocomplete="off" class="w-full px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5d223c] font-bold focus:outline-none focus:ring-1 focus:ring-[#5d223c]">
                             <div class="flex gap-2">
@@ -842,7 +842,6 @@
                                 <button onclick="submitReply('${c.id}', '${c.name}')" class="px-3 py-1.5 bg-[#5d223c] text-white text-xs font-bold rounded-xl hover:bg-[#461a2d] transition shadow">Send</button>
                             </div>
                         </div>
-                        <!-- List of Replies -->
                         <div class="space-y-1">
                             ${repliesHtml}
                         </div>
@@ -851,7 +850,6 @@
             }).join('');
         }
         
-        // Lắng nghe dữ liệu realtime và hàm gửi bình luận cho bản PC đồng bộ với phone
         function initFirebaseComments() {
             if (!window.db) return;
             const commentsRef = window.dbRef(window.db, 'comments');
@@ -870,16 +868,11 @@
             });
         }
         window.initFirebaseComments = initFirebaseComments;
-
         function postUserComment() {
             const nameEl = document.getElementById('comment-name');
             const textEl = document.getElementById('comment-text');
             if (!textEl || !textEl.value.trim()) return;
-            
-            if (!window.db) {
-                alert("Database chưa sẵn sàng!");
-                return;
-            }
+            if (!window.db) return;
             const newCommentRef = window.dbPush(window.dbRef(window.db, 'comments'));
             window.dbSet(newCommentRef, {
                 authorId: mySessionId,
@@ -894,7 +887,6 @@
             });
             textEl.value = '';
         }
-        
         function toggleCommentMenu(id) {
             document.querySelectorAll('[id^="comment-menu-"]').forEach((el) => {
                 if (el.id !== `comment-menu-${id}`) el.classList.add('hidden');
@@ -902,7 +894,6 @@
             const menu = document.getElementById(`comment-menu-${id}`);
             if (menu) menu.classList.toggle('hidden');
         }
-        
         function editComment(id) {
             const target = userCommentsList.find(c => c.id === id);
             if (!target) return;
@@ -915,13 +906,11 @@
                 renderCommentsList();
             }
         }
-        
         function toggleLikeComment(id) {
             const target = userCommentsList.find(c => c.id === id);
             if (!target) return;
             if (!target.likedUsers) target.likedUsers = {};
             if (!target.likes) target.likes = 0;
-
             if (target.likedUsers[mySessionId] === true) {
                 delete target.likedUsers[mySessionId];
                 target.likes = Math.max(0, target.likes - 1);
@@ -929,21 +918,18 @@
                 target.likedUsers[mySessionId] = true;
                 target.likes += 1;
             }
-
             if (window.db) {
                 window.dbSet(window.dbRef(window.db, `comments/${id}/likes`), target.likes);
                 window.dbSet(window.dbRef(window.db, `comments/${id}/likedUsers`), target.likedUsers);
             }
             renderCommentsList();
         }
-
         function toggleReplyLike(cId, rIndex) {
             const target = userCommentsList.find(c => c.id === cId);
             if (!target || !target.replies || !target.replies[rIndex]) return;
             let rep = target.replies[rIndex];
             if (!rep.likedUsers) rep.likedUsers = {};
             if (!rep.likes) rep.likes = 0;
-
             if (rep.likedUsers[mySessionId] === true) {
                 delete rep.likedUsers[mySessionId];
                 rep.likes = Math.max(0, rep.likes - 1);
@@ -951,13 +937,11 @@
                 rep.likedUsers[mySessionId] = true;
                 rep.likes += 1;
             }
-
             if (window.db) {
                 window.dbSet(window.dbRef(window.db, `comments/${cId}/replies`), target.replies);
             }
             renderCommentsList();
         }
-        
         function toggleReplyBox(id) {
             const box = document.getElementById(`reply-box-${id}`);
             if (box) {
@@ -968,23 +952,17 @@
                 }
             }
         }
-
         function toggleReplyToReplyBox(cId, targetName, rIndex) {
             const container = document.getElementById(`reply-to-reply-box-${cId}-${rIndex}`);
-            if (container) {
-                container.classList.toggle('hidden');
-            }
+            if (container) container.classList.toggle('hidden');
         }
-        
         function submitReply(id, targetName) {
             const nameInput = document.getElementById(`reply-name-${id}`);
             const input = document.getElementById(`reply-input-${id}`);
             if (!input || !input.value.trim()) return;
-            
             const target = userCommentsList.find(c => c.id === id);
             if (!target) return;
             if (!target.replies) target.replies = [];
-
             target.replies.push({
                 authorId: mySessionId,
                 name: nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Anonymous',
@@ -994,23 +972,19 @@
                 likes: 0,
                 likedUsers: {}
             });
-
             if (window.db) {
                 window.dbSet(window.dbRef(window.db, `comments/${id}/replies`), target.replies);
             }
             input.value = '';
             renderCommentsList();
         }
-
         function submitReplyToReply(cId, targetName, rIndex) {
             const nameInput = document.getElementById(`r2r-name-${cId}-${rIndex}`);
             const input = document.getElementById(`r2r-input-${cId}-${rIndex}`);
             if (!input || !input.value.trim()) return;
-
             const target = userCommentsList.find(c => c.id === cId);
             if (!target) return;
             if (!target.replies) target.replies = [];
-
             target.replies.push({
                 authorId: mySessionId,
                 name: nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Anonymous',
@@ -1020,14 +994,11 @@
                 likes: 0,
                 likedUsers: {}
             });
-
             if (window.db) {
                 window.dbSet(window.dbRef(window.db, `comments/${cId}/replies`), target.replies);
             }
             renderCommentsList();
         }
-
-        // ADMIN SETTING COMMENT & REPLY MODERATOR MANAGER
         function renderAdminCommentsManager() {
             const container = document.getElementById('admin-comments-manage-list');
             if (!container) return;
@@ -1035,10 +1006,8 @@
                 container.innerHTML = '<div class="text-xs text-gray-400 italic font-vietnamese">No comments found in system.</div>';
                 return;
             }
-            
             let htmlContent = '';
             userCommentsList.forEach((c) => {
-                // Render main comment card for Admin
                 htmlContent += `
                     <div class="bg-[#23182d] p-3 rounded-2xl border border-purple-900/60 flex flex-col gap-2 font-vietnamese">
                         <div class="flex items-center justify-between gap-3">
@@ -1051,7 +1020,6 @@
                             </button>
                         </div>
                 `;
-                // Render replies inside Admin panel if any exist
                 if (c.replies && c.replies.length > 0) {
                     htmlContent += `<div class="ml-4 pl-3 border-l-2 border-teal-500/50 space-y-2 mt-1">`;
                     c.replies.forEach((rep, rIdx) => {
@@ -1073,32 +1041,26 @@
             });
             container.innerHTML = htmlContent;
         }
-
         function adminDeleteComment(cId, rIdx) {
             if (rIdx === null || rIdx === undefined) {
                 if (confirm("Admin, are you sure you want to delete this main comment?")) {
-                    if (window.db) {
-                        window.dbSet(window.dbRef(window.db, `comments/${cId}`), null);
-                    }
+                    if (window.db) window.dbSet(window.dbRef(window.db, `comments/${cId}`), null);
                 }
             } else {
                 if (confirm("Admin, are you sure you want to delete this reply?")) {
                     const target = userCommentsList.find(c => c.id === cId);
                     if (target && target.replies) {
                         target.replies.splice(rIdx, 1);
-                        if (window.db) {
-                            window.dbSet(window.dbRef(window.db, `comments/${cId}/replies`), target.replies);
-                        }
+                        if (window.db) window.dbSet(window.dbRef(window.db, `comments/${cId}/replies`), target.replies);
                     }
                 }
             }
         }
-
-        function testRunSlide(slideType, stageNum) {
+        function testRunSlide(slideType, stageNum, mode = 'pc') {
             closeUploadModal();
             stopAllGlobalMedia();
             if (slideType === 'intro') {
-                showIntroScreen();
+                showIntroScreen(mode === 'phone');
             } else if (slideType === 'stage-select') {
                 skipIntroToStageSelect();
             } else if (slideType === 'stage') {
@@ -1109,14 +1071,13 @@
                 handleBonusChoice('NO');
             }
         }
-        function showIntroScreen() {
+        function showIntroScreen(isPhone = false) {
             stopAllGlobalMedia();
-            recreateIntroVideoElement();
+            recreateIntroVideoElement(isPhone);
             document.getElementById('intro-screen').classList.remove('hidden');
             document.getElementById('stage-select-screen').classList.add('hidden');
             document.getElementById('game-header').classList.add('hidden');
             document.getElementById('game-main-area').classList.add('hidden');
-            
             const vid = document.getElementById('main-intro-video');
             if (vid) {
                 vid.currentTime = 0;
@@ -1131,10 +1092,8 @@
             document.getElementById('game-main-area').classList.add('hidden');
         }
         function replayIntroMainVideo() {
-            recreateIntroVideoElement();
             const vid = document.getElementById('main-intro-video');
-            if (vid && introVideoUrl) {
-                vid.src = introVideoUrl;
+            if (vid) {
                 vid.currentTime = 0;
                 vid.play().catch(()=>{});
             }
@@ -1161,23 +1120,15 @@
             const container = document.getElementById('media-display-content');
             if (container) {
                 const vid = container.querySelector('video');
-                if (vid) {
-                    vid.pause();
-                    vid.src = '';
-                }
+                if (vid) { vid.pause(); vid.src = ''; }
                 const aud = container.querySelector('audio');
-                if (aud) {
-                    aud.pause();
-                    aud.src = '';
-                }
+                if (aud) { aud.pause(); aud.src = ''; }
                 container.innerHTML = '';
             }
             document.getElementById('media-display-modal').classList.add('hidden');
         }
         function playLevelHover(lvl) {
-            [1, 2, 3].forEach(l => {
-                if (l !== lvl) stopLevelHover(l);
-            });
+            [1, 2, 3].forEach(l => { if (l !== lvl) stopLevelHover(l); });
             const vidEl = document.getElementById(`level-vid-${lvl}`);
             if (vidEl && levelHoverMedia[lvl].vid) {
                 vidEl.classList.remove('hidden');
@@ -1224,11 +1175,7 @@
         }
         function stopBGM() {
             const bgm = document.getElementById('stage-bgm-audio');
-            if (bgm) {
-                bgm.pause();
-                bgm.currentTime = 0;
-                bgm.src = '';
-            }
+            if (bgm) { bgm.pause(); bgm.currentTime = 0; bgm.src = ''; }
         }
         function toggleSound() {
             soundEnabled = !soundEnabled;
@@ -1317,9 +1264,7 @@
             previewInterval = setInterval(() => {
                 previewSeconds--;
                 if (previewEl) previewEl.innerText = `${previewSeconds}s`;
-                if (previewSeconds > 0) {
-                    playTickSound();
-                }
+                if (previewSeconds > 0) playTickSound();
                 if (previewSeconds <= 0) {
                     clearInterval(previewInterval);
                     if (previewBox) previewBox.classList.add('hidden');
@@ -1343,7 +1288,6 @@
                 isProcessing = true;
                 const c1 = flippedCards[0];
                 const c2 = flippedCards[1];
-                
                 const pair1 = c1.dataset.pair;
                 const pair2 = c2.dataset.pair;
                 const isMatch = (pair1 === pair2) && (c1.dataset.index !== c2.dataset.index);
@@ -1416,11 +1360,8 @@
             
             if (actionBtn) {
                 actionBtn.classList.remove('hidden');
-                if (key === 'NO') {
-                    actionBtn.innerText = "WHY NOT ME!?";
-                } else {
-                    actionBtn.innerText = "EM CHIP CAM ON";
-                }
+                if (key === 'NO') actionBtn.innerText = "WHY NOT ME!?";
+                else actionBtn.innerText = "EM CHIP CAM ON";
             }
             if (mediaData && mediaData.type === 'video' && mediaData.video) {
                 container.innerHTML = `<video id="result-active-video" src="${mediaData.video}" class="w-full h-auto max-h-[50vh] object-contain rounded-xl" controls autoplay loop playsinline preload="auto" oncanplay="if(this.currentTime>0.5)this.currentTime=0;"></video>`;
@@ -1447,9 +1388,7 @@
                     actionBtn.classList.remove('mt-4');
                     actionBtn.classList.add('mt-2');
                 }
-                if (commentInput) {
-                    commentInput.focus();
-                }
+                if (commentInput) commentInput.focus();
             } else {
                 closeMediaDisplayModal();
                 goToStageSelect();
@@ -1467,17 +1406,12 @@
             const activeBtn = document.getElementById(`tab-btn-${tabKey}`);
             if (activeSec) activeSec.classList.remove('hidden');
             if (activeBtn) activeBtn.className = "px-4 py-2 text-xs font-extrabold rounded-xl bg-teal-400 text-stone-900 whitespace-nowrap shadow";
-            
-            if (tabKey === 'comments') {
-                renderAdminCommentsManager();
-            }
+            if (tabKey === 'comments') renderAdminCommentsManager();
         }
         function renderUploadModalGrids() {
             [1, 2, 3, 4].forEach(s => {
                 const bgmLabel = document.getElementById(`bgm-label-${s}`);
-                if (bgmLabel && stageBGMTracks[s]) {
-                    bgmLabel.innerText = `Loaded: ${stageBGMTracks[s]} ✅`;
-                }
+                if (bgmLabel && stageBGMTracks[s]) bgmLabel.innerText = `Loaded: ${stageBGMTracks[s]} ✅`;
                 const grid = document.getElementById(`cards-grid-s${s}`);
                 if (!grid) return;
                 grid.innerHTML = '';
@@ -1518,13 +1452,18 @@
                 grid.appendChild(vicCard);
             });
         }
-        function uploadIntroVideo(e) {
+        function uploadIntroVideo(e, mode = 'pc') {
             const file = e.target.files[0];
             if (!file) return;
-            introVideoUrl = URL.createObjectURL(file);
+            const url = URL.createObjectURL(file);
+            if (mode === 'phone') {
+                phoneIntroVideoUrl = url;
+            } else {
+                introVideoUrl = url;
+            }
             const msg = document.getElementById('intro-placeholder-text');
             if (msg) msg.classList.add('hidden');
-            recreateIntroVideoElement();
+            recreateIntroVideoElement(mode === 'phone');
         }
         function uploadLevelHoverMedia(e, lvl, type) {
             const file = e.target.files[0];
@@ -1539,9 +1478,7 @@
             stageBGMTracks[stage] = URL.createObjectURL(file);
             const label = document.getElementById(`bgm-label-${stage}`);
             if (label) label.innerText = `Loaded: ${file.name} ✅`;
-            if (currentStage === stage && soundEnabled) {
-                playBGM(stage);
-            }
+            if (currentStage === stage && soundEnabled) playBGM(stage);
         }
         function uploadCoverPhoto(e, stage) {
             const file = e.target.files[0];
@@ -1587,7 +1524,7 @@
         }
         
         window.onload = function() {
-            showIntroScreen();
+            showIntroScreen(false);
             renderCommentsList();
         };
         
