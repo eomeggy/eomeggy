@@ -2,8 +2,8 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IS SEONGHYEON A CAT? (PC Version)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IS SEONGHYEON A CAT?</title>
     <!-- Google Fonts: Titan One, Black Han Sans & Be Vietnam Pro -->
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Black+Han+Sans&family=Titan+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -42,17 +42,21 @@
         }
         #game-container {
             width: 100%;
-            max-width: 480px;
+            max-width: 420px;
             height: 100vh;
-            max-height: 900px;
+            max-height: 850px;
             background-color: var(--main-pink);
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            border-radius: 30px;
-            border: 8px solid #c25e79;
+        }
+        @media (min-width: 423px) {
+            #game-container {
+                border-radius: 30px;
+                border: 8px solid #c25e79;
+            }
         }
         .screen {
             position: absolute;
@@ -64,7 +68,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 15px;
             overflow-y: auto;
             display: none;
             z-index: 1;
@@ -88,7 +92,7 @@
             gap: 20px;
         }
         #intro-screen h1 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             margin-bottom: 5px;
         }
         .video-box-intro {
@@ -138,7 +142,7 @@
             border: none;
             padding: 12px 18px;
             border-radius: 15px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
             transition: transform 0.1s;
@@ -149,7 +153,7 @@
         }
         .korean-laugh-font {
             font-family: 'YanoljaYacheR', 'Black Han Sans', sans-serif !important;
-            font-size: 1.5rem !important;
+            font-size: 1.45rem !important;
             letter-spacing: 0px !important;
             line-height: 1 !important;
             padding-top: 9px !important;
@@ -177,7 +181,7 @@
         }
         .select-stage-viewport {
             width: 100%;
-            max-width: 380px;
+            max-width: 365px;
             display: grid;
             place-items: center;
             position: relative;
@@ -221,44 +225,44 @@
             font-family: 'Titan One', cursive;
             color: var(--dark-burgundy);
             margin-top: 12px;
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             cursor: pointer;
         }
 
         /* GAMEPLAY SCREEN */
         #gameplay-screen {
-            padding: 15px;
+            padding: 12px;
         }
         .game-top-bar {
             width: 100%;
             background: #fff;
             border-radius: 14px;
-            padding: 10px 14px;
+            padding: 8px 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
         .top-btn {
             background: var(--dark-burgundy);
             color: #fff;
             border: none;
-            padding: 8px 12px;
+            padding: 6px 8px;
             border-radius: 8px;
             font-family: 'Titan One', cursive;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             cursor: pointer;
         }
         .stage-info-title {
             font-family: 'Titan One', cursive;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--dark-burgundy);
         }
         .game-stats {
             display: flex;
-            gap: 10px;
-            font-size: 0.8rem;
+            gap: 8px;
+            font-size: 0.75rem;
             font-weight: 700;
             color: var(--dark-burgundy);
         }
@@ -268,8 +272,8 @@
             border-radius: 15px;
             font-family: 'Titan One', cursive !important;
             color: var(--dark-burgundy);
-            margin-bottom: 12px;
-            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
             box-shadow: 0 3px 8px rgba(0,0,0,0.1);
         }
         .preview-banner span {
@@ -279,12 +283,12 @@
             border-radius: 0;
             margin: 0;
         }
-        /* CARDS GRID */
+        /* GRID CARDS LAYOUT */
         .cards-grid {
             display: grid;
-            gap: 10px;
+            gap: 8px;
             width: 100%;
-            max-width: 400px;
+            max-width: 360px;
             justify-content: center;
             align-content: center;
             flex-grow: 1;
@@ -346,17 +350,17 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            gap: 18px;
+            gap: 15px;
             padding: 30px;
         }
         #victory-screen h2 {
             font-family: 'Titan One', cursive;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: var(--dark-burgundy);
         }
         .victory-img-box {
-            width: 190px;
-            height: 190px;
+            width: 170px;
+            height: 170px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -573,7 +577,7 @@
         .admin-content {
             background: #2b131c;
             width: 100%;
-            max-width: 600px;
+            max-width: 550px;
             border-radius: 18px;
             padding: 15px;
             color: #fff;
@@ -616,19 +620,6 @@
         }
         .admin-section.active {
             display: flex;
-        }
-        .admin-input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            font-size: 0.75rem;
-        }
-        .admin-input-group input {
-            padding: 6px 10px;
-            border-radius: 6px;
-            border: 1px solid #555;
-            background: #1a0b11;
-            color: #fff;
         }
     </style>
 </head>
@@ -696,11 +687,11 @@
 
     <!-- 4. VICTORY SCREEN -->
     <div id="victory-screen" class="screen">
-        <h2 class="title-exact-match" id="victory-title-text" style="font-size: 1.5rem;">STAGE 1 CLEARED!</h2>
+        <h2 class="title-exact-match" id="victory-title-text" style="font-size: 1.4rem;">STAGE 1 CLEARED!</h2>
         <div class="victory-img-box">
             <img id="victory-img-elem" alt="Victory">
         </div>
-        <h2 id="victory-question-text" style="font-size: 1.05rem; color: var(--dark-burgundy);">ARE YOU STILL SKEPTICAL?</h2>
+        <h2 id="victory-question-text" style="font-size: 1rem; color: var(--dark-burgundy);">ARE YOU STILL SKEPTICAL?</h2>
         <div class="victory-buttons" id="victory-buttons-container"></div>
     </div>
 
@@ -726,7 +717,7 @@
 <div id="admin-modal">
     <div class="admin-content">
         <div class="admin-header">
-            <h3 class="title-exact-match" style="color:#fff; font-size:1.05rem;">GAME CONFIGURATION & MEDIA UPLOAD</h3>
+            <h3 class="title-exact-match" style="color:#fff; font-size:1rem;">GAME CONFIGURATION & MEDIA UPLOAD</h3>
             <button onclick="closeAdmin()" style="background:none; border:none; color:#fff; font-size:1.1rem; cursor:pointer;">✕</button>
         </div>
         <div class="admin-tabs">
@@ -743,69 +734,69 @@
         <div class="admin-section active">
             <button class="custom-btn primary" onclick="goToScreen('intro-screen')">Test Run Intro</button>
             <button class="custom-btn primary" onclick="goToScreen('select-screen')">Test Run Stage Select</button>
-            <div class="admin-input-group">
+            <div class="admin-input-group" style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
                 <label>Intro Video File Name:</label>
-                <input type="text" id="admin-intro-vid" value="intro-video-phone.mp4" onchange="updateMediaConfig('introVid', this.value)">
+                <input type="text" id="admin-intro-vid" value="intro-video-phone.mp4" onchange="updateMediaConfig('introVid', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
             </div>
         </div>
         
         <!-- Tab 1: Stage 1 -->
         <div class="admin-section">
             <button class="custom-btn primary" onclick="startStage(1)">Test Run Stage 1</button>
-            <div class="admin-input-group">
+            <div class="admin-input-group" style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
                 <label>Stage 1 Cover Image:</label>
-                <input type="text" id="admin-s1-img" value="stage1-easy-img-phone.jpg" onchange="updateStageConfig(1, 'img', this.value)">
+                <input type="text" id="admin-s1-img" value="stage1-easy-img-phone.jpg" onchange="updateStageConfig(1, 'img', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
             </div>
-            <div class="admin-input-group">
+            <div class="admin-input-group" style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
                 <label>Stage 1 Hover Video:</label>
-                <input type="text" id="admin-s1-vid" value="stage1-easy-video-phone.mp4" onchange="updateStageConfig(1, 'vid', this.value)">
+                <input type="text" id="admin-s1-vid" value="stage1-easy-video-phone.mp4" onchange="updateStageConfig(1, 'vid', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
             </div>
-            <div class="admin-input-group">
+            <div class="admin-input-group" style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
                 <label>Stage 1 Sound Effect:</label>
-                <input type="text" id="admin-s1-sound" value="stage1-easy-sound-phone.mp3" onchange="updateStageConfig(1, 'sound', this.value)">
+                <input type="text" id="admin-s1-sound" value="stage1-easy-sound-phone.mp3" onchange="updateStageConfig(1, 'selectSound', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
             </div>
         </div>
         
         <!-- Tab 2: Stage 2 -->
         <div class="admin-section">
             <button class="custom-btn primary" onclick="startStage(2)">Test Run Stage 2</button>
-            <div class="admin-input-group">
+            <div class="admin-input-group" style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
                 <label>Stage 2 Cover Image:</label>
-                <input type="text" id="admin-s2-img" value="stage2-medium-img-phone.jpg" onchange="updateStageConfig(2, 'img', this.value)">
+                <input type="text" id="admin-s2-img" value="stage2-medium-img-phone.jpg" onchange="updateStageConfig(2, 'img', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
             </div>
-            <div class="admin-input-group">
+            <div class="admin-input-group" style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
                 <label>Stage 2 Hover Video:</label>
-                <input type="text" id="admin-s2-vid" value="stage2-medium-video-phone.mp4" onchange="updateStageConfig(2, 'vid', this.value)">
+                <input type="text" id="admin-s2-vid" value="stage2-medium-video-phone.mp4" onchange="updateStageConfig(2, 'vid', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
             </div>
-            <div class="admin-input-group">
+            <div class="admin-input-group" style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
                 <label>Stage 2 Sound Effect:</label>
-                <input type="text" id="admin-s2-sound" value="stage2-medium-sound-phone.mp3" onchange="updateStageConfig(2, 'sound', this.value)">
+                <input type="text" id="admin-s2-sound" value="stage2-medium-sound-phone.mp3" onchange="updateStageConfig(2, 'selectSound', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
             </div>
         </div>
         
         <!-- Tab 3: Stage 3 -->
         <div class="admin-section">
             <button class="custom-btn primary" onclick="startStage(3)">Test Run Stage 3</button>
-            <div class="admin-input-group">
+            <div class="admin-input-group" style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
                 <label>Stage 3 Cover Image:</label>
-                <input type="text" id="admin-s3-img" value="stage3-hard-img-phone.jpg" onchange="updateStageConfig(3, 'img', this.value)">
+                <input type="text" id="admin-s3-img" value="stage3-hard-img-phone.jpg" onchange="updateStageConfig(3, 'img', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
             </div>
-            <div class="admin-input-group">
+            <div class="admin-input-group" style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
                 <label>Stage 3 Hover Video:</label>
-                <input type="text" id="admin-s3-vid" value="stage3-hard-video-phone.mp4" onchange="updateStageConfig(3, 'vid', this.value)">
+                <input type="text" id="admin-s3-vid" value="stage3-hard-video-phone.mp4" onchange="updateStageConfig(3, 'vid', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
             </div>
-            <div class="admin-input-group">
+            <div class="admin-input-group" style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
                 <label>Stage 3 Sound Effect:</label>
-                <input type="text" id="admin-s3-sound" value="stage3-hard-sound-phone.mp3" onchange="updateStageConfig(3, 'sound', this.value)">
+                <input type="text" id="admin-s3-sound" value="stage3-hard-sound-phone.mp3" onchange="updateStageConfig(3, 'selectSound', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
             </div>
         </div>
         
         <!-- Tab 4: Stage Bonus -->
         <div class="admin-section">
             <button class="custom-btn primary" onclick="startStage(4)">Test Run Stage Bonus</button>
-            <div class="admin-input-group">
+            <div class="admin-input-group" style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
                 <label>Victory Image Bonus:</label>
-                <input type="text" id="admin-s4-victory" value="victory-bonus-img-phone.png" onchange="updateStageConfig(4, 'victoryImg', this.value)">
+                <input type="text" id="admin-s4-victory" value="victory-bonus-img-phone.png" onchange="updateStageConfig(4, 'victoryImg', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
             </div>
         </div>
         
@@ -815,13 +806,13 @@
                 <button class="custom-btn primary" onclick="showResultScreen('yes')">Test YES Slide</button>
                 <button class="custom-btn primary" onclick="showResultScreen('no')">Test NO Slide</button>
             </div>
-            <div class="admin-input-group">
+            <div class="admin-input-group" style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
                 <label>YES Video File Name:</label>
-                <input type="text" id="admin-yes-vid" value="yes-button-video-phone.mp4" onchange="updateMediaConfig('yesVid', this.value)">
+                <input type="text" id="admin-yes-vid" value="yes-button-video-phone.mp4" onchange="updateMediaConfig('yesVid', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
             </div>
-            <div class="admin-input-group">
+            <div class="admin-input-group" style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
                 <label>NO Video File Name:</label>
-                <input type="text" id="admin-no-vid" value="no-button-video-phone.mp4" onchange="updateMediaConfig('noVid', this.value)">
+                <input type="text" id="admin-no-vid" value="no-button-video-phone.mp4" onchange="updateMediaConfig('noVid', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
             </div>
         </div>
         
@@ -845,7 +836,6 @@
         localStorage.setItem('seonghyeon_session_id', mySessionId);
     }
 
-    // Cấu hình Media tập trung để liên kết Admin chuẩn xác
     let mediaConfig = {
         introVid: "intro-video-phone.mp4",
         yesVid: "yes-button-video-phone.mp4",
@@ -933,7 +923,6 @@
             pairs: [[1, 14], [2, 8], [3, 18], [4, 5], [6, 16], [7, 10], [9, 20], [11, 17], [12, 15], [13, 19]]
         }
     };
-
     let currentStageId = 1;
     let gameTimer = null;
     let secondsElapsed = 0;
@@ -974,13 +963,146 @@
         stagesData[stageId][field] = val.trim();
         if(stageId <= 3) {
             if(field === 'img') document.getElementById(`stage-img-${stageId}`).src = val.trim();
-            if(field === 'vid') document.getElementById(`stage-vid-${stageId}`).src = val.trim(); } }  function initSelectStageElements() { [1, 2, 3].forEach(id => { document.getElementById(`stage-img-${id}`).src = stagesData[id].img;
-            document.getElementById(`stage-vid-${id}`).src = stagesData[id].vid; }); }  function playSoundEffect(type) { if (isAudioMuted) return; if (audioCtx.state === 'suspended') audioCtx.resume(); const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain(); osc.connect(gainNode); gainNode.connect(audioCtx.destination); const now = audioCtx.currentTime; if (type === 'click') { osc.type = 'sine'; osc.frequency.setValueAtTime(400, now); osc.frequency.exponentialRampToValueAtTime(600, now + 0.08); gainNode.gain.setValueAtTime(0.15, now); gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.08); osc.start(now); osc.stop(now + 0.08); } else if (type === 'preview_tick') { osc.type = 'sine'; osc.frequency.setValueAtTime(800, now); gainNode.gain.setValueAtTime(0.1, now); gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.05); osc.start(now); osc.stop(now + 0.05); } else if (type === 'match') { osc.type = 'triangle'; osc.frequency.setValueAtTime(523.25, now); osc.frequency.setValueAtTime(659.25, now + 0.1); gainNode.gain.setValueAtTime(0.2, now); gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.25); osc.start(now); osc.stop(now + 0.25); } else if (type === 'wrong') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, now); osc.frequency.setValueAtTime(140, now + 0.15); gainNode.gain.setValueAtTime(0.2, now); gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3); osc.start(now); osc.stop(now + 0.3); } else if (type === 'victory') { const notes = [523.25, 659.25, 783.99, 1046.50]; notes.forEach((freq, idx) => { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.setValueAtTime(freq, now + idx * 0.12); g.gain.setValueAtTime(0.2, now + idx * 0.12); g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.12 + 0.3); o.start(now + idx * 0.12); o.stop(now + idx * 0.12 + 0.3); }); } }  function stopAllMediaAssets() { if (currentBgmAudio) { currentBgmAudio.pause(); currentBgmAudio.currentTime = 0; } if (currentSelectSoundAudio) { currentSelectSoundAudio.pause(); currentSelectSoundAudio.currentTime = 0; } const introVid = document.getElementById('intro-video'); if (introVid) { introVid.pause(); introVid.currentTime = 0; } const resultVid = document.getElementById('result-video-player'); if (resultVid) { resultVid.pause(); resultVid.currentTime = 0; resultVid.removeAttribute('src'); resultVid.load(); } stopAllStageVideos(); }  function playSelectStageSound(stageId) { if (currentSelectSoundAudio) { currentSelectSoundAudio.pause(); currentSelectSoundAudio.currentTime = 0; } const soundFile = stagesData[stageId].selectSound; if (soundFile) { currentSelectSoundAudio = new Audio(soundFile); currentSelectSoundAudio.volume = 0.9; currentSelectSoundAudio.muted = isAudioMuted; currentSelectSoundAudio.play().catch(e => {}); } }  function goToScreen(screenId) { stopAllMediaAssets(); document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(screenId).classList.add('active'); if (screenId === 'intro-screen') { const introVid = document.getElementById('intro-video'); introVid.src = mediaConfig.introVid; introVid.currentTime = 0; introVid.play().catch(e => {}); } else if (screenId === 'select-screen') { currentSelectLevel = 2; updateSelectStageDisplay(); playSelectStageSound(currentSelectLevel); } }  function replayIntro() { const vid = document.getElementById('intro-video'); vid.currentTime = 0; vid.play(); }  function goToSelectStage() { goToScreen('select-screen'); }  function updateSelectStageDisplay() { [1, 2, 3].forEach(lvl => { const cardElem = document.getElementById(`stage-card-${lvl}`);
+            if(field === 'vid') document.getElementById(`stage-vid-${stageId}`).src = val.trim();
+        }
+    }
+
+    function initSelectStageElements() {
+        [1, 2, 3].forEach(id => {
+            document.getElementById(`stage-img-${id}`).src = stagesData[id].img;
+            document.getElementById(`stage-vid-${id}`).src = stagesData[id].vid;
+        });
+    }
+
+    function playSoundEffect(type) {
+        if (isAudioMuted) return;
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+        if (type === 'click') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(400, now);
+            osc.frequency.exponentialRampToValueAtTime(600, now + 0.08);
+            gainNode.gain.setValueAtTime(0.15, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+            osc.start(now);
+            osc.stop(now + 0.08);
+        } else if (type === 'preview_tick') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, now);
+            gainNode.gain.setValueAtTime(0.1, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+            osc.start(now);
+            osc.stop(now + 0.05);
+        } else if (type === 'match') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(659.25, now + 0.1);
+            gainNode.gain.setValueAtTime(0.2, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+            osc.start(now);
+            osc.stop(now + 0.25);
+        } else if (type === 'wrong') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(200, now);
+            osc.frequency.setValueAtTime(140, now + 0.15);
+            gainNode.gain.setValueAtTime(0.2, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            osc.start(now);
+            osc.stop(now + 0.3);
+        } else if (type === 'victory') {
+            const notes = [523.25, 659.25, 783.99, 1046.50];
+            notes.forEach((freq, idx) => {
+                const o = audioCtx.createOscillator();
+                const g = audioCtx.createGain();
+                o.connect(g);
+                g.connect(audioCtx.destination);
+                o.frequency.setValueAtTime(freq, now + idx * 0.12);
+                g.gain.setValueAtTime(0.2, now + idx * 0.12);
+                g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.12 + 0.3);
+                o.start(now + idx * 0.12);
+                o.stop(now + idx * 0.12 + 0.3);
+            });
+        }
+    }
+
+    function stopAllMediaAssets() {
+        if (currentBgmAudio) {
+            currentBgmAudio.pause();
+            currentBgmAudio.currentTime = 0;
+        }
+        if (currentSelectSoundAudio) {
+            currentSelectSoundAudio.pause();
+            currentSelectSoundAudio.currentTime = 0;
+        }
+        const introVid = document.getElementById('intro-video');
+        if (introVid) {
+            introVid.pause();
+            introVid.currentTime = 0;
+        }
+        const resultVid = document.getElementById('result-video-player');
+        if (resultVid) {
+            resultVid.pause();
+            resultVid.currentTime = 0;
+            resultVid.removeAttribute('src');
+            resultVid.load();
+        }
+        stopAllStageVideos();
+    }
+
+    function playSelectStageSound(stageId) {
+        if (currentSelectSoundAudio) {
+            currentSelectSoundAudio.pause();
+            currentSelectSoundAudio.currentTime = 0;
+        }
+        const soundFile = stagesData[stageId].selectSound;
+        if (soundFile) {
+            currentSelectSoundAudio = new Audio(soundFile);
+            currentSelectSoundAudio.volume = 0.9;
+            currentSelectSoundAudio.muted = isAudioMuted;
+            currentSelectSoundAudio.play().catch(e => {});
+        }
+    }
+
+    function goToScreen(screenId) {
+        stopAllMediaAssets();
+        closeAdmin();
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        if (screenId === 'intro-screen') {
+            const introVid = document.getElementById('intro-video');
+            introVid.src = mediaConfig.introVid;
+            introVid.currentTime = 0;
+            introVid.play().catch(e => {});
+        } else if (screenId === 'select-screen') {
+            currentSelectLevel = 2;
+            updateSelectStageDisplay();
+            playSelectStageSound(currentSelectLevel);
+        }
+    }
+
+    function replayIntro() {
+        const vid = document.getElementById('intro-video');
+        vid.currentTime = 0;
+        vid.play();
+    }
+
+    function goToSelectStage() {
+        goToScreen('select-screen');
+    }
+
+    function updateSelectStageDisplay() {
+        [1, 2, 3].forEach(lvl => {
+            const cardElem = document.getElementById(`stage-card-${lvl}`);
             if (lvl === currentSelectLevel) {
                 cardElem.classList.add('active-level');
             } else {
                 cardElem.classList.remove('active-level');
-                const img = document.getElementById(`stage-img-${lvl}`); const video = document.getElementById(`stage-vid-${lvl}`);
+                const img = document.getElementById(`stage-img-${lvl}`);
+                const video = document.getElementById(`stage-vid-${lvl}`);
                 if (video) {
                     video.pause();
                     video.currentTime = 0;
@@ -1045,7 +1167,8 @@
 
     function toggleStageVideo(stageId, event) {
         event.stopPropagation();
-        const img = document.getElementById(`stage-img-${stageId}`); const video = document.getElementById(`stage-vid-${stageId}`);
+        const img = document.getElementById(`stage-img-${stageId}`);
+        const video = document.getElementById(`stage-vid-${stageId}`);
         if (activeStageVideoId && activeStageVideoId !== stageId) {
             stopAllStageVideos();
         }
@@ -1063,7 +1186,8 @@
 
     function stopAllStageVideos() {
         [1, 2, 3].forEach(id => {
-            const img = document.getElementById(`stage-img-${id}`); const video = document.getElementById(`stage-vid-${id}`);
+            const img = document.getElementById(`stage-img-${id}`);
+            const video = document.getElementById(`stage-vid-${id}`);
             if (video) {
                 video.pause();
                 video.currentTime = 0;
@@ -1093,6 +1217,7 @@
             currentSelectSoundAudio.pause();
             currentSelectSoundAudio.currentTime = 0;
         }
+        closeAdmin();
         currentStageId = stageId;
         const stage = stagesData[stageId];
         goToScreen('gameplay-screen');
@@ -1166,7 +1291,31 @@
                     cardElem.classList.add('matched');
                     firstSelectedCard = null;
                     matchesCount++;
-                    document.getElementById('matches-display').innerText = `🐾 ${matchesCount}`; canInteract = true; if(matchesCount === stage.pairs.length) { clearInterval(gameTimer); if(currentBgmAudio) currentBgmAudio.pause(); playSoundEffect('victory'); setTimeout(showVictoryScreen, 500); } }, 300); } else { playSoundEffect('wrong'); setTimeout(() => { firstSelectedCard.classList.remove('flipped'); cardElem.classList.remove('flipped'); firstSelectedCard = null; canInteract = true; }, 700); } } }  function showVictoryScreen() { const stage = stagesData[currentStageId]; goToScreen('victory-screen'); document.getElementById('victory-title-text').innerText = (currentStageId === 4) ? "STAGE BONUS CLEARED!" : `STAGE ${currentStageId} CLEARED!`;
+                    document.getElementById('matches-display').innerText = `🐾 ${matchesCount}`;
+                    canInteract = true;
+                    if(matchesCount === stage.pairs.length) {
+                        clearInterval(gameTimer);
+                        if(currentBgmAudio) currentBgmAudio.pause();
+                        playSoundEffect('victory');
+                        setTimeout(showVictoryScreen, 500);
+                    }
+                }, 300);
+            } else {
+                playSoundEffect('wrong');
+                setTimeout(() => {
+                    firstSelectedCard.classList.remove('flipped');
+                    cardElem.classList.remove('flipped');
+                    firstSelectedCard = null;
+                    canInteract = true;
+                }, 700);
+            }
+        }
+    }
+
+    function showVictoryScreen() {
+        const stage = stagesData[currentStageId];
+        goToScreen('victory-screen');
+        document.getElementById('victory-title-text').innerText = (currentStageId === 4) ? "STAGE BONUS CLEARED!" : `STAGE ${currentStageId} CLEARED!`;
         document.getElementById('victory-img-elem').src = stage.victoryImg;
         document.getElementById('victory-question-text').innerText = stage.question;
         const btnContainer = document.getElementById('victory-buttons-container');
@@ -1203,6 +1352,7 @@
     }
 
     function showResultScreen(choice) {
+        closeAdmin();
         currentVoteChoice = choice;
         actionClickCount = 0;
         goToScreen('result-media-screen');
@@ -1276,13 +1426,197 @@
 
                     repliesHtml += `
                         <div class="reply-item">
-                            <div><b>${rep.name}:</b> <span style="color:#d87a93; font-weight:600;">@${rep.replyTo \vert{}\vert{} c.name}</span>${rep.text}</div>
+                            <div><b>${rep.name}:</b> <span style="color:#d87a93; font-weight:600;">@${rep.replyTo || c.name}</span> ${rep.text}</div>
                             <div style="display:flex; gap:12px; font-size:0.74rem; color:#555e68; margin-top:2px;">
-                                <span class="action-like ${isRepLiked ? 'liked' : ''}" onclick="likeReply('${c.firebaseId}',${rIndex})">${repHeartIconHtml}${rep.likes || 0}</span>
-                                <span class="action-reply" onclick="toggleReplyBox('${c.firebaseId}',${rIndex})">Reply</span>
+                                <span class="action-like ${isRepLiked ? 'liked' : ''}" onclick="likeReply('${c.firebaseId}', ${rIndex})">${repHeartIconHtml} ${rep.likes || 0}</span>
+                                <span class="action-reply" onclick="toggleReplyBox('${c.firebaseId}', ${rIndex})">Reply</span>
                             </div>
                             <div class="reply-input-inline" id="reply-inline-${c.firebaseId}-${rIndex}" style="display:none; flex-direction:column; gap:4px; margin-top:4px;">
                                 <input type="text" id="inline-name-${c.firebaseId}-${rIndex}" class="name-input" placeholder="Your name..." autocomplete="off" style="font-size:0.75rem; padding:4px 8px;">
                                 <div style="display:flex; gap:6px;">
                                     <input type="text" id="inline-text-${c.firebaseId}-${rIndex}" class="comment-input" placeholder="Reply to @${rep.name}..." autocomplete="off" style="font-size:0.75rem; padding:4px 8px;">
-                                    <button class="send-btn" onclick="postInlineReply('${c.firebaseId}', ${rIndex}, '${rep.name}')" style="
+                                    <button class="send-btn" onclick="postInlineReply('${c.firebaseId}', ${rIndex}, '${rep.name}')" style="padding:4px 8px; font-size:0.7rem;">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                repliesHtml += '</div>';
+            }
+            item.innerHTML = `
+                <div class="comment-header">
+                    <span>${c.name}</span>
+                    <span class="voted-badge ${c.vote === 'no' ? 'no' : ''}">voted ${c.vote.toUpperCase()}</span>
+                    <span class="comment-time" style="font-weight:normal; color:#777; font-size:0.7rem;">${c.time || ''}</span>
+                    <button class="comment-menu-btn" onclick="toggleCommentMenu('${c.firebaseId}')">⋮</button>
+                    <div class="comment-dropdown" id="dropdown-${c.firebaseId}">
+                        <button onclick="editComment('${c.firebaseId}')">Edit</button>
+                    </div>
+                </div>
+                <div class="comment-body">${c.text}</div>
+                <div class="comment-footer-actions">
+                    <span class="action-like ${isLiked ? 'liked' : ''}" onclick="likeComment('${c.firebaseId}')">${heartIconHtml} ${c.likes || 0}</span>
+                    <span class="action-reply" onclick="toggleRootReplyBox('${c.firebaseId}')">Reply</span>
+                </div>
+                <div class="reply-input-inline" id="reply-root-${c.firebaseId}" style="display:none; flex-direction:column; gap:4px; margin-top:6px;">
+                    <input type="text" id="root-name-${c.firebaseId}" class="name-input" placeholder="Your name..." autocomplete="off" style="font-size:0.75rem; padding:5px 8px;">
+                    <div style="display:flex; gap:6px;">
+                        <input type="text" id="root-text-${c.firebaseId}" class="comment-input" placeholder="Reply to @${c.name}..." autocomplete="off" style="font-size:0.75rem; padding:5px 8px;">
+                        <button class="send-btn" onclick="postRootReply('${c.firebaseId}', '${c.name}')" style="padding:5px 10px; font-size:0.7rem;">Send</button>
+                    </div>
+                </div>
+                ${repliesHtml}
+            `;
+            listContainer.appendChild(item);
+        });
+    }
+
+    function toggleCommentMenu(firebaseId) {
+        const dropdown = document.getElementById(`dropdown-${firebaseId}`);
+        document.querySelectorAll('.comment-dropdown').forEach(d => { if(d !== dropdown) d.style.display = 'none'; });
+        dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function editComment(firebaseId) {
+        const comment = commentsData.find(c => c.firebaseId === firebaseId);
+        const newText = prompt("Edit your comment:", comment.text);
+        if(newText !== null && newText.trim() !== '') {
+            commentsRef.child(firebaseId).update({ text: newText.trim() });
+        }
+    }
+
+    function likeComment(firebaseId) {
+        playSoundEffect('click');
+        const commentRef = commentsRef.child(firebaseId);
+        commentRef.once('value', snapshot => {
+            const val = snapshot.val();
+            if(!val) return;
+            let likedUsers = val.likedUsers || {};
+            let likes = val.likes || 0;
+            if (likedUsers[mySessionId]) {
+                delete likedUsers[mySessionId];
+                likes = Math.max(0, likes - 1);
+            } else {
+                likedUsers[mySessionId] = true;
+                likes += 1;
+            }
+            commentRef.update({ likes, likedUsers });
+        });
+    }
+
+    function toggleRootReplyBox(firebaseId) {
+        playSoundEffect('click');
+        const box = document.getElementById(`reply-root-${firebaseId}`);
+        if(box) box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function postRootReply(firebaseId, targetName) {
+        const nameInput = document.getElementById(`root-name-${firebaseId}`);
+        const textInput = document.getElementById(`root-text-${firebaseId}`);
+        if(!nameInput.value.trim() || !textInput.value.trim()) return;
+        const comment = commentsData.find(c => c.firebaseId === firebaseId);
+        let replies = comment.replies ? [...comment.replies] : [];
+        replies.push({
+            name: nameInput.value.trim(),
+            replyTo: targetName,
+            text: textInput.value.trim(),
+            likes: 0,
+            likedUsers: {}
+        });
+        commentsRef.child(firebaseId).update({ replies: replies });
+        playSoundEffect('click');
+    }
+
+    function toggleReplyBox(firebaseId, rIndex) {
+        playSoundEffect('click');
+        const box = document.getElementById(`reply-inline-${firebaseId}-${rIndex}`);
+        if(box) box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function postInlineReply(firebaseId, rIndex, targetName) {
+        const nameInput = document.getElementById(`inline-name-${firebaseId}-${rIndex}`);
+        const textInput = document.getElementById(`inline-text-${firebaseId}-${rIndex}`);
+        if(!nameInput.value.trim() || !textInput.value.trim()) return;
+        const comment = commentsData.find(c => c.firebaseId === firebaseId);
+        let replies = comment.replies ? [...comment.replies] : [];
+        replies.push({
+            name: nameInput.value.trim(),
+            replyTo: targetName,
+            text: textInput.value.trim(),
+            likes: 0,
+            likedUsers: {}
+        });
+        commentsRef.child(firebaseId).update({ replies: replies });
+        playSoundEffect('click');
+    }
+
+    function likeReply(firebaseId, replyIndex) {
+        playSoundEffect('click');
+        const commentRef = commentsRef.child(firebaseId);
+        commentRef.once('value', snapshot => {
+            const val = snapshot.val();
+            if(!val || !val.replies || !val.replies[replyIndex]) return;
+            let replies = [...val.replies];
+            let rep = replies[replyIndex];
+            let likedUsers = rep.likedUsers || {};
+            let likes = rep.likes || 0;
+            if (likedUsers[mySessionId]) {
+                delete likedUsers[mySessionId];
+                likes = Math.max(0, likes - 1);
+            } else {
+                likedUsers[mySessionId] = true;
+                likes += 1;
+            }
+            rep.likes = likes;
+            rep.likedUsers = likedUsers;
+            commentRef.update({ replies: replies });
+        });
+    }
+
+    function renderAdminCommentsList() {
+        const adminList = document.getElementById('admin-comments-manage-list');
+        if (!adminList) return;
+        adminList.innerHTML = '';
+        commentsData.forEach(c => {
+            const row = document.createElement('div');
+            row.style.cssText = "display:flex; justify-content:space-between; align-items:center; background:#3b1a26; padding:6px 10px; border-radius:6px; font-size:0.75rem;";
+            row.innerHTML = `
+                <span><b>${c.name}:</b> ${c.text}</span>
+                <button onclick="adminDeleteComment('${c.firebaseId}')" style="background:#e74c3c; color:#fff; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Xóa</button>
+            `;
+            adminList.appendChild(row);
+        });
+    }
+
+    function adminDeleteComment(firebaseId) {
+        if(confirm("Admin: Bạn có chắc chắn muốn xóa bình luận này không?")) {
+            commentsRef.child(firebaseId).remove();
+        }
+    }
+
+    window.addEventListener('keydown', (e) => {
+        if(e.shiftKey && e.key.toLowerCase() === 'u') {
+            document.getElementById('admin-modal').style.display = 'flex';
+        }
+    });
+
+    function closeAdmin() {
+        document.getElementById('admin-modal').style.display = 'none';
+    }
+
+    function switchAdminTab(index) {
+        const tabs = document.querySelectorAll('.admin-tab-btn');
+        const sections = document.querySelectorAll('.admin-section');
+        tabs.forEach((t, i) => {
+            t.classList.toggle('active', i === index);
+            sections[i].classList.toggle('active', i === index);
+        });
+    }
+
+    window.onload = function() {
+        initSelectStageElements();
+        goToScreen('intro-screen');
+    };
+</script>
+</body>
+</html>
