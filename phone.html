@@ -12,7 +12,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <style>
-        /* Nhúng trực tiếp font 야놀자 야체 (Yanolja Yache) chuẩn như hình 1 */
+        /* Nhúng trực tiếp font 야놀자 야체 (Yanolja Yache) chuẩn */
         @font-face {
             font-family: 'YanoljaYacheR';
             src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/YanoljaYacheR.woff') format('woff');
@@ -153,11 +153,14 @@
             justify-content: center;
             gap: 8px;
         }
-        /* Class riêng cho chữ Hàn ㅋㅋㅋㅋㅋㅋ để hiển thị nét tròn mập giống hình 1 & 2 */
+        /* Tối ưu hóa hiển thị chữ ㅋㅋㅋㅋㅋㅋ: to hơn 2 mức, thu hẹp khoảng cách chữ nhưng giữ nguyên chiều cao nút */
         .korean-laugh-font {
             font-family: 'YanoljaYacheR', 'Black Han Sans', sans-serif !important;
-            font-size: 1.15rem !important;
-            letter-spacing: 2px;
+            font-size: 1.45rem !important;
+            letter-spacing: 0px !important;
+            line-height: 1 !important;
+            padding-top: 9px !important;
+            padding-bottom: 9px !important;
             font-weight: 900;
         }
         .custom-btn:active {
@@ -860,6 +863,7 @@
     let activeStageVideoId = null;
     let actionClickCount = 0;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
     // Lắng nghe dữ liệu bình luận realtime từ Firebase
     commentsRef.on('value', (snapshot) => {
         const data = snapshot.val();
@@ -874,6 +878,7 @@
         renderComments();
         renderAdminCommentsList();
     });
+
     function playSoundEffect(type) {
         if (isAudioMuted) return;
         if (audioCtx.state === 'suspended') {
@@ -930,7 +935,8 @@
             });
         }
     }
-    // Tự động dừng và tắt tiếng toàn bộ media (audio + video) khi chuyển sang slide khác
+
+    // Tự động dừng và tắt tiếng toàn bộ media khi chuyển màn
     function stopAllMediaAssets() {
         if (currentBgmAudio) {
             currentBgmAudio.pause();
@@ -951,9 +957,9 @@
         }
         stopAllStageVideos();
     }
+
     function goToScreen(screenId) {
         stopAllMediaAssets();
-        
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
         if (screenId === 'intro-screen') {
@@ -965,15 +971,18 @@
             }
         }
     }
+
     function replayIntro() {
         const vid = document.getElementById('intro-video');
         vid.currentTime = 0;
         vid.muted = false;
         vid.play();
     }
+
     function goToSelectStage() {
         goToScreen('select-screen');
     }
+
     function toggleStageVideo(stageId, event) {
         event.stopPropagation();
         const img = document.getElementById(`stage-img-${stageId}`);
@@ -991,6 +1000,7 @@
             stopAllStageVideos();
         }
     }
+
     function stopAllStageVideos() {
         [1, 2, 3].forEach(id => {
             const img = document.getElementById(`stage-img-${id}`);
@@ -1007,11 +1017,13 @@
         });
         activeStageVideoId = null;
     }
+
     function handleScreenClick(event) {
         if (!event.target.closest('.stage-media-wrapper')) {
             stopAllStageVideos();
         }
     }
+
     function toggleStageAudio() {
         isAudioMuted = !isAudioMuted;
         const btn = document.getElementById('audio-toggle-btn');
@@ -1020,6 +1032,7 @@
         }
         btn.innerText = isAudioMuted ? "🔇" : "🔊";
     }
+
     function startStage(stageId) {
         currentStageId = stageId;
         const stage = stagesData[stageId];
@@ -1078,6 +1091,7 @@
             }
         }, 1000);
     }
+
     function onCardClick(cardElem) {
         if(!canInteract || cardElem.classList.contains('flipped') || cardElem.classList.contains('matched')) return;
         playSoundEffect('click');
@@ -1117,6 +1131,7 @@
             }
         }
     }
+
     function showVictoryScreen() {
         const stage = stagesData[currentStageId];
         goToScreen('victory-screen');
@@ -1138,6 +1153,7 @@
             `;
         }
     }
+
     function nextStageOrResult() {
         if (currentStageId === 1) {
             startStage(2);
@@ -1147,6 +1163,7 @@
             startStage(4);
         }
     }
+
     function updateBottomButtonLabel() {
         const bottomBtn = document.getElementById('bottom-action-btn');
         if (currentVoteChoice === 'yes') {
@@ -1157,6 +1174,7 @@
             bottomBtn.classList.remove('korean-laugh-font');
         }
     }
+
     function showResultScreen(choice) {
         currentVoteChoice = choice;
         actionClickCount = 0;
@@ -1175,6 +1193,7 @@
         bottomBtn.style.marginTop = '0px';
         updateBottomButtonLabel();
     }
+
     function handleBottomAction() {
         actionClickCount++;
         const commentBox = document.getElementById('comment-box-elem');
@@ -1190,6 +1209,7 @@
             goToScreen('intro-screen');
         }
     }
+
     // Đẩy bình luận mới lên Firebase Realtime Database
     function postComment() {
         const nameInput = document.getElementById('user-name-input');
@@ -1208,6 +1228,7 @@
         commentsRef.push(newComment);
         commentInput.value = '';
     }
+
     // Render danh sách bình luận với icon tim rỗng khi chưa like và tim đỏ khi đã like
     function renderComments() {
         const listContainer = document.getElementById('comments-list-container');
@@ -1279,11 +1300,13 @@
             listContainer.appendChild(item);
         });
     }
+
     function toggleCommentMenu(firebaseId) {
         const dropdown = document.getElementById(`dropdown-${firebaseId}`);
         document.querySelectorAll('.comment-dropdown').forEach(d => { if(d !== dropdown) d.style.display = 'none'; });
         dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
     }
+
     function editComment(firebaseId) {
         const comment = commentsData.find(c => c.firebaseId === firebaseId);
         const newText = prompt("Edit your comment:", comment.text);
@@ -1291,6 +1314,7 @@
             commentsRef.child(firebaseId).update({ text: newText.trim() });
         }
     }
+
     function likeComment(firebaseId) {
         playSoundEffect('click');
         const commentRef = commentsRef.child(firebaseId);
@@ -1309,6 +1333,7 @@
             commentRef.update({ likes, likedUsers });
         });
     }
+
     function toggleRootReplyBox(firebaseId) {
         playSoundEffect('click');
         const box = document.getElementById(`reply-root-${firebaseId}`);
@@ -1316,6 +1341,7 @@
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
         }
     }
+
     function postRootReply(firebaseId, targetName) {
         const nameInput = document.getElementById(`root-name-${firebaseId}`);
         const textInput = document.getElementById(`root-text-${firebaseId}`);
@@ -1332,6 +1358,7 @@
         commentsRef.child(firebaseId).update({ replies: replies });
         playSoundEffect('click');
     }
+
     function toggleReplyBox(firebaseId, rIndex) {
         playSoundEffect('click');
         const box = document.getElementById(`reply-inline-${firebaseId}-${rIndex}`);
@@ -1339,6 +1366,7 @@
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
         }
     }
+
     function postInlineReply(firebaseId, rIndex, targetName) {
         const nameInput = document.getElementById(`inline-name-${firebaseId}-${rIndex}`);
         const textInput = document.getElementById(`inline-text-${firebaseId}-${rIndex}`);
@@ -1355,6 +1383,7 @@
         commentsRef.child(firebaseId).update({ replies: replies });
         playSoundEffect('click');
     }
+
     function likeReply(firebaseId, replyIndex) {
         playSoundEffect('click');
         const commentRef = commentsRef.child(firebaseId);
@@ -1377,6 +1406,7 @@
             commentRef.update({ replies: replies });
         });
     }
+
     function renderAdminCommentsList() {
         const adminList = document.getElementById('admin-comments-manage-list');
         if (!adminList) return;
@@ -1384,34 +1414,4 @@
         commentsData.forEach(c => {
             const row = document.createElement('div');
             row.style.cssText = "display:flex; justify-content:space-between; align-items:center; background:#3b1a26; padding:6px 10px; border-radius:6px; font-size:0.75rem;";
-            row.innerHTML = `
-                <span><b>${c.name}:</b> ${c.text}</span>
-                <button onclick="adminDeleteComment('${c.firebaseId}')" style="background:#e74c3c; color:#fff; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Xóa</button>
-            `;
-            adminList.appendChild(row);
-        });
-    }
-    function adminDeleteComment(firebaseId) {
-        if(confirm("Admin: Bạn có chắc chắn muốn xóa bình luận này không?")) {
-            commentsRef.child(firebaseId).remove();
-        }
-    }
-    window.addEventListener('keydown', (e) => {
-        if(e.shiftKey && e.key.toLowerCase() === 'u') {
-            document.getElementById('admin-modal').style.display = 'flex';
-        }
-    });
-    function closeAdmin() {
-        document.getElementById('admin-modal').style.display = 'none';
-    }
-    function switchAdminTab(index) {
-        const tabs = document.querySelectorAll('.admin-tab-btn');
-        const sections = document.querySelectorAll('.admin-section');
-        tabs.forEach((t, i) => {
-            t.classList.toggle('active', i === index);
-            sections[i].classList.toggle('active', i === index);
-        });
-    }
-</script>
-</body>
-</html>
+            row
