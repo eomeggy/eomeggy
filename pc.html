@@ -320,7 +320,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div class="p-3 bg-[#18111e] rounded-xl border border-purple-900/60 space-y-2">
                                 <span class="font-bold text-xs text-pink-300 block">EASY (Stage 1)</span>
-                                <div class="text-[11px] text-gray-400">Static Cover Image (PC/Phone):
+                                <div class="text-[11px] text-gray-400">Static Cover Image:
                                     <input type="file" accept="image/*" onchange="uploadLevelHoverMedia(event, 1, 'img')" class="w-full text-[10px] mt-1">
                                 </div>
                                 <div class="text-[11px] text-gray-400">Hover Video:
@@ -530,13 +530,18 @@
         let isProcessing = false;
         let totalPairsInStage = 2;
         let introVideoUrl = "intro-video.mp4";
-        let phoneIntroVideoUrl = "intro-video-phone.mp4"; // Biến lưu bản phone ver
+        let phoneIntroVideoUrl = "intro-video-phone.mp4";
         let currentChoiceVote = 'YES';
         
         let levelHoverMedia = {
             1: { img: 'stage1-easy-img.jpg', vid: 'stage1-easy-video.mp4' },
             2: { img: 'stage2-medium-img.jpg', vid: 'stage2-medium-video.mp4' },
             3: { img: 'stage3-hard-img.jpg', vid: 'stage3-hard-video.mp4' }
+        };
+        let phoneLevelHoverMedia = {
+            1: { img: 'stage1-easy-img-phone.jpg', vid: 'stage1-easy-video-phone.mp4' },
+            2: { img: 'stage2-medium-img-phone.jpg', vid: 'stage2-medium-video-phone.mp4' },
+            3: { img: 'stage3-hard-img-phone.jpg', vid: 'stage3-hard-video-phone.mp4' }
         };
         
         let stageCovers = {
@@ -545,12 +550,24 @@
             3: 'card-back-1-2-3-bonus.jpg',
             4: 'card-back-1-2-3-bonus.jpg'
         };
+        let phoneStageCovers = {
+            1: 'card-back-1-2-3-bonus-phone.jpg',
+            2: 'card-back-1-2-3-bonus-phone.jpg',
+            3: 'card-back-1-2-3-bonus-phone.jpg',
+            4: 'card-back-1-2-3-bonus-phone.jpg'
+        };
         
         let stageVictoryImages = { 
             1: 'victory1-img.png', 
             2: 'victory2-img.png', 
             3: 'victory3-img.png', 
             4: 'victory-bonus-img.png' 
+        };
+        let phoneStageVictoryImages = { 
+            1: 'victory1-img-phone.png', 
+            2: 'victory2-img-phone.png', 
+            3: 'victory3-img-phone.png', 
+            4: 'victory-bonus-img-phone.png' 
         };
         
         let stageBGMTracks = { 
@@ -559,6 +576,12 @@
             3: 'stage3-audio.mp3', 
             4: 'stage-bonus-audio.mp3' 
         };
+        let phoneStageBGMTracks = { 
+            1: 'stage1-audio-phone.mp3', 
+            2: 'stage2-audio-phone.mp3', 
+            3: 'stage3-audio-phone.mp3', 
+            4: 'stage-bonus-audio-phone.mp3' 
+        };
         
         let stageCardPhotos = {
             1: ['stage1-card-1.jpg', 'stage1-card-2.jpg', 'stage1-card-3.png', 'stage1-card-4.jpg'],
@@ -566,6 +589,13 @@
             3: ['stage3-card-1.jpg', 'stage3-card-2.jpg', 'stage3-card-3.jpg', 'stage3-card-4.jpg', 'stage3-card-5.jpg', 'stage3-card-6.jpg', 'stage3-card-7.jpg', 'stage3-card-8.jpg', 'stage3-card-9.jpg', 'stage3-card-10.jpg', 'stage3-card-11.jpg', 'stage3-card-12.jpg'],
             4: ['bonus-card-1.jpg', 'bonus-card-2.jpg', 'bonus-card-3.jpg', 'bonus-card-4.jpg', 'bonus-card-5.png', 'bonus-card-6.jpg', 'bonus-card-7.jpg', 'bonus-card-8.jpg', 'bonus-card-9.jpg', 'bonus-card-10.png', 'bonus-card-11.jpg', 'bonus-card-12.jpg', 'bonus-card-13.png', 'bonus-card-14.jpg', 'bonus-card-15.png', 'bonus-card-16.jpg', 'bonus-card-17.jpg', 'bonus-card-18.jpg', 'bonus-card-19.jpg', 'bonus-card-20.jpg']
         };
+        let phoneStageCardPhotos = {
+            1: ['stage1-card-1-phone.jpg', 'stage1-card-2-phone.jpg', 'stage1-card-3-phone.jpg', 'stage1-card-4-phone.jpg'],
+            2: ['stage2-card-1-phone.jpg', 'stage2-card-2-phone.jpg', 'stage2-card-3-phone.jpg', 'stage2-card-4-phone.jpg', 'stage2-card-5-phone.jpg', 'stage2-card-6-phone.jpg', 'stage2-card-7-phone.jpg', 'stage2-card-8-phone.jpg'],
+            3: ['stage3-card-1-phone.jpg', 'stage3-card-2-phone.jpg', 'stage3-card-3-phone.jpg', 'stage3-card-4-phone.jpg', 'stage3-card-5-phone.jpg', 'stage3-card-6-phone.jpg', 'stage3-card-7-phone.jpg', 'stage3-card-8-phone.jpg', 'stage3-card-9-phone.jpg', 'stage3-card-10-phone.jpg', 'stage3-card-11-phone.jpg', 'stage3-card-12-phone.jpg'],
+            4: ['bonus-card-1-phone.jpg', 'bonus-card-2-phone.jpg', 'bonus-card-3-phone.jpg', 'bonus-card-4-phone.jpg', 'bonus-card-5-phone.png', 'bonus-card-6-phone.jpg', 'bonus-card-7-phone.jpg', 'bonus-card-8-phone.jpg', 'bonus-card-9-phone.jpg', 'bonus-card-10-phone.png', 'bonus-card-11-phone.jpg', 'bonus-card-12-phone.jpg', 'bonus-card-13-phone.png', 'bonus-card-14-phone.jpg', 'bonus-card-15-phone.png', 'bonus-card-16-phone.jpg', 'bonus-card-17-phone.jpg', 'bonus-card-18-phone.jpg', 'bonus-card-19-phone.jpg', 'bonus-card-20-phone.jpg']
+        };
+
         let stageMatchingPairs = {
             1: { 0: 0, 3: 0, 1: 1, 2: 1 },
             2: { 0: 0, 6: 0, 1: 1, 7: 1, 2: 2, 5: 2, 3: 3, 4: 3 },
@@ -576,6 +606,10 @@
         let resultChoiceMedia = {
             YES: { type: 'video', video: 'yes-button-video.mp4', image: '', audio: '' },
             NO: { type: 'video', video: 'no-button-video.mp4', image: '', audio: '' }
+        };
+        let phoneResultChoiceMedia = {
+            YES: { type: 'video', video: 'yes-button-video-phone.mp4', image: '', audio: '' },
+            NO: { type: 'video', video: 'no-button-video-phone.mp4', image: '', audio: '' }
         };
         
         let resultActionState = 0;
@@ -616,12 +650,11 @@
             if (audioUnlocked) return;
             audioUnlocked = true;
             const ctx = getAudioContext();
-            if (ctx && ctx.state === 'suspended') {
-                ctx.resume();
-            }
+            if (ctx && ctx.state === 'suspended') ctx.resume();
         }
         window.addEventListener('click', unlockAudio, { once: true });
         window.addEventListener('touchstart', unlockAudio, { once: true });
+
         function stopAllGlobalMedia() {
             stopBGM();
             stopIntroVideoCompletely();
@@ -752,6 +785,7 @@
                 osc.stop(ctx.currentTime + 0.15);
             } catch (e) {}
         }
+
         function sortCommentsData() {
             userCommentsList.sort((a, b) => {
                 const likesA = a.likes || 0;
@@ -1056,6 +1090,7 @@
                 }
             }
         }
+        
         function testRunSlide(slideType, stageNum, mode = 'pc') {
             closeUploadModal();
             stopAllGlobalMedia();
@@ -1064,11 +1099,11 @@
             } else if (slideType === 'stage-select') {
                 skipIntroToStageSelect();
             } else if (slideType === 'stage') {
-                startGame(stageNum || 1);
+                startGame(stageNum || 1, mode);
             } else if (slideType === 'result-yes') {
-                handleBonusChoice('YES');
+                handleBonusChoice('YES', mode);
             } else if (slideType === 'result-no') {
-                handleBonusChoice('NO');
+                handleBonusChoice('NO', mode);
             }
         }
         function showIntroScreen(isPhone = false) {
@@ -1127,10 +1162,12 @@
             }
             document.getElementById('media-display-modal').classList.add('hidden');
         }
-        function playLevelHover(lvl) {
+        function playLevelHover(lvl, mode = 'pc') {
             [1, 2, 3].forEach(l => { if (l !== lvl) stopLevelHover(l); });
             const vidEl = document.getElementById(`level-vid-${lvl}`);
-            if (vidEl && levelHoverMedia[lvl].vid) {
+            const mediaObj = (mode === 'phone') ? phoneLevelHoverMedia : levelHoverMedia;
+            if (vidEl && mediaObj[lvl].vid) {
+                vidEl.src = mediaObj[lvl].vid;
                 vidEl.classList.remove('hidden');
                 vidEl.muted = false;
                 vidEl.currentTime = 0;
@@ -1145,7 +1182,7 @@
                 vidEl.classList.add('hidden');
             }
         }
-        function startGame(stage) {
+        function startGame(stage, mode = 'pc') {
             currentStage = stage;
             stopAllGlobalMedia();
             document.getElementById('intro-screen').classList.add('hidden');
@@ -1160,13 +1197,14 @@
             movesCount = 0;
             updateHeaderStats();
             stopTimer();
-            playBGM(stage);
-            setupBoard(stage);
+            playBGM(stage, mode);
+            setupBoard(stage, mode);
         }
-        function playBGM(stage) {
+        function playBGM(stage, mode = 'pc') {
             const bgm = document.getElementById('stage-bgm-audio');
-            if (bgm && stageBGMTracks[stage] && soundEnabled) {
-                bgm.src = stageBGMTracks[stage];
+            const tracks = (mode === 'phone') ? phoneStageBGMTracks : stageBGMTracks;
+            if (bgm && tracks[stage] && soundEnabled) {
+                bgm.src = tracks[stage];
                 bgm.currentTime = 0;
                 bgm.play().catch(()=>{});
             } else if (bgm) {
@@ -1205,12 +1243,12 @@
             document.getElementById('timer-display').innerText = `${mins}:${secs}`;
             document.getElementById('moves-display').innerText = movesCount;
         }
-        function setupBoard(stage) {
+        function setupBoard(stage, mode = 'pc') {
             const board = document.getElementById('game-board');
             if (!board) return;
             board.innerHTML = '';
             let deck = [];
-            const photos = stageCardPhotos[stage];
+            const photos = (mode === 'phone') ? phoneStageCardPhotos[stage] : stageCardPhotos[stage];
             const pairsMap = stageMatchingPairs[stage];
             
             if (stage === 1) {
@@ -1234,7 +1272,8 @@
             flippedCards = [];
             matchedPairsCount = 0;
             isProcessing = true;
-            const coverImage = stageCovers[stage] || stageCovers[1];
+            const covers = (mode === 'phone') ? phoneStageCovers : stageCovers;
+            const coverImage = covers[stage] || covers[1];
             
             deck.forEach((cardData) => {
                 const cardEl = document.createElement('div');
@@ -1320,8 +1359,10 @@
             const actionBtn = document.getElementById('victory-action-btn');
             const bonusBtns = document.getElementById('bonus-choice-buttons');
             questionEl.innerText = victoryQuestions[currentStage] || victoryQuestions[1];
-            if (stageVictoryImages[currentStage] && stageVictoryImages[currentStage].trim() !== '') {
-                victoryImg.src = stageVictoryImages[currentStage];
+            
+            const vicImages = stageVictoryImages;
+            if (vicImages[currentStage] && vicImages[currentStage].trim() !== '') {
+                victoryImg.src = vicImages[currentStage];
                 victoryImg.classList.remove('hidden');
             } else {
                 victoryImg.classList.add('hidden');
@@ -1342,7 +1383,7 @@
             else if (currentStage === 2) startGame(3);
             else if (currentStage === 3) startGame(4);
         }
-        function handleBonusChoice(choice) {
+        function handleBonusChoice(choice, mode = 'pc') {
             document.getElementById('victory-modal').classList.add('hidden');
             const modal = document.getElementById('media-display-modal');
             const container = document.getElementById('media-display-content');
@@ -1356,7 +1397,7 @@
             if (commentBox) commentBox.classList.add('hidden');
             resultActionState = 0;
             const key = choice.toUpperCase();
-            const mediaData = resultChoiceMedia[key];
+            const mediaData = (mode === 'phone') ? phoneResultChoiceMedia[key] : resultChoiceMedia[key];
             
             if (actionBtn) {
                 actionBtn.classList.remove('hidden');
@@ -1456,11 +1497,8 @@
             const file = e.target.files[0];
             if (!file) return;
             const url = URL.createObjectURL(file);
-            if (mode === 'phone') {
-                phoneIntroVideoUrl = url;
-            } else {
-                introVideoUrl = url;
-            }
+            if (mode === 'phone') phoneIntroVideoUrl = url;
+            else introVideoUrl = url;
             const msg = document.getElementById('intro-placeholder-text');
             if (msg) msg.classList.add('hidden');
             recreateIntroVideoElement(mode === 'phone');
