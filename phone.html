@@ -12,7 +12,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <style>
-        /* Nhúng trực tiếp font 야놀자 야체 (Yanolja Yache) chuẩn */
         @font-face {
             font-family: 'YanoljaYacheR';
             src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/YanoljaYacheR.woff') format('woff');
@@ -41,7 +40,6 @@
             min-height: 100vh;
             overflow: hidden;
         }
-        /* Mobile Container Frame */
         #game-container {
             width: 100%;
             max-width: 420px;
@@ -153,7 +151,6 @@
             justify-content: center;
             gap: 8px;
         }
-        /* Yêu cầu: Tăng cỡ chữ lên 2 mức, thu hẹp khoảng cách chữ (0px) nhưng giữ nguyên chiều cao nút bấm */
         .korean-laugh-font {
             font-family: 'YanoljaYacheR', 'Black Han Sans', sans-serif !important;
             font-size: 1.45rem !important;
@@ -170,33 +167,49 @@
             background-color: var(--dark-burgundy);
             color: #fff;
         }
-        /* SELECT STAGE SCREEN */
+        
+        /* SELECT STAGE SCREEN MỚI (CHỈ HIỆN 1 LEVEL TRONG KHUNG VÀ ẨN THANH CUỘN) */
         #select-screen {
-            padding: 20px 12px;
-            overflow-y: auto;
+            padding: 20px 15px;
+            overflow: hidden !important; /* Ẩn toàn bộ thanh cuộn dọc */
+            justify-content: flex-start;
             align-items: center;
         }
-        .stages-scroll-area {
+        .select-stage-title-container {
+            margin-bottom: 25px;
+            flex-shrink: 0;
+        }
+        .select-stage-viewport {
             width: 100%;
-            max-width: 370px;
+            max-width: 340px;
+            flex-grow: 1;
             display: flex;
-            flex-direction: column;
-            gap: 25px;
-            padding-bottom: 50px;
+            justify-content: center;
             align-items: center;
+            position: relative;
         }
         .stage-card-item {
             width: 100%;
             background: #fff;
-            border-radius: 18px;
-            padding: 10px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+            border-radius: 20px;
+            padding: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.18);
             text-align: center;
+            position: absolute;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            pointer-events: none;
+        }
+        .stage-card-item.active-level {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
         }
         .stage-media-wrapper {
             width: 100%;
             aspect-ratio: 1/1;
-            border-radius: 12px;
+            border-radius: 14px;
             overflow: hidden;
             position: relative;
             background: #000;
@@ -213,10 +226,11 @@
         .stage-card-item h3 {
             font-family: 'Titan One', cursive;
             color: var(--dark-burgundy);
-            margin-top: 10px;
-            font-size: 1.1rem;
+            margin-top: 12px;
+            font-size: 1.2rem;
             cursor: pointer;
         }
+
         /* GAMEPLAY SCREEN */
         #gameplay-screen {
             padding: 12px;
@@ -617,7 +631,6 @@
     <div id="intro-screen" class="screen active">
         <h1 class="title-exact-match">IS SEONGHYEON A CAT?</h1>
         <div class="video-box-intro">
-            <!-- Đã bổ sung đầy đủ controls, autoplay, loop chuẩn Safari mobile -->
             <video id="intro-video" src="intro-video-phone.mp4" controls autoplay loop playsinline preload="auto"></video>
         </div>
         <div class="btn-group">
@@ -625,27 +638,31 @@
             <button class="custom-btn primary" onclick="goToSelectStage()">Start Game ➔</button>
         </div>
     </div>
-    <!-- 2. SELECT STAGE SCREEN -->
+
+    <!-- 2. SELECT STAGE SCREEN (GIAO DIỆN 1 LEVEL ĐƠN LẺ VỚI HIỆU ỨNG FADE MƯỢT MÀ) -->
     <div id="select-screen" class="screen" onclick="handleScreenClick(event)">
-        <div class="stages-scroll-area" id="stages-scroll-container">
-            <!-- EASY -->
-            <div class="stage-card-item">
+        <div class="select-stage-title-container">
+            <h2 class="title-exact-match" style="font-size: 1.8rem;">SELECT STAGE</h2>
+        </div>
+        <div class="select-stage-viewport" id="select-viewport">
+            <!-- EASY (Stage 1) -->
+            <div class="stage-card-item" id="stage-card-1">
                 <div class="stage-media-wrapper" onclick="toggleStageVideo(1, event)">
                     <img id="stage-img-1" src="stage1-easy-img-phone.jpg" alt="EASY">
                     <video id="stage-vid-1" src="stage1-easy-video-phone.mp4" loop playsinline style="display:none;"></video>
                 </div>
                 <h3 onclick="startStage(1)">EASY</h3>
             </div>
-            <!-- MEDIUM -->
-            <div class="stage-card-item">
+            <!-- MEDIUM (Stage 2) -->
+            <div class="stage-card-item" id="stage-card-2">
                 <div class="stage-media-wrapper" onclick="toggleStageVideo(2, event)">
                     <img id="stage-img-2" src="stage2-medium-img-phone.jpg" alt="MEDIUM">
                     <video id="stage-vid-2" src="stage2-medium-video-phone.mp4" loop playsinline style="display:none;"></video>
                 </div>
                 <h3 onclick="startStage(2)">MEDIUM</h3>
             </div>
-            <!-- HARD -->
-            <div class="stage-card-item">
+            <!-- HARD (Stage 3) -->
+            <div class="stage-card-item" id="stage-card-3">
                 <div class="stage-media-wrapper" onclick="toggleStageVideo(3, event)">
                     <img id="stage-img-3" src="stage3-hard-img-phone.jpg" alt="HARD">
                     <video id="stage-vid-3" src="stage3-hard-video-phone.mp4" loop playsinline style="display:none;"></video>
@@ -654,6 +671,7 @@
             </div>
         </div>
     </div>
+
     <!-- 3. GAMEPLAY SCREEN -->
     <div id="gameplay-screen" class="screen">
         <div class="game-top-bar">
@@ -668,6 +686,7 @@
         <div class="preview-banner" id="preview-banner-box">Preview Time: <span id="preview-sec">3</span>s</div>
         <div class="cards-grid" id="cards-grid-container"></div>
     </div>
+
     <!-- 4. VICTORY SCREEN -->
     <div id="victory-screen" class="screen">
         <h2 class="title-exact-match" id="victory-title-text" style="font-size: 1.4rem;">STAGE 1 CLEARED!</h2>
@@ -677,12 +696,12 @@
         <h2 id="victory-question-text" style="font-size: 1rem; color: var(--dark-burgundy);">ARE YOU STILL SKEPTICAL?</h2>
         <div class="victory-buttons" id="victory-buttons-container"></div>
     </div>
+
     <!-- 5. RESULT MEDIA & COMMENT SCREEN (YES/NO) -->
     <div id="result-media-screen" class="screen" style="justify-content: center; gap: 15px;">
         <div class="video-box" id="result-video-box" style="width: 100%;">
             <video id="result-video-player" autoplay loop playsinline></video>
         </div>
-        <!-- Khung bình luận ban đầu ẩn -->
         <div class="comment-section-box" id="comment-box-elem" style="display: none; width: 100%;">
             <h3 class="title-exact-match" style="font-size: 0.95rem;">LEAVE YOUR COMMENTS</h3>
             <input type="text" id="user-name-input" class="name-input font-vietnamese" placeholder="Your name..." autocomplete="off">
@@ -695,6 +714,7 @@
         <button class="custom-btn primary" id="bottom-action-btn" onclick="handleBottomAction()" style="width: 100%; flex-shrink: 0;">ㅋㅋㅋㅋㅋㅋ</button>
     </div>
 </div>
+
 <!-- ADMIN CONFIGURATION MODAL -->
 <div id="admin-modal">
     <div class="admin-content">
@@ -738,6 +758,7 @@
         </div>
     </div>
 </div>
+
 <script>
     const firebaseConfig = {
         databaseURL: "https://seonghyeon-cat-game-default-rtdb.firebaseio.com/"
@@ -836,6 +857,10 @@
     let actionClickCount = 0;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     
+    // Logic quản lý chuyển stage lướt dọc (Mặc định bắt đầu ở Level 2: MEDIUM)
+    let currentSelectLevel = 2; 
+    let isTransitioning = false;
+
     commentsRef.on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -932,6 +957,10 @@
                 introVid.currentTime = 0;
                 introVid.play().catch(e => {});
             }
+        } else if (screenId === 'select-screen') {
+            // Mặc định luôn bật ở level MEDIUM (2) khi chuyển vào màn hình Select Stage
+            currentSelectLevel = 2;
+            updateSelectStageDisplay();
         }
     }
 
@@ -943,6 +972,83 @@
 
     function goToSelectStage() {
         goToScreen('select-screen');
+    }
+
+    // Cập nhật hiển thị level kèm hiệu ứng mờ dần (Fade) chỉ trong khung chứa ảnh/video
+    function updateSelectStageDisplay() {
+        [1, 2, 3].forEach(lvl => {
+            const cardElem = document.getElementById(`stage-card-${lvl}`);
+            if (lvl === currentSelectLevel) {
+                cardElem.classList.add('active-level');
+            } else {
+                cardElem.classList.remove('active-level');
+                // Tắt video ẩn nếu lướt qua level khác
+                const img = document.getElementById(`stage-img-${lvl}`);
+                const video = document.getElementById(`stage-vid-${lvl}`);
+                if (video) {
+                    video.pause();
+                    video.currentTime = 0;
+                    video.style.display = 'none';
+                }
+                if (img) img.style.display = 'block';
+            }
+        });
+    }
+
+    // Xử lý sự kiện lướt dọc (Wheel trên PC & Touch trên Mobile) ở màn hình Select Stage
+    let touchStartY = 0;
+    const selectViewport = document.getElementById('select-viewport');
+
+    selectViewport.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+    }, {passive: true});
+
+    selectViewport.addEventListener('touchend', (e) => {
+        if (isTransitioning) return;
+        let touchEndY = e.changedTouches[0].clientY;
+        let diff = touchStartY - touchEndY;
+        
+        if (Math.abs(diff) > 30) { // Ngưỡng vuốt tối thiểu
+            if (diff > 0) {
+                // Vuốt lên -> Tăng level (MEDIUM -> HARD)
+                if (currentSelectLevel < 3) {
+                    currentSelectLevel++;
+                    triggerLevelTransition();
+                }
+            } else {
+                // Vuốt xuống -> Giảm level (MEDIUM -> EASY)
+                if (currentSelectLevel > 1) {
+                    currentSelectLevel--;
+                    triggerLevelTransition();
+                }
+            }
+        }
+    }, {passive: true});
+
+    selectViewport.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        if (isTransitioning) return;
+        if (e.deltaY > 20) {
+            // Cuộn xuống -> Tăng level
+            if (currentSelectLevel < 3) {
+                currentSelectLevel++;
+                triggerLevelTransition();
+            }
+        } else if (e.deltaY < -20) {
+            // Cuộn lên -> Giảm level
+            if (currentSelectLevel > 1) {
+                currentSelectLevel--;
+                triggerLevelTransition();
+            }
+        }
+    }, {passive: false});
+
+    function triggerLevelTransition() {
+        isTransitioning = true;
+        updateSelectStageDisplay();
+        setTimeout(() => {
+            isTransitioning = false;
+        }, 400); // Khớp với thời gian transition CSS
     }
 
     function toggleStageVideo(stageId, event) {
