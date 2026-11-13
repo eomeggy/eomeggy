@@ -727,14 +727,12 @@
     
     // Đồng bộ cơ sở dữ liệu chung giữa PC và Phone
     const commentsRef = db.ref('comments');
-
     // Tạo mã định danh phiên làm việc cho thiết bị (chỉ dùng để quản lý trạng thái Like cá nhân)
     let mySessionId = localStorage.getItem('seonghyeon_session_id');
     if (!mySessionId) {
         mySessionId = 'session_' + Math.random().toString(36).substr(2, 9);
         localStorage.setItem('seonghyeon_session_id', mySessionId);
     }
-
     const stagesData = {
         1: {
             name: "STAGE 1: SKEPTICAL",
@@ -832,7 +830,6 @@
     let activeStageVideoId = null;
     let actionClickCount = 0;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
     // Lắng nghe dữ liệu bình luận realtime từ Firebase
     commentsRef.on('value', (snapshot) => {
         const data = snapshot.val();
@@ -847,7 +844,6 @@
         renderComments();
         renderAdminCommentsList();
     });
-
     function playSoundEffect(type) {
         if (isAudioMuted) return;
         if (audioCtx.state === 'suspended') {
@@ -867,7 +863,6 @@
             osc.start(now);
             osc.stop(now + 0.08);
         } else if (type === 'preview_tick') {
-            // Âm thanh đếm ngược trong giai đoạn preview time
             osc.type = 'sine';
             osc.frequency.setValueAtTime(800, now);
             gainNode.gain.setValueAtTime(0.1, now);
@@ -905,7 +900,6 @@
             });
         }
     }
-
     function goToScreen(screenId) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
@@ -913,18 +907,15 @@
             currentBgmAudio.pause();
         }
     }
-
     function replayIntro() {
         const vid = document.getElementById('intro-video');
         vid.currentTime = 0;
         vid.play();
     }
-
     function goToSelectStage() {
         stopAllStageVideos();
         goToScreen('select-screen');
     }
-
     function toggleStageVideo(stageId, event) {
         event.stopPropagation();
         const img = document.getElementById(`stage-img-${stageId}`);
@@ -942,7 +933,6 @@
             stopAllStageVideos();
         }
     }
-
     function stopAllStageVideos() {
         [1, 2, 3].forEach(id => {
             const img = document.getElementById(`stage-img-${id}`);
@@ -958,13 +948,11 @@
         });
         activeStageVideoId = null;
     }
-
     function handleScreenClick(event) {
         if (!event.target.closest('.stage-media-wrapper')) {
             stopAllStageVideos();
         }
     }
-
     function toggleStageAudio() {
         isAudioMuted = !isAudioMuted;
         const btn = document.getElementById('audio-toggle-btn');
@@ -973,7 +961,6 @@
         }
         btn.innerText = isAudioMuted ? "🔇" : "🔊";
     }
-
     function startStage(stageId) {
         stopAllStageVideos();
         currentStageId = stageId;
@@ -1022,7 +1009,7 @@
         document.getElementById('preview-sec').innerText = previewSec;
         let previewInterval = setInterval(() => {
             previewSec--;
-            playSoundEffect('preview_tick'); // Kích hoạt âm thanh đếm ngược preview time
+            playSoundEffect('preview_tick');
             document.getElementById('preview-sec').innerText = previewSec;
             if(previewSec <= 0) {
                 clearInterval(previewInterval);
@@ -1032,7 +1019,6 @@
             }
         }, 1000);
     }
-
     function onCardClick(cardElem) {
         if(!canInteract || cardElem.classList.contains('flipped') || cardElem.classList.contains('matched')) return;
         playSoundEffect('click');
@@ -1072,7 +1058,6 @@
             }
         }
     }
-
     function showVictoryScreen() {
         const stage = stagesData[currentStageId];
         goToScreen('victory-screen');
@@ -1094,7 +1079,6 @@
             `;
         }
     }
-
     function nextStageOrResult() {
         if (currentStageId === 1) {
             startStage(2);
@@ -1104,7 +1088,6 @@
             startStage(4);
         }
     }
-
     function showResultScreen(choice) {
         currentVoteChoice = choice;
         actionClickCount = 0;
@@ -1119,26 +1102,25 @@
         
         const bottomBtn = document.getElementById('bottom-action-btn');
         bottomBtn.style.marginTop = '0px';
-        bottomBtn.innerText = choice === 'yes' ? 'EM CHIP CAM ON' : 'WHY NOT ME!?';
+        // Đổi tên nút tùy theo lựa chọn YES / NO
+        bottomBtn.innerText = choice === 'yes' ? 'ㅋㅋㅋㅋㅋㅋ' : 'aniyaaa~';
     }
-
     function handleBottomAction() {
         actionClickCount++;
         const commentBox = document.getElementById('comment-box-elem');
         const bottomBtn = document.getElementById('bottom-action-btn');
         const screenDiv = document.getElementById('result-media-screen');
-
         if(actionClickCount === 1) {
             screenDiv.style.justifyContent = 'flex-start';
             commentBox.style.display = 'flex';
             bottomBtn.style.marginTop = 'auto';
-            bottomBtn.innerText = 'REPLAY INTRO';
+            // Khi bấm lần đầu để mở khung bình luận, đổi tên nút dưới khung bình luận theo lựa chọn YES / NO tương ứng
+            bottomBtn.innerText = (currentVoteChoice === 'yes') ? 'ㅋㅋㅋㅋㅋㅋ' : 'aniyaaa~';
         } else {
             actionClickCount = 0;
             goToScreen('intro-screen');
         }
     }
-
     // Đẩy bình luận mới lên Firebase Realtime Database
     function postComment() {
         const nameInput = document.getElementById('user-name-input');
@@ -1157,7 +1139,6 @@
         commentsRef.push(newComment);
         commentInput.value = '';
     }
-
     // Render danh sách bình luận với kiểm tra trạng thái Like chuẩn xác
     function renderComments() {
         const listContainer = document.getElementById('comments-list-container');
@@ -1167,10 +1148,8 @@
             const item = document.createElement('div');
             item.className = 'comment-item';
             
-            // Đảm bảo chỉ khi session hiện tại chủ động bấm like thì tim mới chuyển đỏ
             const likedUsers = c.likedUsers || {};
             const isLiked = likedUsers[mySessionId] === true;
-
             let repliesHtml = '';
             if (c.replies && c.replies.length > 0) {
                 repliesHtml = '<div class="reply-container">';
@@ -1196,7 +1175,6 @@
                 });
                 repliesHtml += '</div>';
             }
-
             item.innerHTML = `
                 <div class="comment-header">
                     <span>${c.name}</span>
@@ -1224,13 +1202,11 @@
             listContainer.appendChild(item);
         });
     }
-
     function toggleCommentMenu(firebaseId) {
         const dropdown = document.getElementById(`dropdown-${firebaseId}`);
         document.querySelectorAll('.comment-dropdown').forEach(d => { if(d !== dropdown) d.style.display = 'none'; });
         dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
     }
-
     function editComment(firebaseId) {
         const comment = commentsData.find(c => c.firebaseId === firebaseId);
         const newText = prompt("Edit your comment:", comment.text);
@@ -1238,8 +1214,6 @@
             commentsRef.child(firebaseId).update({ text: newText.trim() });
         }
     }
-
-    // Like bình luận chính với kiểm tra session an toàn
     function likeComment(firebaseId) {
         playSoundEffect('click');
         const commentRef = commentsRef.child(firebaseId);
@@ -1248,7 +1222,6 @@
             if(!val) return;
             let likedUsers = val.likedUsers || {};
             let likes = val.likes || 0;
-
             if (likedUsers[mySessionId]) {
                 delete likedUsers[mySessionId];
                 likes = Math.max(0, likes - 1);
@@ -1259,7 +1232,6 @@
             commentRef.update({ likes, likedUsers });
         });
     }
-
     function toggleRootReplyBox(firebaseId) {
         playSoundEffect('click');
         const box = document.getElementById(`reply-root-${firebaseId}`);
@@ -1267,12 +1239,10 @@
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
         }
     }
-
     function postRootReply(firebaseId, targetName) {
         const nameInput = document.getElementById(`root-name-${firebaseId}`);
         const textInput = document.getElementById(`root-text-${firebaseId}`);
         if(!nameInput.value.trim() || !textInput.value.trim()) return;
-
         const comment = commentsData.find(c => c.firebaseId === firebaseId);
         let replies = comment.replies ? [...comment.replies] : [];
         replies.push({
@@ -1285,7 +1255,6 @@
         commentsRef.child(firebaseId).update({ replies: replies });
         playSoundEffect('click');
     }
-
     function toggleReplyBox(firebaseId, rIndex) {
         playSoundEffect('click');
         const box = document.getElementById(`reply-inline-${firebaseId}-${rIndex}`);
@@ -1293,12 +1262,10 @@
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
         }
     }
-
     function postInlineReply(firebaseId, rIndex, targetName) {
         const nameInput = document.getElementById(`inline-name-${firebaseId}-${rIndex}`);
         const textInput = document.getElementById(`inline-text-${firebaseId}-${rIndex}`);
         if(!nameInput.value.trim() || !textInput.value.trim()) return;
-
         const comment = commentsData.find(c => c.firebaseId === firebaseId);
         let replies = comment.replies ? [...comment.replies] : [];
         replies.push({
@@ -1311,7 +1278,6 @@
         commentsRef.child(firebaseId).update({ replies: replies });
         playSoundEffect('click');
     }
-
     function likeReply(firebaseId, replyIndex) {
         playSoundEffect('click');
         const commentRef = commentsRef.child(firebaseId);
@@ -1322,7 +1288,6 @@
             let rep = replies[replyIndex];
             let likedUsers = rep.likedUsers || {};
             let likes = rep.likes || 0;
-
             if (likedUsers[mySessionId]) {
                 delete likedUsers[mySessionId];
                 likes = Math.max(0, likes - 1);
@@ -1332,12 +1297,9 @@
             }
             rep.likes = likes;
             rep.likedUsers = likedUsers;
-
             commentRef.update({ replies: replies });
         });
     }
-
-    // Bảng quản lý Admin: Chỉ giữ lại quyền xóa cmt tại đây
     function renderAdminCommentsList() {
         const adminList = document.getElementById('admin-comments-manage-list');
         if (!adminList) return;
@@ -1352,23 +1314,19 @@
             adminList.appendChild(row);
         });
     }
-
     function adminDeleteComment(firebaseId) {
         if(confirm("Admin: Bạn có chắc chắn muốn xóa bình luận này không?")) {
             commentsRef.child(firebaseId).remove();
         }
     }
-
     window.addEventListener('keydown', (e) => {
         if(e.shiftKey && e.key.toLowerCase() === 'u') {
             document.getElementById('admin-modal').style.display = 'flex';
         }
     });
-
     function closeAdmin() {
         document.getElementById('admin-modal').style.display = 'none';
     }
-
     function switchAdminTab(index) {
         const tabs = document.querySelectorAll('.admin-tab-btn');
         const sections = document.querySelectorAll('.admin-section');
