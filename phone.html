@@ -18,7 +18,6 @@
             font-weight: normal;
             font-style: normal;
         }
-
         :root {
             --bg-pink: #f8d7da;
             --main-pink: #d87a93;
@@ -113,7 +112,7 @@
             object-fit: cover;
         }
         .video-box {
-            width: 90%;
+            width: 100%;
             background: #000;
             border-radius: 15px;
             overflow: hidden;
@@ -122,11 +121,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            max-height: 65vh;
+            transition: aspect-ratio 0.2s ease;
         }
         .video-box video {
             width: 100%;
-            height: auto;
-            max-height: 45vh;
+            height: 100%;
             object-fit: contain;
         }
         .btn-group {
@@ -228,7 +228,6 @@
             font-size: 1.35rem;
             cursor: pointer;
         }
-
         /* GAMEPLAY SCREEN */
         #gameplay-screen {
             padding: 12px;
@@ -636,7 +635,6 @@
             <button class="custom-btn primary" onclick="goToSelectStage()">Start Game ➔</button>
         </div>
     </div>
-
     <!-- 2. SELECT STAGE SCREEN -->
     <div id="select-screen" class="screen" onclick="handleScreenClick(event)">
         <div class="select-stage-title-container">
@@ -669,7 +667,6 @@
             </div>
         </div>
     </div>
-
     <!-- 3. GAMEPLAY SCREEN -->
     <div id="gameplay-screen" class="screen">
         <div class="game-top-bar">
@@ -684,7 +681,6 @@
         <div class="preview-banner" id="preview-banner-box">Preview Time: <span id="preview-sec">3</span>s</div>
         <div class="cards-grid" id="cards-grid-container"></div>
     </div>
-
     <!-- 4. VICTORY SCREEN -->
     <div id="victory-screen" class="screen">
         <h2 class="title-exact-match" id="victory-title-text" style="font-size: 1.4rem;">STAGE 1 CLEARED!</h2>
@@ -694,10 +690,9 @@
         <h2 id="victory-question-text" style="font-size: 1rem; color: var(--dark-burgundy);">ARE YOU STILL SKEPTICAL?</h2>
         <div class="victory-buttons" id="victory-buttons-container"></div>
     </div>
-
     <!-- 5. RESULT MEDIA & COMMENT SCREEN (YES/NO) -->
     <div id="result-media-screen" class="screen" style="justify-content: center; gap: 15px;">
-        <div class="video-box" id="result-video-box" style="width: 100%;">
+        <div class="video-box" id="result-video-box">
             <video id="result-video-player" autoplay loop playsinline></video>
         </div>
         <div class="comment-section-box" id="comment-box-elem" style="display: none; width: 100%;">
@@ -712,7 +707,6 @@
         <button class="custom-btn primary" id="bottom-action-btn" onclick="handleBottomAction()" style="width: 100%; flex-shrink: 0;">ㅋㅋㅋㅋㅋㅋ</button>
     </div>
 </div>
-
 <!-- ADMIN CONFIGURATION MODAL -->
 <div id="admin-modal">
     <div class="admin-content">
@@ -822,7 +816,6 @@
         </div>
     </div>
 </div>
-
 <script>
     const firebaseConfig = {
         databaseURL: "https://seonghyeon-cat-game-default-rtdb.firebaseio.com/"
@@ -835,13 +828,11 @@
         mySessionId = 'session_' + Math.random().toString(36).substr(2, 9);
         localStorage.setItem('seonghyeon_session_id', mySessionId);
     }
-
     let mediaConfig = {
         introVid: "intro-video-phone.mp4",
         yesVid: "yes-button-video-phone.mp4",
         noVid: "no-button-video-phone.mp4"
     };
-
     const stagesData = {
         1: {
             name: "STAGE 1: SKEPTICAL",
@@ -941,7 +932,6 @@
     
     let currentSelectLevel = 2; 
     let isTransitioning = false;
-
     commentsRef.on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -952,14 +942,12 @@
         renderComments();
         renderAdminCommentsList();
     });
-
     function updateMediaConfig(key, val) {
         mediaConfig[key] = val.trim();
         if(key === 'introVid') {
             document.getElementById('intro-video').src = mediaConfig.introVid;
         }
     }
-
     function updateStageConfig(stageId, field, val) {
         stagesData[stageId][field] = val.trim();
         if(stageId <= 3) {
@@ -967,14 +955,12 @@
             if(field === 'vid') document.getElementById(`stage-vid-${stageId}`).src = val.trim();
         }
     }
-
     function initSelectStageElements() {
         [1, 2, 3].forEach(id => {
             document.getElementById(`stage-img-${id}`).src = stagesData[id].img;
             document.getElementById(`stage-vid-${id}`).src = stagesData[id].vid;
         });
     }
-
     function playSoundEffect(type) {
         if (isAudioMuted) return;
         if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -1029,7 +1015,6 @@
             });
         }
     }
-
     function stopAllMediaAssets() {
         if (currentBgmAudio) {
             currentBgmAudio.pause();
@@ -1053,7 +1038,6 @@
         }
         stopAllStageVideos();
     }
-
     function playSelectStageSound(stageId) {
         if (currentSelectSoundAudio) {
             currentSelectSoundAudio.pause();
@@ -1067,7 +1051,6 @@
             currentSelectSoundAudio.play().catch(e => {});
         }
     }
-
     function goToScreen(screenId) {
         stopAllMediaAssets();
         closeAdmin();
@@ -1084,17 +1067,14 @@
             playSelectStageSound(currentSelectLevel);
         }
     }
-
     function replayIntro() {
         const vid = document.getElementById('intro-video');
         vid.currentTime = 0;
         vid.play();
     }
-
     function goToSelectStage() {
         goToScreen('select-screen');
     }
-
     function updateSelectStageDisplay() {
         [1, 2, 3].forEach(lvl => {
             const cardElem = document.getElementById(`stage-card-${lvl}`);
@@ -1113,14 +1093,11 @@
             }
         });
     }
-
     let touchStartY = 0;
     const selectViewport = document.getElementById('select-viewport');
-
     selectViewport.addEventListener('touchstart', (e) => {
         touchStartY = e.touches[0].clientY;
     }, {passive: true});
-
     selectViewport.addEventListener('touchend', (e) => {
         if (isTransitioning) return;
         let touchEndY = e.changedTouches[0].clientY;
@@ -1140,7 +1117,6 @@
             }
         }
     }, {passive: true});
-
     selectViewport.addEventListener('wheel', (e) => {
         e.preventDefault();
         if (isTransitioning) return;
@@ -1156,7 +1132,6 @@
             }
         }
     }, {passive: false});
-
     function triggerLevelTransition() {
         isTransitioning = true;
         updateSelectStageDisplay();
@@ -1165,7 +1140,6 @@
             isTransitioning = false;
         }, 400);
     }
-
     function toggleStageVideo(stageId, event) {
         event.stopPropagation();
         const img = document.getElementById(`stage-img-${stageId}`);
@@ -1184,7 +1158,6 @@
             stopAllStageVideos();
         }
     }
-
     function stopAllStageVideos() {
         [1, 2, 3].forEach(id => {
             const img = document.getElementById(`stage-img-${id}`);
@@ -1198,13 +1171,11 @@
         });
         activeStageVideoId = null;
     }
-
     function handleScreenClick(event) {
         if (!event.target.closest('.stage-media-wrapper')) {
             stopAllStageVideos();
         }
     }
-
     function toggleStageAudio() {
         isAudioMuted = !isAudioMuted;
         const btn = document.getElementById('audio-toggle-btn');
@@ -1212,7 +1183,6 @@
         if (currentSelectSoundAudio) currentSelectSoundAudio.muted = isAudioMuted;
         btn.innerText = isAudioMuted ? "🔇" : "🔊";
     }
-
     function startStage(stageId) {
         if (currentSelectSoundAudio) {
             currentSelectSoundAudio.pause();
@@ -1225,7 +1195,7 @@
         document.getElementById('game-stage-title').innerText = stage.name;
         document.getElementById('matches-display').innerText = `🐾 0`;
         matchesCount = 0;
-        stepsCount = 0; // Reset số bước đi về 0 khi bắt đầu màn mới
+        stepsCount = 0; 
         secondsElapsed = 0;
         canInteract = false;
         
@@ -1273,7 +1243,6 @@
             }
         }, 1000);
     }
-
     function onCardClick(cardElem) {
         if(!canInteract || cardElem.classList.contains('flipped') || cardElem.classList.contains('matched')) return;
         playSoundEffect('click');
@@ -1283,10 +1252,8 @@
         } else {
             canInteract = false;
             
-            // Tăng số bước lượt chơi khi lật xong 2 thẻ (tính cả đúng và sai)
             stepsCount++;
             document.getElementById('matches-display').innerText = `🐾 ${stepsCount}`;
-
             let id1 = parseInt(firstSelectedCard.dataset.id);
             let id2 = parseInt(cardElem.dataset.id);
             let stage = stagesData[currentStageId];
@@ -1298,7 +1265,7 @@
                     firstSelectedCard.classList.add('matched');
                     cardElem.classList.add('matched');
                     firstSelectedCard = null;
-                    matchesCount++; // Dùng để kiểm tra điều kiện thắng game
+                    matchesCount++; 
                     canInteract = true;
                     if(matchesCount === stage.pairs.length) {
                         clearInterval(gameTimer);
@@ -1318,7 +1285,6 @@
             }
         }
     }
-
     function showVictoryScreen() {
         const stage = stagesData[currentStageId];
         goToScreen('victory-screen');
@@ -1340,13 +1306,11 @@
             `;
         }
     }
-
     function nextStageOrResult() {
         if (currentStageId === 1) startStage(2);
         else if (currentStageId === 2) startStage(3);
         else if (currentStageId === 3) startStage(4);
     }
-
     function updateBottomButtonLabel() {
         const bottomBtn = document.getElementById('bottom-action-btn');
         if (currentVoteChoice === 'yes') {
@@ -1357,7 +1321,6 @@
             bottomBtn.classList.remove('korean-laugh-font');
         }
     }
-
     function showResultScreen(choice) {
         closeAdmin();
         currentVoteChoice = choice;
@@ -1376,7 +1339,6 @@
         bottomBtn.style.marginTop = '0px';
         updateBottomButtonLabel();
     }
-
     function handleBottomAction() {
         actionClickCount++;
         const commentBox = document.getElementById('comment-box-elem');
@@ -1392,7 +1354,6 @@
             goToScreen('intro-screen');
         }
     }
-
     function postComment() {
         const nameInput = document.getElementById('user-name-input');
         const commentInput = document.getElementById('user-comment-input');
@@ -1410,7 +1371,6 @@
         commentsRef.push(newComment);
         commentInput.value = '';
     }
-
     function renderComments() {
         const listContainer = document.getElementById('comments-list-container');
         if (!listContainer) return;
@@ -1422,7 +1382,6 @@
             const likedUsers = c.likedUsers || {};
             const isLiked = likedUsers[mySessionId] === true;
             const heartIconHtml = isLiked ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
-
             let repliesHtml = '';
             if (c.replies && c.replies.length > 0) {
                 repliesHtml = '<div class="reply-container">';
@@ -1430,7 +1389,6 @@
                     const repLikedUsers = rep.likedUsers || {};
                     const isRepLiked = repLikedUsers[mySessionId] === true;
                     const repHeartIconHtml = isRepLiked ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
-
                     repliesHtml += `
                         <div class="reply-item">
                             <div><b>${rep.name}:</b> <span style="color:#d87a93; font-weight:600;">@${rep.replyTo || c.name}</span> ${rep.text}</div>
@@ -1477,13 +1435,11 @@
             listContainer.appendChild(item);
         });
     }
-
     function toggleCommentMenu(firebaseId) {
         const dropdown = document.getElementById(`dropdown-${firebaseId}`);
         document.querySelectorAll('.comment-dropdown').forEach(d => { if(d !== dropdown) d.style.display = 'none'; });
         dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
     }
-
     function editComment(firebaseId) {
         const comment = commentsData.find(c => c.firebaseId === firebaseId);
         const newText = prompt("Edit your comment:", comment.text);
@@ -1491,7 +1447,6 @@
             commentsRef.child(firebaseId).update({ text: newText.trim() });
         }
     }
-
     function likeComment(firebaseId) {
         playSoundEffect('click');
         const commentRef = commentsRef.child(firebaseId);
@@ -1510,13 +1465,11 @@
             commentRef.update({ likes, likedUsers });
         });
     }
-
     function toggleRootReplyBox(firebaseId) {
         playSoundEffect('click');
         const box = document.getElementById(`reply-root-${firebaseId}`);
         if(box) box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
     }
-
     function postRootReply(firebaseId, targetName) {
         const nameInput = document.getElementById(`root-name-${firebaseId}`);
         const textInput = document.getElementById(`root-text-${firebaseId}`);
@@ -1533,13 +1486,11 @@
         commentsRef.child(firebaseId).update({ replies: replies });
         playSoundEffect('click');
     }
-
     function toggleReplyBox(firebaseId, rIndex) {
         playSoundEffect('click');
         const box = document.getElementById(`reply-inline-${firebaseId}-${rIndex}`);
         if(box) box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
     }
-
     function postInlineReply(firebaseId, rIndex, targetName) {
         const nameInput = document.getElementById(`inline-name-${firebaseId}-${rIndex}`);
         const textInput = document.getElementById(`inline-text-${firebaseId}-${rIndex}`);
@@ -1556,7 +1507,6 @@
         commentsRef.child(firebaseId).update({ replies: replies });
         playSoundEffect('click');
     }
-
     function likeReply(firebaseId, replyIndex) {
         playSoundEffect('click');
         const commentRef = commentsRef.child(firebaseId);
@@ -1579,7 +1529,6 @@
             commentRef.update({ replies: replies });
         });
     }
-
     function renderAdminCommentsList() {
         const adminList = document.getElementById('admin-comments-manage-list');
         if (!adminList) return;
@@ -1594,23 +1543,19 @@
             adminList.appendChild(row);
         });
     }
-
     function adminDeleteComment(firebaseId) {
         if(confirm("Admin: Bạn có chắc chắn muốn xóa bình luận này không?")) {
             commentsRef.child(firebaseId).remove();
         }
     }
-
     window.addEventListener('keydown', (e) => {
         if(e.shiftKey && e.key.toLowerCase() === 'u') {
             document.getElementById('admin-modal').style.display = 'flex';
         }
     });
-
     function closeAdmin() {
         document.getElementById('admin-modal').style.display = 'none';
     }
-
     function switchAdminTab(index) {
         const tabs = document.querySelectorAll('.admin-tab-btn');
         const sections = document.querySelectorAll('.admin-section');
@@ -1619,10 +1564,23 @@
             sections[i].classList.toggle('active', i === index);
         });
     }
-
     window.onload = function() {
         initSelectStageElements();
         goToScreen('intro-screen');
+        
+        // Tự động điều chỉnh tỷ lệ khung video YES/NO theo đúng kích thước thực tế của video được up lên
+        const resultVidPlayer = document.getElementById('result-video-player');
+        if (resultVidPlayer) {
+            resultVidPlayer.addEventListener('loadedmetadata', function() {
+                if (this.videoWidth && this.videoHeight) {
+                    const ratio = this.videoWidth / this.videoHeight;
+                    const box = document.getElementById('result-video-box');
+                    if (box) {
+                        box.style.aspectRatio = ratio;
+                    }
+                }
+            });
+        }
     };
 </script>
 </body>
