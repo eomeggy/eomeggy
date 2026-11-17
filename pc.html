@@ -307,7 +307,8 @@
                         <div class="flex gap-3 pt-2">
                             <button onclick="setSpecialStageOpenStatus(true)" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs rounded-xl shadow">OPEN STAGE</button>
                             <button onclick="setSpecialStageOpenStatus(false)" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-black text-xs rounded-xl shadow">CLOSE STAGE</button>
-                            <button onclick="testRunSlide('stage', 5, 'pc')" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow">Test Run Special</button>
+                            <button onclick="testRunSlide('stage', 5, 'pc')" class="px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow">Test PC</button>
+                            <button onclick="testRunSlide('stage', 5, 'phone')" class="px-3 py-2 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow">Test Phone</button>
                         </div>
                     </div>
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
@@ -325,12 +326,8 @@
                         <div class="flex items-center justify-between gap-4">
                             <input type="file" accept="video/*" onchange="uploadIntroVideo(event, 'pc')" class="text-xs text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
                             <div class="flex gap-2">
-                                <button onclick="testRunSlide('intro', 1, 'pc')" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1.5">
-                                    <i class="fa-solid fa-desktop"></i> Run PC
-                                </button>
-                                <button onclick="testRunSlide('intro', 1, 'phone')" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1.5">
-                                    <i class="fa-solid fa-mobile-screen"></i> Run Phone
-                                </button>
+                                <button onclick="testRunSlide('intro', 1, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow">Test PC</button>
+                                <button onclick="testRunSlide('intro', 1, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow">Test Phone</button>
                             </div>
                         </div>
                     </div>
@@ -338,12 +335,8 @@
                         <div class="flex items-center justify-between border-b border-purple-900/40 pb-2">
                             <span class="font-extrabold text-sm text-teal-300 block">2. Select Stage Hover Media (Levels 1, 2, 3)</span>
                             <div class="flex gap-2">
-                                <button onclick="testRunSlide('stage-select', 1, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                    <i class="fa-solid fa-desktop"></i> Run PC
-                                </button>
-                                <button onclick="testRunSlide('stage-select', 1, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                    <i class="fa-solid fa-mobile-screen"></i> Run Phone
-                                </button>
+                                <button onclick="testRunSlide('stage-select', 1, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow">Test PC</button>
+                                <button onclick="testRunSlide('stage-select', 1, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow">Test Phone</button>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -382,12 +375,8 @@
                     <div class="flex items-center justify-between">
                         <div class="font-black text-teal-300 text-sm">STAGE 1: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
                         <div class="flex gap-2">
-                            <button onclick="testRunSlide('stage', 1, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-desktop"></i> Run PC
-                            </button>
-                            <button onclick="testRunSlide('stage', 1, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-mobile-screen"></i> Run Phone
-                            </button>
+                            <button onclick="testRunSlide('stage', 1, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow">Test PC</button>
+                            <button onclick="testRunSlide('stage', 1, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow">Test Phone</button>
                         </div>
                     </div>
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
@@ -404,12 +393,8 @@
                     <div class="flex items-center justify-between">
                         <div class="font-black text-teal-300 text-sm">STAGE 2: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
                         <div class="flex gap-2">
-                            <button onclick="testRunSlide('stage', 2, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-desktop"></i> Run PC
-                            </button>
-                            <button onclick="testRunSlide('stage', 2, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-mobile-screen"></i> Run Phone
-                            </button>
+                            <button onclick="testRunSlide('stage', 2, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow">Test PC</button>
+                            <button onclick="testRunSlide('stage', 2, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow">Test Phone</button>
                         </div>
                     </div>
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
@@ -426,12 +411,8 @@
                     <div class="flex items-center justify-between">
                         <div class="font-black text-teal-300 text-sm">STAGE 3: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
                         <div class="flex gap-2">
-                            <button onclick="testRunSlide('stage', 3, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-desktop"></i> Run PC
-                            </button>
-                            <button onclick="testRunSlide('stage', 3, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-mobile-screen"></i> Run Phone
-                            </button>
+                            <button onclick="testRunSlide('stage', 3, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow">Test PC</button>
+                            <button onclick="testRunSlide('stage', 3, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow">Test Phone</button>
                         </div>
                     </div>
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
@@ -448,12 +429,8 @@
                     <div class="flex items-center justify-between">
                         <div class="font-black text-teal-300 text-sm">STAGE BONUS: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
                         <div class="flex gap-2">
-                            <button onclick="testRunSlide('stage', 4, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-desktop"></i> Run PC
-                            </button>
-                            <button onclick="testRunSlide('stage', 4, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-mobile-screen"></i> Run Phone
-                            </button>
+                            <button onclick="testRunSlide('stage', 4, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow">Test PC</button>
+                            <button onclick="testRunSlide('stage', 4, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow">Test Phone</button>
                         </div>
                     </div>
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
@@ -570,7 +547,7 @@
             3: { img: 'stage3-hard-img.jpg', vid: 'stage3-hard-video.mp4' }
         };
         let phoneLevelHoverMedia = {
-            1: { img: 'stage1-easy-img-phone.jpg', vid: 'stage1-easy-video-phone.jpg' },
+            1: { img: 'stage1-easy-img-phone.jpg', vid: 'stage1-easy-video-phone.mp4' },
             2: { img: 'stage2-medium-img-phone.jpg', vid: 'stage2-medium-video-phone.mp4' },
             3: { img: 'stage3-hard-img-phone.jpg', vid: 'stage3-hard-video-phone.mp4' }
         };
@@ -1349,7 +1326,7 @@
                 board.className = "grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 w-full max-w-2xl mx-auto p-3";
             } else if (stage === 5) {
                 totalPairsInStage = 14;
-                board.className = "grid grid-cols-4 gap-2 sm:gap-2.5 w-full max-w-xl mx-auto p-2";
+                board.className = "grid grid-cols-7 gap-2 sm:gap-2.5 w-full max-w-3xl mx-auto p-2"; // 4 hàng x 7 cột chuẩn PC
             }
             deck = photos.map((imgUrl, idx) => ({
                 index: idx,
