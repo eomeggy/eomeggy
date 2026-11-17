@@ -120,36 +120,36 @@
     </div>
     <!-- STAGE SELECT SCREEN -->
     <div id="stage-select-screen" class="fixed inset-0 bg-[#c96b92] z-40 flex flex-col items-center justify-center p-4 hidden">
-        <div class="w-full max-w-4xl flex flex-col items-center justify-center">
+        <div class="w-full max-w-5xl flex flex-col items-center justify-center">
             
-            <h2 class="text-4xl sm:text-6xl font-bubble-title title-exact-match mb-8 tracking-wider text-center">
+            <h2 class="text-3xl sm:text-5xl font-bubble-title title-exact-match mb-6 tracking-wider text-center">
                 SELECT STAGE
             </h2>
-            <!-- 3 Level Cards Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 w-full max-w-3xl mb-8">
+            <!-- 3 Level Cards Grid (Tăng kích thước thẻ lên ~1.5 lần, tối ưu khoảng cách không gian, giữ nguyên kích thước viền border-4) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-10 w-full max-w-5xl mb-6 px-4">
                <!-- EASY -->
-        <div onclick="startGame(1)" onmouseenter="playLevelHover(1)" onmouseleave="stopLevelHover(1)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
-            <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
+        <div onclick="startGame(1)" onmouseenter="playLevelHover(1)" onmouseleave="stopLevelHover(1)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-4 sm:p-5 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
+            <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center scale-105 sm:scale-[1.35] origin-center my-4 sm:my-8">
                 <img id="level-img-1" src="stage1-easy-img.jpg" class="w-full h-full object-cover rounded-xl">
                 <video id="level-vid-1" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="stage1-easy-video.mp4"></video>
             </div>
-            <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">EASY</span>
+            <span class="font-extrabold text-2xl sm:text-3xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)] mt-2">EASY</span>
         </div>
         <!-- MEDIUM -->
-        <div onclick="startGame(2)" onmouseenter="playLevelHover(2)" onmouseleave="stopLevelHover(2)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
-            <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
+        <div onclick="startGame(2)" onmouseenter="playLevelHover(2)" onmouseleave="stopLevelHover(2)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-4 sm:p-5 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
+            <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center scale-105 sm:scale-[1.35] origin-center my-4 sm:my-8">
                 <img id="level-img-2" src="stage2-medium-img.jpg" class="w-full h-full object-cover rounded-xl">
                 <video id="level-vid-2" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="stage2-medium-video.mp4"></video>
             </div>
-            <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">MEDIUM</span>
+            <span class="font-extrabold text-2xl sm:text-3xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)] mt-2">MEDIUM</span>
         </div>
         <!-- HARD -->
-        <div onclick="startGame(3)" onmouseenter="playLevelHover(3)" onmouseleave="stopLevelHover(3)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
-            <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center">
+        <div onclick="startGame(3)" onmouseenter="playLevelHover(3)" onmouseleave="stopLevelHover(3)" class="bg-[#fff7e6] border-4 border-white rounded-3xl p-4 sm:p-5 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative">
+            <div class="w-full aspect-square rounded-2xl overflow-hidden mb-3 bg-[#fff7e6] relative flex items-center justify-center scale-105 sm:scale-[1.35] origin-center my-4 sm:my-8">
                 <img id="level-img-3" src="stage3-hard-img.jpg" class="w-full h-full object-cover rounded-xl">
                 <video id="level-vid-3" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" loop="" playsinline="" src="stage3-hard-video.mp4"></video>
             </div>
-            <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)]">HARD</span>
+            <span class="font-extrabold text-2xl sm:text-3xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)] mt-2">HARD</span>
         </div>
             </div>
             <div class="flex items-center justify-center gap-4 w-full max-w-xl">
@@ -595,7 +595,6 @@
             3: ['stage3-card-1-phone.jpg', 'stage3-card-2-phone.jpg', 'stage3-card-3-phone.jpg', 'stage3-card-4-phone.jpg', 'stage3-card-5-phone.jpg', 'stage3-card-6-phone.jpg', 'stage3-card-7-phone.jpg', 'stage3-card-8-phone.jpg', 'stage3-card-9-phone.jpg', 'stage3-card-10-phone.jpg', 'stage3-card-11-phone.jpg', 'stage3-card-12-phone.jpg'],
             4: ['bonus-card-1-phone.jpg', 'bonus-card-2-phone.jpg', 'bonus-card-3-phone.jpg', 'bonus-card-4-phone.jpg', 'bonus-card-5-phone.png', 'bonus-card-6-phone.jpg', 'bonus-card-7-phone.jpg', 'bonus-card-8-phone.jpg', 'bonus-card-9-phone.jpg', 'bonus-card-10-phone.png', 'bonus-card-11-phone.jpg', 'bonus-card-12-phone.jpg', 'bonus-card-13-phone.png', 'bonus-card-14-phone.jpg', 'bonus-card-15-phone.png', 'bonus-card-16-phone.jpg', 'bonus-card-17-phone.jpg', 'bonus-card-18-phone.jpg', 'bonus-card-19-phone.jpg', 'bonus-card-20-phone.jpg']
         };
-
         let stageMatchingPairs = {
             1: { 0: 0, 3: 0, 1: 1, 2: 1 },
             2: { 0: 0, 6: 0, 1: 1, 7: 1, 2: 2, 5: 2, 3: 3, 4: 3 },
@@ -654,7 +653,6 @@
         }
         window.addEventListener('click', unlockAudio, { once: true });
         window.addEventListener('touchstart', unlockAudio, { once: true });
-
         function stopAllGlobalMedia() {
             stopBGM();
             stopIntroVideoCompletely();
@@ -785,7 +783,6 @@
                 osc.stop(ctx.currentTime + 0.15);
             } catch (e) {}
         }
-
         function sortCommentsData() {
             userCommentsList.sort((a, b) => {
                 const likesA = a.likes || 0;
