@@ -68,7 +68,7 @@
             flex-direction: column;
             align-items: center;
             padding: 15px;
-            overflow: hidden; /* Đảm bảo tuyệt đối không có thanh cuộn dọc */
+            overflow: hidden; /* Bỏ hoàn toàn thanh cuộn dọc */
             display: none;
             z-index: 1;
         }
@@ -298,9 +298,9 @@
         .grid-stage-1 { grid-template-columns: repeat(2, 1fr); }
         .grid-stage-2 { 
             grid-template-columns: repeat(2, 1fr); 
-            transform: scale(0.8); /* Giảm kích thước các cards ở stage 2 xuống 0.8 */
+            transform: scale(0.8) translateY(-15px); /* Thu nhỏ 0.8 và nhích lên trên 15px */
             transform-origin: center center;
-            margin: -20px 0; /* Bù trừ khoảng trống sau khi scale nhỏ lại */
+            margin: -25px 0; /* Bù trừ khoảng trống */
         }
         .grid-stage-3 { grid-template-columns: repeat(3, 1fr); }
         .grid-stage-bonus { grid-template-columns: repeat(4, 1fr); gap: 6px; }
