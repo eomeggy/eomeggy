@@ -68,7 +68,7 @@
             flex-direction: column;
             align-items: center;
             padding: 15px;
-            overflow-y: auto;
+            overflow: hidden; /* Đảm bảo tuyệt đối không có thanh cuộn dọc */
             display: none;
             z-index: 1;
         }
@@ -112,7 +112,7 @@
             object-fit: cover;
         }
         .video-box {
-            width: 100%;
+            width: 90%;
             background: #000;
             border-radius: 15px;
             overflow: hidden;
@@ -121,12 +121,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            max-height: 65vh;
-            transition: aspect-ratio 0.2s ease;
         }
         .video-box video {
             width: 100%;
-            height: 100%;
+            height: auto;
+            max-height: 45vh;
             object-fit: contain;
         }
         .btn-group {
@@ -230,7 +229,8 @@
         }
         /* GAMEPLAY SCREEN */
         #gameplay-screen {
-            padding: 12px;
+            padding: 10px 12px;
+            justify-content: flex-start;
         }
         .game-top-bar {
             width: 100%;
@@ -241,7 +241,8 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            flex-shrink: 0;
         }
         .top-btn {
             background: var(--dark-burgundy);
@@ -267,13 +268,14 @@
         }
         .preview-banner, .preview-banner span {
             background: #fff;
-            padding: 6px 16px;
+            padding: 5px 14px;
             border-radius: 15px;
             font-family: 'Titan One', cursive !important;
             color: var(--dark-burgundy);
-            margin-bottom: 10px;
-            font-size: 0.85rem;
+            margin-bottom: 6px;
+            font-size: 0.8rem;
             box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            flex-shrink: 0;
         }
         .preview-banner span {
             padding: 0;
@@ -291,12 +293,17 @@
             justify-content: center;
             align-content: center;
             flex-grow: 1;
-            padding-bottom: 15px;
+            padding-bottom: 5px;
         }
         .grid-stage-1 { grid-template-columns: repeat(2, 1fr); }
-        .grid-stage-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-stage-2 { 
+            grid-template-columns: repeat(2, 1fr); 
+            transform: scale(0.8); /* Giảm kích thước các cards ở stage 2 xuống 0.8 */
+            transform-origin: center center;
+            margin: -20px 0; /* Bù trừ khoảng trống sau khi scale nhỏ lại */
+        }
         .grid-stage-3 { grid-template-columns: repeat(3, 1fr); }
-        .grid-stage-bonus { grid-template-columns: repeat(4, 1fr); }
+        .grid-stage-bonus { grid-template-columns: repeat(4, 1fr); gap: 6px; }
         .card {
             aspect-ratio: 1/1;
             perspective: 1000px;
@@ -398,7 +405,7 @@
         /* RESULT MEDIA & COMMENTS */
         #result-media-screen {
             padding: 15px;
-            overflow-y: auto;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -692,7 +699,7 @@
     </div>
     <!-- 5. RESULT MEDIA & COMMENT SCREEN (YES/NO) -->
     <div id="result-media-screen" class="screen" style="justify-content: center; gap: 15px;">
-        <div class="video-box" id="result-video-box">
+        <div class="video-box" id="result-video-box" style="width: 100%;">
             <video id="result-video-player" autoplay loop playsinline></video>
         </div>
         <div class="comment-section-box" id="comment-box-elem" style="display: none; width: 100%;">
@@ -917,8 +924,8 @@
     let currentStageId = 1;
     let gameTimer = null;
     let secondsElapsed = 0;
-    let stepsCount = 0;   // Đếm tổng số lượt chọn (cả đúng lẫn sai)
-    let matchesCount = 0; // Đếm số cặp đúng để kiểm tra thắng màn
+    let stepsCount = 0;
+    let matchesCount = 0;
     let firstSelectedCard = null;
     let canInteract = false;
     let currentBgmAudio = null;
@@ -1195,7 +1202,7 @@
         document.getElementById('game-stage-title').innerText = stage.name;
         document.getElementById('matches-display').innerText = `🐾 0`;
         matchesCount = 0;
-        stepsCount = 0; 
+        stepsCount = 0;
         secondsElapsed = 0;
         canInteract = false;
         
@@ -1251,7 +1258,6 @@
             firstSelectedCard = cardElem;
         } else {
             canInteract = false;
-            
             stepsCount++;
             document.getElementById('matches-display').innerText = `🐾 ${stepsCount}`;
             let id1 = parseInt(firstSelectedCard.dataset.id);
@@ -1265,7 +1271,7 @@
                     firstSelectedCard.classList.add('matched');
                     cardElem.classList.add('matched');
                     firstSelectedCard = null;
-                    matchesCount++; 
+                    matchesCount++;
                     canInteract = true;
                     if(matchesCount === stage.pairs.length) {
                         clearInterval(gameTimer);
@@ -1567,20 +1573,6 @@
     window.onload = function() {
         initSelectStageElements();
         goToScreen('intro-screen');
-        
-        // Tự động điều chỉnh tỷ lệ khung video YES/NO theo đúng kích thước thực tế của video được up lên
-        const resultVidPlayer = document.getElementById('result-video-player');
-        if (resultVidPlayer) {
-            resultVidPlayer.addEventListener('loadedmetadata', function() {
-                if (this.videoWidth && this.videoHeight) {
-                    const ratio = this.videoWidth / this.videoHeight;
-                    const box = document.getElementById('result-video-box');
-                    if (box) {
-                        box.style.aspectRatio = ratio;
-                    }
-                }
-            });
-        }
     };
 </script>
 </body>
