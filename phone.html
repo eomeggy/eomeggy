@@ -68,7 +68,7 @@
             flex-direction: column;
             align-items: center;
             padding: 15px;
-            overflow: hidden; /* Bỏ hoàn toàn thanh cuộn dọc */
+            overflow: hidden;
             display: none;
             z-index: 1;
         }
@@ -298,12 +298,20 @@
         .grid-stage-1 { grid-template-columns: repeat(2, 1fr); }
         .grid-stage-2 { 
             grid-template-columns: repeat(2, 1fr); 
-            transform: scale(0.8) translateY(-15px); /* Thu nhỏ 0.8 và nhích lên trên 15px */
+            transform: scale(0.8) translateY(-15px);
             transform-origin: center center;
-            margin: -25px 0; /* Bù trừ khoảng trống */
+            margin: -25px 0;
         }
         .grid-stage-3 { grid-template-columns: repeat(3, 1fr); }
         .grid-stage-bonus { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        /* Stage Special: 4 cột x 7 hàng = 28 cards, khớp chiều cao màn hình điện thoại không cuộn dọc */
+        .grid-stage-special {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 5px;
+            max-width: min(360px, calc((100vh - 115px) * 4 / 7));
+            width: 100%;
+            padding-bottom: 0;
+        }
         .card {
             aspect-ratio: 1/1;
             perspective: 1000px;
@@ -318,6 +326,11 @@
             transform-style: preserve-3d;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .grid-stage-special .card-inner,
+        .grid-stage-special .card-front,
+        .grid-stage-special .card-back {
+            border-radius: 8px;
         }
         .card.flipped .card-inner {
             transform: rotateY(180deg);
@@ -357,7 +370,7 @@
             align-items: center;
             text-align: center;
             gap: 15px;
-            padding: 30px;
+            padding: 25px;
         }
         #victory-screen h2 {
             font-family: 'Titan One', cursive;
@@ -371,10 +384,27 @@
             justify-content: center;
             align-items: center;
         }
+        .victory-img-box.video-mode {
+            width: 92%;
+            height: auto;
+            max-height: 44vh;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 4px solid #fff;
+            background: #000;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
         .victory-img-box img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
+        }
+        .victory-img-box video {
+            width: 100%;
+            height: auto;
+            max-height: 44vh;
+            object-fit: contain;
+            display: block;
         }
         .victory-buttons {
             display: flex;
@@ -627,6 +657,21 @@
         .admin-section.active {
             display: flex;
         }
+        .status-badge-pill {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+        .status-badge-pill.open {
+            background: #2ecc71;
+            color: #102a1a;
+        }
+        .status-badge-pill.closed {
+            background: #e74c3c;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -691,10 +736,11 @@
     <!-- 4. VICTORY SCREEN -->
     <div id="victory-screen" class="screen">
         <h2 class="title-exact-match" id="victory-title-text" style="font-size: 1.4rem;">STAGE 1 CLEARED!</h2>
-        <div class="victory-img-box">
+        <div class="victory-img-box" id="victory-media-box">
             <img id="victory-img-elem" alt="Victory">
+            <video id="victory-vid-elem" autoplay loop playsinline style="display:none;"></video>
         </div>
-        <h2 id="victory-question-text" style="font-size: 1rem; color: var(--dark-burgundy);">ARE YOU STILL SKEPTICAL?</h2>
+        <h2 id="victory-question-text" style="font-size: 1rem; color: var(--dark-burgundy); line-height: 1.45;">ARE YOU STILL SKEPTICAL?</h2>
         <div class="victory-buttons" id="victory-buttons-container"></div>
     </div>
     <!-- 5. RESULT MEDIA & COMMENT SCREEN (YES/NO) -->
@@ -727,8 +773,9 @@
             <button class="admin-tab-btn" onclick="switchAdminTab(2)">Stage 2 (Medium)</button>
             <button class="admin-tab-btn" onclick="switchAdminTab(3)">Stage 3 (Hard)</button>
             <button class="admin-tab-btn" onclick="switchAdminTab(4)">Stage Bonus</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab(5)">YES / NO</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab(6)">Comments</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(5)">Stage Special</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(6)">YES / NO</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(7)">Comments</button>
         </div>
         
         <!-- Tab 0: Intro & Select -->
@@ -800,8 +847,29 @@
                 <input type="text" id="admin-s4-victory" value="victory-bonus-img-phone.png" onchange="updateStageConfig(4, 'victoryImg', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
             </div>
         </div>
+
+        <!-- Tab 5: Stage Special (EOM EGGY) -->
+        <div class="admin-section">
+            <div style="display:flex; align-items:center; justify-content:space-between; background:#3b1a26; padding:10px 12px; border-radius:10px;">
+                <span style="font-size:0.8rem; font-weight:700;">Trạng thái Stage Special (EOM EGGY):</span>
+                <span id="special-stage-status-badge" class="status-badge-pill closed">CLOSED</span>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="custom-btn" onclick="setSpecialStageOpen(true)" style="flex:1; background:#2ecc71; color:#fff;">OPEN STAGE</button>
+                <button class="custom-btn" onclick="setSpecialStageOpen(false)" style="flex:1; background:#e74c3c; color:#fff;">CLOSE STAGE</button>
+            </div>
+            <button class="custom-btn primary" onclick="startStage(5)">Test Run Stage Special (EOM EGGY)</button>
+            <div class="admin-input-group" style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
+                <label>Stage Special Audio File:</label>
+                <input type="text" id="admin-s5-audio" value="stage-eggy-audio-phone.mp3" onchange="updateStageConfig(5, 'audio', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
+            </div>
+            <div class="admin-input-group" style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
+                <label>Victory Video Special:</label>
+                <input type="text" id="admin-s5-victory" value="victory-eggy-img-phone.mp4" onchange="updateStageConfig(5, 'victoryVid', this.value)" style="padding:6px 10px; border-radius:6px; border:1px solid #555; background:#1a0b11; color:#fff;">
+            </div>
+        </div>
         
-        <!-- Tab 5: YES / NO -->
+        <!-- Tab 6: YES / NO -->
         <div class="admin-section">
             <div style="display:flex; gap:10px;">
                 <button class="custom-btn primary" onclick="showResultScreen('yes')">Test YES Slide</button>
@@ -817,7 +885,7 @@
             </div>
         </div>
         
-        <!-- Tab 6: Comments Management -->
+        <!-- Tab 7: Comments Management -->
         <div class="admin-section">
             <div id="admin-comments-manage-list" style="display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto;"></div>
         </div>
@@ -830,6 +898,35 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const commentsRef = db.ref('comments');
+    const specialStageConfigRef = db.ref('gameConfig/specialStageOpen');
+
+    let isSpecialStageOpen = false;
+
+    specialStageConfigRef.on('value', (snapshot) => {
+        isSpecialStageOpen = snapshot.val() === true;
+        updateSpecialStageStatusUI();
+    });
+
+    function setSpecialStageOpen(openState) {
+        isSpecialStageOpen = openState;
+        specialStageConfigRef.set(openState);
+        updateSpecialStageStatusUI();
+    }
+
+    function updateSpecialStageStatusUI() {
+        const badge = document.getElementById('special-stage-status-badge');
+        if (!badge) return;
+        if (isSpecialStageOpen) {
+            badge.innerText = 'OPEN';
+            badge.classList.remove('closed');
+            badge.classList.add('open');
+        } else {
+            badge.innerText = 'CLOSED';
+            badge.classList.remove('open');
+            badge.classList.add('closed');
+        }
+    }
+
     let mySessionId = localStorage.getItem('seonghyeon_session_id');
     if (!mySessionId) {
         mySessionId = 'session_' + Math.random().toString(36).substr(2, 9);
@@ -840,6 +937,12 @@
         yesVid: "yes-button-video-phone.mp4",
         noVid: "no-button-video-phone.mp4"
     };
+
+    const specialCardsList = Array.from({ length: 28 }, (_, idx) => ({
+        id: idx + 1,
+        img: `eggy-card-${idx + 1}-phone.jpg`
+    }));
+
     const stagesData = {
         1: {
             name: "STAGE 1: SKEPTICAL",
@@ -919,10 +1022,27 @@
                 { id: 19, img: "bonus-card-19-phone.jpg" }, { id: 20, img: "bonus-card-20-phone.jpg" }
             ],
             pairs: [[1, 14], [2, 8], [3, 18], [4, 5], [6, 16], [7, 10], [9, 20], [11, 17], [12, 15], [13, 19]]
+        },
+        5: {
+            name: "EOM EGGY",
+            levelName: "SPECIAL",
+            previewTime: 5,
+            audio: "stage-eggy-audio-phone.mp3",
+            victoryVid: "victory-eggy-img-phone.mp4",
+            questionHTML: "THANK YOU FOR JOINING THE GAME!<br>SEE YOU NEXT TIME!👋",
+            buttonText: "EOM EGGY",
+            isSpecial: true,
+            cards: specialCardsList,
+            pairs: [
+                [1, 12], [2, 13], [4, 20], [3, 6], [5, 25],
+                [7, 16], [8, 21], [9, 27], [10, 28], [11, 18],
+                [14, 24], [15, 26], [17, 23], [19, 22]
+            ]
         }
     };
     let currentStageId = 1;
     let gameTimer = null;
+    let previewInterval = null;
     let secondsElapsed = 0;
     let stepsCount = 0;
     let matchesCount = 0;
@@ -1023,6 +1143,8 @@
         }
     }
     function stopAllMediaAssets() {
+        if (gameTimer) clearInterval(gameTimer);
+        if (previewInterval) clearInterval(previewInterval);
         if (currentBgmAudio) {
             currentBgmAudio.pause();
             currentBgmAudio.currentTime = 0;
@@ -1042,6 +1164,13 @@
             resultVid.currentTime = 0;
             resultVid.removeAttribute('src');
             resultVid.load();
+        }
+        const vicVid = document.getElementById('victory-vid-elem');
+        if (vicVid) {
+            vicVid.pause();
+            vicVid.currentTime = 0;
+            vicVid.removeAttribute('src');
+            vicVid.load();
         }
         stopAllStageVideos();
     }
@@ -1200,10 +1329,12 @@
         const stage = stagesData[stageId];
         goToScreen('gameplay-screen');
         document.getElementById('game-stage-title').innerText = stage.name;
+        document.getElementById('timer-display').innerText = `⏱️ 00:00`;
         document.getElementById('matches-display').innerText = `🐾 0`;
         matchesCount = 0;
         stepsCount = 0;
         secondsElapsed = 0;
+        firstSelectedCard = null;
         canInteract = false;
         
         currentBgmAudio = new Audio(stage.audio);
@@ -1220,7 +1351,10 @@
             document.getElementById('timer-display').innerText = `⏱️ ${mins}:${secs}`;
         }, 1000);
         const gridContainer = document.getElementById('cards-grid-container');
-        gridContainer.className = `cards-grid grid-stage-${stageId === 4 ? 'bonus' : stageId}`;
+        let gridClass = `grid-stage-${stageId}`;
+        if (stageId === 4) gridClass = 'grid-stage-bonus';
+        else if (stageId === 5) gridClass = 'grid-stage-special';
+        gridContainer.className = `cards-grid ${gridClass}`;
         gridContainer.innerHTML = '';
         stage.cards.forEach((card) => {
             const cardElem = document.createElement('div');
@@ -1238,7 +1372,8 @@
         let previewSec = stage.previewTime;
         document.getElementById('preview-banner-box').style.display = 'block';
         document.getElementById('preview-sec').innerText = previewSec;
-        let previewInterval = setInterval(() => {
+        if (previewInterval) clearInterval(previewInterval);
+        previewInterval = setInterval(() => {
             previewSec--;
             playSoundEffect('preview_tick');
             document.getElementById('preview-sec').innerText = previewSec;
@@ -1294,22 +1429,48 @@
     function showVictoryScreen() {
         const stage = stagesData[currentStageId];
         goToScreen('victory-screen');
-        document.getElementById('victory-title-text').innerText = (currentStageId === 4) ? "STAGE BONUS CLEARED!" : `STAGE ${currentStageId} CLEARED!`;
-        document.getElementById('victory-img-elem').src = stage.victoryImg;
-        document.getElementById('victory-question-text').innerText = stage.question;
-        const btnContainer = document.getElementById('victory-buttons-container');
         
-        if (currentStageId === 4) {
+        const titleEl = document.getElementById('victory-title-text');
+        const mediaBox = document.getElementById('victory-media-box');
+        const imgEl = document.getElementById('victory-img-elem');
+        const vidEl = document.getElementById('victory-vid-elem');
+        const questionEl = document.getElementById('victory-question-text');
+        const btnContainer = document.getElementById('victory-buttons-container');
+
+        if (currentStageId === 5) {
+            titleEl.innerText = "STAGE SPECIAL CLEARED!";
+            mediaBox.classList.add('video-mode');
+            imgEl.style.display = 'none';
+            vidEl.style.display = 'block';
+            vidEl.src = stage.victoryVid;
+            vidEl.currentTime = 0;
+            vidEl.play().catch(e => {});
+            questionEl.innerHTML = stage.questionHTML;
             btnContainer.innerHTML = `
-                <button class="custom-btn btn-no" onclick="showResultScreen('no')">NO</button>
-                <button class="custom-btn btn-yes" onclick="showResultScreen('yes')">YES</button>
-            `;
-        } else {
-            btnContainer.innerHTML = `
-                <button class="custom-btn primary" style="flex:1; padding: 12px; border-radius: 16px;" onclick="nextStageOrResult()">
+                <button class="custom-btn primary" style="flex:1; padding: 13px; border-radius: 16px; font-size: 1rem;" onclick="goToScreen('intro-screen')">
                     ${stage.buttonText}
                 </button>
             `;
+        } else {
+            titleEl.innerText = (currentStageId === 4) ? "STAGE BONUS CLEARED!" : `STAGE ${currentStageId} CLEARED!`;
+            mediaBox.classList.remove('video-mode');
+            vidEl.style.display = 'none';
+            imgEl.style.display = 'block';
+            imgEl.src = stage.victoryImg;
+            questionEl.innerText = stage.question;
+            
+            if (currentStageId === 4) {
+                btnContainer.innerHTML = `
+                    <button class="custom-btn btn-no" onclick="showResultScreen('no')">NO</button>
+                    <button class="custom-btn btn-yes" onclick="showResultScreen('yes')">YES</button>
+                `;
+            } else {
+                btnContainer.innerHTML = `
+                    <button class="custom-btn primary" style="flex:1; padding: 12px; border-radius: 16px;" onclick="nextStageOrResult()">
+                        ${stage.buttonText}
+                    </button>
+                `;
+            }
         }
     }
     function nextStageOrResult() {
@@ -1357,7 +1518,11 @@
             updateBottomButtonLabel();
         } else {
             actionClickCount = 0;
-            goToScreen('intro-screen');
+            if (isSpecialStageOpen) {
+                startStage(5);
+            } else {
+                goToScreen('intro-screen');
+            }
         }
     }
     function postComment() {
@@ -1557,6 +1722,7 @@
     window.addEventListener('keydown', (e) => {
         if(e.shiftKey && e.key.toLowerCase() === 'u') {
             document.getElementById('admin-modal').style.display = 'flex';
+            updateSpecialStageStatusUI();
         }
     });
     function closeAdmin() {
