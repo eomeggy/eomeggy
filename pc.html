@@ -201,7 +201,7 @@
     <div id="victory-modal" class="fixed inset-0 bg-[#fcebeb] z-50 flex flex-col items-center justify-center p-4 sm:p-8 hidden">
         <div class="w-full max-w-4xl bg-[#fcebeb] flex flex-col items-center justify-center">
             
-            <!-- Tiêu đề Victory cho Stage 5 đồng bộ kích thước và hiệu ứng chuẩn Intro -->
+            <!-- Tiêu đề Victory cho Stage 5 -->
             <h1 id="victory-main-title" class="text-3xl sm:text-5xl font-bubble-title title-exact-match mb-4 tracking-wide text-center hidden">
                 THANK YOU FOR LOVING SEONGHYEON!
             </h1>
@@ -212,13 +212,13 @@
             
             <h2 id="victory-question" class="text-2xl sm:text-3xl font-black text-[#5d223c] mb-4 leading-snug px-2 font-bubble-title">IS SEONGHYEON A CAT?</h2>
             
-            <!-- Video Frame Container chuẩn Intro -->
+            <!-- Video Frame Container -->
             <div id="victory-image-container" class="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-[#fcebeb] flex items-center justify-center relative mb-6">
                 <img id="victory-stage-img" src="" class="w-full h-full object-cover" alt="Stage Victory Image">
                 <video id="victory-stage-vid" src="" class="w-full h-full object-cover hidden" autoplay loop playsinline></video>
             </div>
 
-            <!-- Nút bấm & Chữ ký cho Stage 5 hoặc nút bình thường cho các stage khác -->
+            <!-- Nút bấm & Chữ ký linh hoạt theo stage -->
             <div id="victory-custom-actions" class="w-full max-w-3xl flex flex-col items-center justify-center">
                 <div class="flex flex-col items-center">
                     <button id="victory-action-btn" onclick="handleVictoryNext()" class="px-6 sm:px-8 py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-sm sm:text-base rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 font-bubble-title">
@@ -1480,7 +1480,7 @@
                 victoryImg.classList.add('hidden');
                 victoryVid.src = stageVictoryImages[5];
                 victoryVid.classList.remove('hidden');
-                victoryVid.muted = false; // Bật âm thanh cho video victory stage 5
+                victoryVid.muted = false; // Bật âm thanh cho video stage 5
                 victoryVid.currentTime = 0;
                 victoryVid.play().catch(()=>{});
                 
