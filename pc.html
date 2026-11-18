@@ -215,17 +215,17 @@
             <!-- Video Frame Container chuẩn Intro -->
             <div id="victory-image-container" class="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-[#fcebeb] flex items-center justify-center relative mb-6">
                 <img id="victory-stage-img" src="" class="w-full h-full object-cover" alt="Stage Victory Image">
-                <video id="victory-stage-vid" src="" class="w-full h-full object-cover hidden" autoplay loop muted playsinline></video>
+                <video id="victory-stage-vid" src="" class="w-full h-full object-cover hidden" autoplay loop playsinline></video>
             </div>
 
-            <!-- Cụm nút bấm 'see you,' và chữ ký tách nền nằm căn giữa thẳng hàng nhau, chiều rộng chữ ký bằng chính xác chiều rộng nút -->
+            <!-- Nút bấm & Chữ ký cho Stage 5 hoặc nút bình thường cho các stage khác -->
             <div id="victory-custom-actions" class="w-full max-w-3xl flex flex-col items-center justify-center">
-                <div class="inline-flex flex-col items-stretch">
+                <div class="flex flex-col items-center">
                     <button id="victory-action-btn" onclick="handleVictoryNext()" class="px-6 sm:px-8 py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-sm sm:text-base rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 font-bubble-title">
                         ABSOLUTELY ➔
                     </button>
-                    <div id="victory-signature-container" class="mt-2 w-full hidden">
-                        <img src="eom-signature.png" alt="eom_eggy signature" class="w-full h-auto object-contain mix-blend-multiply drop-shadow-sm filter brightness-105 block">
+                    <div id="victory-signature-container" class="mt-2 hidden">
+                        <img src="eom-signature.png" alt="eom_eggy signature" class="h-12 sm:h-16 w-auto object-contain mix-blend-multiply drop-shadow-sm filter brightness-105 block">
                     </div>
                 </div>
             </div>
@@ -1480,6 +1480,7 @@
                 victoryImg.classList.add('hidden');
                 victoryVid.src = stageVictoryImages[5];
                 victoryVid.classList.remove('hidden');
+                victoryVid.muted = false; // Bật âm thanh cho video victory stage 5
                 victoryVid.currentTime = 0;
                 victoryVid.play().catch(()=>{});
                 
