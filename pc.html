@@ -198,35 +198,39 @@
         <div id="game-board" class="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 w-full max-w-2xl mx-auto p-3"></div>
     </main>
     <!-- STAGE TRANSITION & VICTORY MODAL -->
-    <div id="victory-modal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-[#fff7e6] rounded-3xl p-6 sm:p-8 max-w-lg w-full text-center shadow-2xl border-4 border-white flex flex-col items-center">
-            <div id="victory-trophy-icon" class="text-yellow-500 text-4xl mb-2">
-                <i class="fa-solid fa-trophy"></i>
-            </div>
+    <div id="victory-modal" class="fixed inset-0 bg-[#fcebeb] z-50 flex flex-col items-center justify-center p-4 sm:p-8 hidden">
+        <div class="w-full max-w-4xl bg-[#fcebeb] flex flex-col items-center justify-center">
+            
+            <!-- Tiêu đề Victory cho Stage 5 đồng bộ kích thước và hiệu ứng chuẩn Intro -->
+            <h1 id="victory-main-title" class="text-3xl sm:text-5xl font-bubble-title title-exact-match mb-4 tracking-wide text-center hidden">
+                THANK YOU FOR LOVING SEONGHYEON!
+            </h1>
+
             <div id="victory-subtitle-label" class="text-xs font-bold text-emerald-600 tracking-widest uppercase mb-2 font-vietnamese">
                 Stage Cleared!
             </div>
             
             <h2 id="victory-question" class="text-2xl sm:text-3xl font-black text-[#5d223c] mb-4 leading-snug px-2 font-bubble-title">IS SEONGHYEON A CAT?</h2>
             
-            <!-- Standard Image Container for Stages 1-4 -->
-            <div id="victory-image-container" class="w-full max-h-52 my-3 flex items-center justify-center overflow-hidden">
-                <img id="victory-stage-img" src="" class="max-h-48 object-contain drop-shadow-lg" alt="Stage Victory Image">
+            <!-- Video Frame Container chuẩn Intro -->
+            <div id="victory-image-container" class="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-[#fcebeb] flex items-center justify-center relative mb-6">
+                <img id="victory-stage-img" src="" class="w-full h-full object-cover" alt="Stage Victory Image">
+                <video id="victory-stage-vid" src="" class="w-full h-full object-cover hidden" autoplay loop muted playsinline></video>
             </div>
 
-            <!-- Video & Intro-like Frame Container for Stage Special (Stage 5) -->
-            <div id="victory-special-video-container" class="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-[#fcebeb] flex items-center justify-center relative my-3 hidden">
-                <video id="victory-stage-vid" class="w-full h-full object-cover" autoplay loop muted playsinline src=""></video>
+            <!-- Cụm nút bấm 'see you,' và chữ ký tách nền nằm căn giữa thẳng hàng nhau, chiều rộng chữ ký bằng chính xác chiều rộng nút -->
+            <div id="victory-custom-actions" class="w-full max-w-3xl flex flex-col items-center justify-center">
+                <div class="inline-flex flex-col items-stretch">
+                    <button id="victory-action-btn" onclick="handleVictoryNext()" class="px-6 sm:px-8 py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-sm sm:text-base rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 font-bubble-title">
+                        ABSOLUTELY ➔
+                    </button>
+                    <div id="victory-signature-container" class="mt-2 w-full hidden">
+                        <img src="eom-signature.png" alt="eom_eggy signature" class="w-full h-auto object-contain mix-blend-multiply drop-shadow-sm filter brightness-105 block">
+                    </div>
+                </div>
             </div>
 
-            <button id="victory-action-btn" onclick="handleVictoryNext()" class="w-full py-4 bg-[#5d223c] text-white font-black text-lg rounded-2xl shadow-lg hover:bg-[#461a2d] transition transform hover:scale-105 cursor-pointer mt-2 font-bubble-title hidden">ABSOLUTELY ➔</button>
-            
-            <!-- Signature Image Button for Stage Special (Stage 5) -->
-            <button id="victory-signature-btn" onclick="handleVictoryNext()" class="w-full py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white rounded-2xl shadow-lg transition transform hover:scale-105 cursor-pointer mt-2 flex items-center justify-center hidden">
-                <img id="victory-signature-img" src="signature-eggy.png" class="max-h-10 object-contain" alt="EOM EGGY">
-            </button>
-
-            <div id="bonus-choice-buttons" class="w-full flex items-center justify-center gap-4 mt-4 hidden">
+            <div id="bonus-choice-buttons" class="w-full max-w-2xl flex items-center justify-center gap-4 mt-4 hidden">
                 <button onclick="handleBonusChoice('NO')" class="flex-1 py-4 bg-rose-500 hover:bg-rose-600 text-white font-black text-xl rounded-2xl shadow-lg transition transform hover:scale-105 border-2 border-white font-bubble-title">
                     NO
                 </button>
@@ -680,6 +684,13 @@
             3: 'ARE YOU FULLY CONVINCED NOW?',
             4: 'IS SEONGHYEON A CAT?',
             5: 'THANK YOU FOR JOINING THE GAME!<br>SEE YOU NEXT TIME!👋'
+        };
+        
+        const victoryBtnLabels = {
+            1: 'NOT SURE ➔',
+            2: 'A LITTLE ➔',
+            3: 'ABSOLUTELY ➔',
+            5: 'see you,'
         };
         
         let userCommentsList = [];
@@ -1165,6 +1176,7 @@
             }
         }
         
+        // HỆ THỐNG CHỌN TEST RUN PHONE HOẶC PC NGAY TỪ ĐẦU
         function testRunSlide(slideType, stageNum, mode = 'pc') {
             closeUploadModal();
             if (mode === 'phone') {
@@ -1448,47 +1460,40 @@
             stopBGM();
             playVictoryFanfareSound();
             const modal = document.getElementById('victory-modal');
-            const trophyIcon = document.getElementById('victory-trophy-icon');
+            const mainTitle = document.getElementById('victory-main-title');
             const subtitleEl = document.getElementById('victory-subtitle-label');
             const questionEl = document.getElementById('victory-question');
-            
-            const victoryImgContainer = document.getElementById('victory-image-container');
             const victoryImg = document.getElementById('victory-stage-img');
-            
-            const victorySpecialVidContainer = document.getElementById('victory-special-video-container');
             const victoryVid = document.getElementById('victory-stage-vid');
-            
             const actionBtn = document.getElementById('victory-action-btn');
-            const signatureBtn = document.getElementById('victory-signature-btn');
             const bonusBtns = document.getElementById('bonus-choice-buttons');
+            const signatureContainer = document.getElementById('victory-signature-container');
             
             if (currentStage === 5) {
-                if (trophyIcon) trophyIcon.style.display = 'block';
-                if (subtitleEl) subtitleEl.innerText = "STAGE SPECIAL CLEARED!";
-                questionEl.innerHTML = victoryQuestions[5];
-                
-                // Ẩn khung ảnh thường, hiển thị khung video phong cách Intro
-                if (victoryImgContainer) victoryImgContainer.classList.add('hidden');
-                if (victorySpecialVidContainer) victorySpecialVidContainer.classList.remove('hidden');
-                if (victoryVid) {
-                    victoryVid.src = stageVictoryImages[5];
-                    victoryVid.currentTime = 0;
-                    victoryVid.play().catch(()=>{});
+                if (mainTitle) {
+                    mainTitle.innerText = "THANK YOU FOR LOVING SEONGHYEON!";
+                    mainTitle.classList.remove('hidden');
                 }
+                if (subtitleEl) subtitleEl.classList.add('hidden');
+                if (questionEl) questionEl.classList.add('hidden');
+
+                victoryImg.classList.add('hidden');
+                victoryVid.src = stageVictoryImages[5];
+                victoryVid.classList.remove('hidden');
+                victoryVid.currentTime = 0;
+                victoryVid.play().catch(()=>{});
                 
-                // Ẩn nút text thường, hiển thị nút ảnh chữ ký (Signature Button)
-                if (actionBtn) actionBtn.classList.add('hidden');
-                if (signatureBtn) signatureBtn.classList.remove('hidden');
-                if (bonusBtns) bonusBtns.classList.add('hidden');
+                actionBtn.classList.remove('hidden');
+                if (signatureContainer) signatureContainer.classList.remove('hidden');
+                bonusBtns.classList.add('hidden');
+                actionBtn.innerText = victoryBtnLabels[5];
             } else {
-                if (trophyIcon) trophyIcon.style.display = 'block';
-                if (subtitleEl) subtitleEl.innerText = "Stage Cleared!";
-                questionEl.innerHTML = victoryQuestions[currentStage] || victoryQuestions[1];
+                if (mainTitle) mainTitle.classList.add('hidden');
+                if (subtitleEl) { subtitleEl.innerText = "Stage Cleared!"; subtitleEl.classList.remove('hidden'); }
+                if (questionEl) { questionEl.innerHTML = victoryQuestions[currentStage] || victoryQuestions[1]; questionEl.classList.remove('hidden'); }
+                if (signatureContainer) signatureContainer.classList.add('hidden');
                 
-                // Hiển thị khung ảnh thường, ẩn khung video Special
-                if (victorySpecialVidContainer) victorySpecialVidContainer.classList.add('hidden');
-                if (victoryImgContainer) victoryImgContainer.classList.remove('hidden');
-                
+                victoryVid.classList.add('hidden');
                 const vicImages = stageVictoryImages;
                 if (vicImages[currentStage] && vicImages[currentStage].trim() !== '') {
                     victoryImg.src = vicImages[currentStage];
@@ -1496,21 +1501,13 @@
                 } else {
                     victoryImg.classList.add('hidden');
                 }
-                
-                if (signatureBtn) signatureBtn.classList.add('hidden');
-                
                 if (currentStage === 4) {
-                    if (actionBtn) actionBtn.classList.add('hidden');
-                    if (bonusBtns) bonusBtns.classList.remove('hidden');
+                    actionBtn.classList.add('hidden');
+                    bonusBtns.classList.remove('hidden');
                 } else {
-                    if (actionBtn) {
-                        actionBtn.classList.remove('hidden');
-                        if (currentStage === 1) actionBtn.innerText = 'NOT SURE ➔';
-                        else if (currentStage === 2) actionBtn.innerText = 'A LITTLE ➔';
-                        else if (currentStage === 3) actionBtn.innerText = 'ABSOLUTELY ➔';
-                        else actionBtn.innerText = 'NEXT STAGE ➔';
-                    }
-                    if (bonusBtns) bonusBtns.classList.add('hidden');
+                    actionBtn.classList.remove('hidden');
+                    bonusBtns.classList.add('hidden');
+                    actionBtn.innerText = victoryBtnLabels[currentStage] || 'NEXT STAGE ➔';
                 }
             }
             modal.classList.remove('hidden');
