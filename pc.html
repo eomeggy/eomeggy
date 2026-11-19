@@ -6,14 +6,13 @@
         const firebaseConfig = {
     apiKey: "AIzaSyCY640ZkYMIA9t8TAFwuznAPA-liPYBYrU",
     authDomain: "seonghyeon-cat-game.firebaseapp.com",
-    projectId: "seonghyeon-cat-game-default-rtdb".replace("-default-rtdb", ".firebaseapp.com"),
+    projectId: "seonghyeon-cat-game",
     databaseURL: "https://seonghyeon-cat-game-default-rtdb.firebaseio.com",
     storageBucket: "seonghyeon-cat-game.appspot.com",
     messagingSenderId: "126426060136",
     appId: "1:126426060136:web:bf0d19b46871b6d9a5f2dd",
     measurementId: "G-2D9C0R6GL0"
 };
-        firebaseConfig.authDomain = "seonghyeon-cat-game.firebaseapp.com";
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         window.db = db;
