@@ -196,7 +196,7 @@
         </div>
         <div id="game-board" class="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 w-full max-w-2xl mx-auto p-3"></div>
     </main>
-    <!-- STAGE TRANSITION & VICTORY MODAL -->
+    <!-- STAGE TRANSITION & VICTORY MODAL (EGGY VICTORY SLIDE FROM SECOND FILE) -->
     <div id="victory-modal" class="fixed inset-0 bg-[#fcebeb] z-50 flex flex-col items-center justify-center p-4 sm:p-8 hidden">
         <div class="w-full max-w-4xl bg-[#fcebeb] flex flex-col items-center justify-center">
             
@@ -204,7 +204,6 @@
             <h1 id="victory-main-title" class="text-3xl sm:text-5xl font-bubble-title title-exact-match mb-4 tracking-wide text-center hidden">
                 THANK YOU FOR LOVING SEONGHYEON!
             </h1>
-
             <div id="victory-subtitle-label" class="text-xs font-bold text-emerald-600 tracking-widest uppercase mb-2 font-vietnamese">
                 Stage Cleared!
             </div>
@@ -216,7 +215,6 @@
                 <img id="victory-stage-img" src="" class="w-full h-full object-cover" alt="Stage Victory Image">
                 <video id="victory-stage-vid" src="" class="w-full h-full object-cover hidden" autoplay loop playsinline></video>
             </div>
-
             <!-- Nút bấm hoặc Chữ ký làm nút bấm linh hoạt cho Stage 5 -->
             <div id="victory-custom-actions" class="w-full max-w-3xl flex flex-col items-center justify-center">
                 <div class="flex flex-col items-center">
@@ -229,7 +227,6 @@
                     </div>
                 </div>
             </div>
-
             <div id="bonus-choice-buttons" class="w-full max-w-2xl flex items-center justify-center gap-4 mt-4 hidden">
                 <button onclick="handleBonusChoice('NO')" class="flex-1 py-4 bg-rose-500 hover:bg-rose-600 text-white font-black text-xl rounded-2xl shadow-lg transition transform hover:scale-105 border-2 border-white font-bubble-title">
                     NO
@@ -1454,6 +1451,7 @@
                 }
             }
         }
+        // EGGY VICTORY SLIDE LOGIC FROM SECOND FILE
         function handleStageVictory() {
             stopTimer();
             stopBGM();
@@ -1469,27 +1467,23 @@
             const signatureContainer = document.getElementById('victory-signature-container');
             
             if (currentStage === 5) {
-                // STAGE 5 (EOM EGGY): Dùng tiêu đề đặc biệt, video victory có âm thanh và ảnh chữ ký làm nút bấm
                 if (mainTitle) {
                     mainTitle.innerText = "THANK YOU FOR LOVING SEONGHYEON!";
                     mainTitle.classList.remove('hidden');
                 }
                 if (subtitleEl) subtitleEl.classList.add('hidden');
                 if (questionEl) questionEl.classList.add('hidden');
-
                 victoryImg.classList.add('hidden');
                 victoryVid.src = stageVictoryImages[5];
                 victoryVid.classList.remove('hidden');
-                victoryVid.muted = false; // Bật âm thanh cho video stage 5
+                victoryVid.muted = false;
                 victoryVid.currentTime = 0;
                 victoryVid.play().catch(()=>{});
                 
-                // Ẩn nút bấm chữ thường, hiện ảnh chữ ký làm nút bấm
                 actionBtn.classList.add('hidden');
                 if (signatureContainer) signatureContainer.classList.remove('hidden');
                 bonusBtns.classList.add('hidden');
             } else {
-                // CÁC STAGE KHÁC (1, 2, 3, BONUS): Trả về nguyên bản code chuẩn
                 if (mainTitle) mainTitle.classList.add('hidden');
                 if (subtitleEl) { subtitleEl.innerText = "Stage Cleared!"; subtitleEl.classList.remove('hidden'); }
                 if (questionEl) { questionEl.innerHTML = victoryQuestions[currentStage] || victoryQuestions[1]; questionEl.classList.remove('hidden'); }
