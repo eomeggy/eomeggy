@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en"><head>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -21,6 +22,9 @@
         window.dbOnValue = onValue;
         if (typeof window.initFirebaseComments === 'function') {
             window.initFirebaseComments();
+        }
+        if (typeof window.initFirebaseSpecialStage === 'function') {
+            window.initFirebaseSpecialStage();
         }
     </script>
     <meta charset="UTF-8">
@@ -82,6 +86,12 @@
         .custom-scrollbar::-webkit-scrollbar-track {
             background-color: #1e1525;
         }
+        /* Phóng to card special stage trên PC lên 1.15 lần */
+        .scale-pc-special {
+            transform: scale(1.15);
+            transform-origin: center;
+            margin: 10px;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-between p-2 sm:p-4 select-none bg-[#c96b92]">
@@ -122,11 +132,9 @@
     <div id="stage-select-screen" class="fixed inset-0 bg-[#c96b92] z-40 flex flex-col items-center justify-center p-4 hidden">
         <div class="w-full max-w-6xl flex flex-col items-center justify-center">
             
-            <!-- Khoảng cách tiêu đề SELECT STAGE -->
             <h2 class="text-3xl sm:text-5xl font-bubble-title title-exact-match mb-10 tracking-wider text-center">
                 SELECT STAGE
             </h2>
-            <!-- 3 Level Cards Grid: Viền 3 cạnh trên/trái/phải giữ nguyên, viền dưới giảm còn 2/3 (border-bottom-[1.6px]) -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 w-full max-w-5xl mb-10 px-4 justify-items-center">
                <!-- EASY -->
         <div onclick="startGame(1)" onmouseenter="playLevelHover(1)" onmouseleave="stopLevelHover(1)" style="border-top: 2.5px solid white; border-left: 2.5px solid white; border-right: 2.5px solid white; border-bottom: 1.66px solid white;" class="bg-[#fff7e6] rounded-3xl p-4 sm:p-5 flex flex-col items-center justify-between cursor-pointer hover:scale-105 transition-all shadow-xl group relative w-full max-w-[320px]">
@@ -134,7 +142,6 @@
                 <img id="level-img-1" src="stage1-easy-img.jpg" class="w-full h-full object-cover rounded-2xl">
                 <video id="level-vid-1" class="absolute inset-0 w-full h-full object-cover rounded-2xl hidden" loop="" playsinline="" src="stage1-easy-video.mp4"></video>
             </div>
-            <!-- Giữ nguyên kích thước chữ text-2xl -->
             <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)] mt-2">EASY</span>
         </div>
         <!-- MEDIUM -->
@@ -143,7 +150,6 @@
                 <img id="level-img-2" src="stage2-medium-img.jpg" class="w-full h-full object-cover rounded-2xl">
                 <video id="level-vid-2" class="absolute inset-0 w-full h-full object-cover rounded-2xl hidden" loop="" playsinline="" src="stage2-medium-video.mp4"></video>
             </div>
-            <!-- Giữ nguyên kích thước chữ text-2xl -->
             <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)] mt-2">MEDIUM</span>
         </div>
         <!-- HARD -->
@@ -152,11 +158,9 @@
                 <img id="level-img-3" src="stage3-hard-img.jpg" class="w-full h-full object-cover rounded-2xl">
                 <video id="level-vid-3" class="absolute inset-0 w-full h-full object-cover rounded-2xl hidden" loop="" playsinline="" src="stage3-hard-video.mp4"></video>
             </div>
-            <!-- Giữ nguyên kích thước chữ text-2xl -->
             <span class="font-extrabold text-2xl text-[#6b2d4b] tracking-wide font-bubble-title drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)] mt-2">HARD</span>
         </div>
             </div>
-            <!-- Nút bấm Replay Intro -->
             <div class="flex items-center justify-center gap-4 w-full max-w-xl mt-2">
                 <button onclick="showIntroScreen()" class="px-6 py-3 bg-white/20 hover:bg-white/30 text-white border-2 border-white font-extrabold text-sm sm:text-base rounded-2xl transition flex items-center gap-2 backdrop-blur-sm font-bubble-title">
                     <i class="fa-solid fa-play"></i> REPLAY INTRO
@@ -199,13 +203,14 @@
             <div class="text-yellow-500 text-4xl mb-2">
                 <i class="fa-solid fa-trophy"></i>
             </div>
-            <div class="text-xs font-bold text-emerald-600 tracking-widest uppercase mb-2 font-vietnamese">
+            <div id="victory-subtitle-label" class="text-xs font-bold text-emerald-600 tracking-widest uppercase mb-2 font-vietnamese">
                 Stage Cleared!
             </div>
             
             <h2 id="victory-question" class="text-2xl sm:text-3xl font-black text-[#5d223c] mb-4 leading-snug px-2 font-bubble-title">IS SEONGHYEON A CAT?</h2>
             <div id="victory-image-container" class="w-full max-h-52 my-3 flex items-center justify-center overflow-hidden">
                 <img id="victory-stage-img" src="" class="max-h-48 object-contain drop-shadow-lg" alt="Stage Victory Image">
+                <video id="victory-stage-vid" src="" class="max-h-48 object-contain drop-shadow-lg hidden" autoplay loop muted playsinline></video>
             </div>
             <button id="victory-action-btn" onclick="handleVictoryNext()" class="w-full py-4 bg-[#5d223c] text-white font-black text-lg rounded-2xl shadow-lg hover:bg-[#461a2d] transition transform hover:scale-105 cursor-pointer mt-2 font-bubble-title hidden">ABSOLUTELY ➔</button>
             <div id="bonus-choice-buttons" class="w-full flex items-center justify-center gap-4 mt-4">
@@ -277,6 +282,9 @@
                 <button id="tab-btn-s4" onclick="setUploadTab('s4')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/15 whitespace-nowrap">
                     Stage Bonus (BONUS)
                 </button>
+                <button id="tab-btn-special" onclick="setUploadTab('special')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/15 whitespace-nowrap">
+                    Stage Special (EGGY)
+                </button>
                 <button id="tab-btn-result" onclick="setUploadTab('result')" class="px-4 py-2 text-xs font-extrabold rounded-xl bg-white/5 text-gray-300 hover:bg-white/15 whitespace-nowrap">
                     Result (YES / NO)
                 </button>
@@ -295,18 +303,37 @@
                     </div>
                     <div id="admin-comments-manage-list" class="space-y-3"></div>
                 </div>
+                <!-- TAB STAGE SPECIAL (EOM EGGY) -->
+                <div id="tab-sec-special" class="space-y-5 hidden">
+                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="font-black text-teal-300 text-sm">STAGE SPECIAL (EOM EGGY) CONTROL PANEL</span>
+                            <span id="admin-special-status-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-rose-600 text-white">CLOSED</span>
+                        </div>
+                        <div class="flex gap-3 pt-2">
+                            <button onclick="setSpecialStageOpenStatus(true)" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs rounded-xl shadow">OPEN STAGE</button>
+                            <button onclick="setSpecialStageOpenStatus(false)" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-black text-xs rounded-xl shadow">CLOSE STAGE</button>
+                            <button onclick="testRunSlide('stage', 5, 'pc')" class="px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow">Test PC</button>
+                            <button onclick="testRunSlide('stage', 5, 'phone')" class="px-3 py-2 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow">Test Phone</button>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
+                        <div>
+                            <span class="font-bold text-xs text-teal-300 block">🎵 Stage Special Background Music (BGM)</span>
+                            <span class="text-[11px] text-gray-400" id="bgm-label-5">Audio track loaded successfully ✅</span>
+                        </div>
+                        <input type="file" accept="audio/*" onchange="uploadStageBGM(event, 5)" class="text-xs text-gray-300 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
+                    </div>
+                    <div id="cards-grid-s5" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+                </div>
                 <div id="tab-sec-intro" class="space-y-5 hidden">
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 space-y-3">
                         <span class="font-extrabold text-sm text-teal-300 block">1. Intro Video (Chọn bản để Test)</span>
                         <div class="flex items-center justify-between gap-4">
                             <input type="file" accept="video/*" onchange="uploadIntroVideo(event, 'pc')" class="text-xs text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-teal-400 file:text-stone-900 file:font-bold">
                             <div class="flex gap-2">
-                                <button onclick="testRunSlide('intro', 1, 'pc')" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1.5">
-                                    <i class="fa-solid fa-desktop"></i> Run PC
-                                </button>
-                                <button onclick="testRunSlide('intro', 1, 'phone')" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1.5">
-                                    <i class="fa-solid fa-mobile-screen"></i> Run Phone
-                                </button>
+                                <button onclick="testRunSlide('intro', 1, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow">Test PC</button>
+                                <button onclick="testRunSlide('intro', 1, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow">Test Phone</button>
                             </div>
                         </div>
                     </div>
@@ -314,12 +341,8 @@
                         <div class="flex items-center justify-between border-b border-purple-900/40 pb-2">
                             <span class="font-extrabold text-sm text-teal-300 block">2. Select Stage Hover Media (Levels 1, 2, 3)</span>
                             <div class="flex gap-2">
-                                <button onclick="testRunSlide('stage-select', 1, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                    <i class="fa-solid fa-desktop"></i> Run PC
-                                </button>
-                                <button onclick="testRunSlide('stage-select', 1, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                    <i class="fa-solid fa-mobile-screen"></i> Run Phone
-                                </button>
+                                <button onclick="testRunSlide('stage-select', 1, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow">Test PC</button>
+                                <button onclick="testRunSlide('stage-select', 1, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow">Test Phone</button>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -358,12 +381,8 @@
                     <div class="flex items-center justify-between">
                         <div class="font-black text-teal-300 text-sm">STAGE 1: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
                         <div class="flex gap-2">
-                            <button onclick="testRunSlide('stage', 1, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-desktop"></i> Run PC
-                            </button>
-                            <button onclick="testRunSlide('stage', 1, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-mobile-screen"></i> Run Phone
-                            </button>
+                            <button onclick="testRunSlide('stage', 1, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow">Test PC</button>
+                            <button onclick="testRunSlide('stage', 1, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow">Test Phone</button>
                         </div>
                     </div>
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
@@ -380,12 +399,8 @@
                     <div class="flex items-center justify-between">
                         <div class="font-black text-teal-300 text-sm">STAGE 2: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
                         <div class="flex gap-2">
-                            <button onclick="testRunSlide('stage', 2, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-desktop"></i> Run PC
-                            </button>
-                            <button onclick="testRunSlide('stage', 2, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-mobile-screen"></i> Run Phone
-                            </button>
+                            <button onclick="testRunSlide('stage', 2, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow">Test PC</button>
+                            <button onclick="testRunSlide('stage', 2, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow">Test Phone</button>
                         </div>
                     </div>
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
@@ -402,12 +417,8 @@
                     <div class="flex items-center justify-between">
                         <div class="font-black text-teal-300 text-sm">STAGE 3: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
                         <div class="flex gap-2">
-                            <button onclick="testRunSlide('stage', 3, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-desktop"></i> Run PC
-                            </button>
-                            <button onclick="testRunSlide('stage', 3, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-mobile-screen"></i> Run Phone
-                            </button>
+                            <button onclick="testRunSlide('stage', 3, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow">Test PC</button>
+                            <button onclick="testRunSlide('stage', 3, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow">Test Phone</button>
                         </div>
                     </div>
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
@@ -424,12 +435,8 @@
                     <div class="flex items-center justify-between">
                         <div class="font-black text-teal-300 text-sm">STAGE BONUS: BGM AUDIO, COVER, CARD PHOTOS &amp; VICTORY</div>
                         <div class="flex gap-2">
-                            <button onclick="testRunSlide('stage', 4, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-desktop"></i> Run PC
-                            </button>
-                            <button onclick="testRunSlide('stage', 4, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow flex items-center gap-1">
-                                <i class="fa-solid fa-mobile-screen"></i> Run Phone
-                            </button>
+                            <button onclick="testRunSlide('stage', 4, 'pc')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow">Test PC</button>
+                            <button onclick="testRunSlide('stage', 4, 'phone')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl shadow">Test Phone</button>
                         </div>
                     </div>
                     <div class="p-4 bg-[#23182d] rounded-2xl border border-purple-800/40 flex items-center justify-between gap-4">
@@ -522,6 +529,15 @@
     <!-- Hidden Stage Audio Element -->
     <audio id="stage-bgm-audio" loop=""></audio>
     
+    <!-- EMBEDDED PHONE SIMULATOR MODAL (Dùng file PHONE khi test phone) -->
+    <div id="phone-simulator-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[100] flex items-center justify-center p-2 hidden">
+        <div class="relative bg-[#d87a93] w-full max-w-[420px] h-[95vh] max-h-[850px] rounded-[30px] border-8 border-[#c25e79] shadow-2xl overflow-hidden flex flex-col">
+            <button onclick="closePhoneSimulator()" class="absolute top-3 right-3 w-8 h-8 bg-[#592233] text-white font-black rounded-full flex items-center justify-center hover:bg-black transition text-sm z-[110]">
+                ✕
+            </button>
+            <iframe id="phone-simulator-iframe" src="about:blank" class="w-full h-full border-0"></iframe>
+        </div>
+    </div>
     <script>
         let currentStage = 1;
         let activeTabStage = 1;
@@ -537,6 +553,8 @@
         let introVideoUrl = "intro-video.mp4";
         let phoneIntroVideoUrl = "intro-video-phone.mp4";
         let currentChoiceVote = 'YES';
+        let actionClickCount = 0;
+        let isSpecialStageOpen = false;
         
         let levelHoverMedia = {
             1: { img: 'stage1-easy-img.jpg', vid: 'stage1-easy-video.mp4' },
@@ -553,58 +571,75 @@
             1: 'card-back-1-2-3-bonus.jpg',
             2: 'card-back-1-2-3-bonus.jpg',
             3: 'card-back-1-2-3-bonus.jpg',
-            4: 'card-back-1-2-3-bonus.jpg'
+            4: 'card-back-1-2-3-bonus.jpg',
+            5: 'card-back-1-2-3-bonus.jpg'
         };
         let phoneStageCovers = {
             1: 'card-back-1-2-3-bonus-phone.jpg',
             2: 'card-back-1-2-3-bonus-phone.jpg',
             3: 'card-back-1-2-3-bonus-phone.jpg',
-            4: 'card-back-1-2-3-bonus-phone.jpg'
+            4: 'card-back-1-2-3-bonus-phone.jpg',
+            5: 'card-back-1-2-3-bonus-phone.jpg'
         };
         
         let stageVictoryImages = { 
             1: 'victory1-img.png', 
             2: 'victory2-img.png', 
             3: 'victory3-img.png', 
-            4: 'victory-bonus-img.png' 
+            4: 'victory-bonus-img.png',
+            5: 'victory-eggy-img.mp4'
         };
         let phoneStageVictoryImages = { 
             1: 'victory1-img-phone.png', 
             2: 'victory2-img-phone.png', 
             3: 'victory3-img-phone.png', 
-            4: 'victory-bonus-img-phone.png' 
+            4: 'victory-bonus-img-phone.png',
+            5: 'victory-eggy-img-phone.mp4'
         };
         
         let stageBGMTracks = { 
             1: 'stage1-audio.mp3', 
             2: 'stage2-audio.mp3', 
             3: 'stage3-audio.mp3', 
-            4: 'stage-bonus-audio.mp3' 
+            4: 'stage-bonus-audio.mp3',
+            5: 'stage-eggy-audio.mp3'
         };
         let phoneStageBGMTracks = { 
             1: 'stage1-audio-phone.mp3', 
             2: 'stage2-audio-phone.mp3', 
             3: 'stage3-audio-phone.mp3', 
-            4: 'stage-bonus-audio-phone.mp3' 
+            4: 'stage-bonus-audio-phone.mp3',
+            5: 'stage-eggy-audio-phone.mp3'
         };
         
+        const specialCardsList = Array.from({ length: 28 }, (_, idx) => `eggy-card-${idx + 1}.jpg`);
+        const phoneSpecialCardsList = Array.from({ length: 28 }, (_, idx) => `eggy-card-${idx + 1}-phone.jpg`);
         let stageCardPhotos = {
             1: ['stage1-card-1.jpg', 'stage1-card-2.jpg', 'stage1-card-3.png', 'stage1-card-4.jpg'],
             2: ['stage2-card-1.jpg', 'stage2-card-2.jpg', 'stage2-card-3.jpg', 'stage2-card-4.jpg', 'stage2-card-5.jpg', 'stage2-card-6.jpg', 'stage2-card-7.jpg', 'stage2-card-8.jpg'],
             3: ['stage3-card-1.jpg', 'stage3-card-2.jpg', 'stage3-card-3.jpg', 'stage3-card-4.jpg', 'stage3-card-5.jpg', 'stage3-card-6.jpg', 'stage3-card-7.jpg', 'stage3-card-8.jpg', 'stage3-card-9.jpg', 'stage3-card-10.jpg', 'stage3-card-11.jpg', 'stage3-card-12.jpg'],
-            4: ['bonus-card-1.jpg', 'bonus-card-2.jpg', 'bonus-card-3.jpg', 'bonus-card-4.jpg', 'bonus-card-5.png', 'bonus-card-6.jpg', 'bonus-card-7.jpg', 'bonus-card-8.jpg', 'bonus-card-9.jpg', 'bonus-card-10.png', 'bonus-card-11.jpg', 'bonus-card-12.jpg', 'bonus-card-13.png', 'bonus-card-14.jpg', 'bonus-card-15.png', 'bonus-card-16.jpg', 'bonus-card-17.jpg', 'bonus-card-18.jpg', 'bonus-card-19.jpg', 'bonus-card-20.jpg']
+            4: ['bonus-card-1.jpg', 'bonus-card-2.jpg', 'bonus-card-3.jpg', 'bonus-card-4.jpg', 'bonus-card-5.png', 'bonus-card-6.jpg', 'bonus-card-7.jpg', 'bonus-card-8.jpg', 'bonus-card-9.jpg', 'bonus-card-10.png', 'bonus-card-11.jpg', 'bonus-card-12.jpg', 'bonus-card-13.png', 'bonus-card-14.jpg', 'bonus-card-15.png', 'bonus-card-16.jpg', 'bonus-card-17.jpg', 'bonus-card-18.jpg', 'bonus-card-19.jpg', 'bonus-card-20.jpg'],
+            5: specialCardsList
         };
         let phoneStageCardPhotos = {
             1: ['stage1-card-1-phone.jpg', 'stage1-card-2-phone.jpg', 'stage1-card-3-phone.jpg', 'stage1-card-4-phone.jpg'],
             2: ['stage2-card-1-phone.jpg', 'stage2-card-2-phone.jpg', 'stage2-card-3-phone.jpg', 'stage2-card-4-phone.jpg', 'stage2-card-5-phone.jpg', 'stage2-card-6-phone.jpg', 'stage2-card-7-phone.jpg', 'stage2-card-8-phone.jpg'],
             3: ['stage3-card-1-phone.jpg', 'stage3-card-2-phone.jpg', 'stage3-card-3-phone.jpg', 'stage3-card-4-phone.jpg', 'stage3-card-5-phone.jpg', 'stage3-card-6-phone.jpg', 'stage3-card-7-phone.jpg', 'stage3-card-8-phone.jpg', 'stage3-card-9-phone.jpg', 'stage3-card-10-phone.jpg', 'stage3-card-11-phone.jpg', 'stage3-card-12-phone.jpg'],
-            4: ['bonus-card-1-phone.jpg', 'bonus-card-2-phone.jpg', 'bonus-card-3-phone.jpg', 'bonus-card-4-phone.jpg', 'bonus-card-5-phone.png', 'bonus-card-6-phone.jpg', 'bonus-card-7-phone.jpg', 'bonus-card-8-phone.jpg', 'bonus-card-9-phone.jpg', 'bonus-card-10-phone.png', 'bonus-card-11-phone.jpg', 'bonus-card-12-phone.jpg', 'bonus-card-13-phone.png', 'bonus-card-14-phone.jpg', 'bonus-card-15-phone.png', 'bonus-card-16-phone.jpg', 'bonus-card-17-phone.jpg', 'bonus-card-18-phone.jpg', 'bonus-card-19-phone.jpg', 'bonus-card-20-phone.jpg']
+            4: ['bonus-card-1-phone.jpg', 'bonus-card-2-phone.jpg', 'bonus-card-3-phone.jpg', 'bonus-card-4-phone.jpg', 'bonus-card-5-phone.png', 'bonus-card-6-phone.jpg', 'bonus-card-7-phone.jpg', 'bonus-card-8-phone.jpg', 'bonus-card-9-phone.jpg', 'bonus-card-10-phone.png', 'bonus-card-11-phone.jpg', 'bonus-card-12-phone.jpg', 'bonus-card-13-phone.png', 'bonus-card-14-phone.jpg', 'bonus-card-15-phone.png', 'bonus-card-16-phone.jpg', 'bonus-card-17-phone.jpg', 'bonus-card-18-phone.jpg', 'bonus-card-19-phone.jpg', 'bonus-card-20-phone.jpg'],
+            5: phoneSpecialCardsList
         };
+        const eggyPairsMap = {};
+        const eggyPairsList = [[1,12], [2,13], [4,20], [3,6], [5,25], [7,16], [8,21], [9,27], [10,28], [11,18], [14,24], [15,26], [17,23], [19,22]];
+        eggyPairsList.forEach((pair, pIdx) => {
+            eggyPairsMap[pair[0] - 1] = pIdx;
+            eggyPairsMap[pair[1] - 1] = pIdx;
+        });
         let stageMatchingPairs = {
             1: { 0: 0, 3: 0, 1: 1, 2: 1 },
             2: { 0: 0, 6: 0, 1: 1, 7: 1, 2: 2, 5: 2, 3: 3, 4: 3 },
             3: { 0: 0, 6: 0, 1: 1, 8: 1, 2: 2, 11: 2, 3: 3, 4: 3, 5: 4, 10: 4, 7: 5, 9: 5 },
-            4: { 0: 0, 16: 0, 1: 1, 9: 1, 2: 2, 15: 2, 3: 3, 5: 3, 4: 4, 14: 4, 7: 5, 19: 5, 6: 6, 13: 6, 8: 7, 11: 7, 12: 8, 18: 8, 10: 9, 17: 9 }
+            4: { 0: 0, 16: 0, 1: 1, 9: 1, 2: 2, 15: 2, 3: 3, 5: 3, 4: 4, 14: 4, 7: 5, 19: 5, 6: 6, 13: 6, 8: 7, 11: 7, 12: 8, 18: 8, 10: 9, 17: 9 },
+            5: eggyPairsMap
         };
         
         let resultChoiceMedia = {
@@ -622,20 +657,23 @@
             1: 'STAGE 1: SKEPTICAL',
             2: 'STAGE 2: TENTATIVE',
             3: 'STAGE 3: CONVINCED',
-            4: 'STAGE BONUS: UNSHAKABLE'
+            4: 'STAGE BONUS: UNSHAKABLE',
+            5: 'STAGE SPECIAL: EOM EGGY'
         };
         
         const victoryQuestions = {
             1: 'ARE YOU STILL SKEPTICAL?',
             2: 'HAVE YOU STARTING TO BELIEVING?',
             3: 'ARE YOU FULLY CONVINCED NOW?',
-            4: 'IS SEONGHYEON A CAT?'
+            4: 'IS SEONGHYEON A CAT?',
+            5: 'THANK YOU FOR JOINING THE GAME!<br>SEE YOU NEXT TIME!👋'
         };
         
         const victoryBtnLabels = {
             1: 'NOT SURE ➔',
             2: 'A LITTLE ➔',
-            3: 'ABSOLUTELY ➔'
+            3: 'ABSOLUTELY ➔',
+            5: 'EOM EGGY'
         };
         
         let userCommentsList = [];
@@ -658,6 +696,34 @@
         }
         window.addEventListener('click', unlockAudio, { once: true });
         window.addEventListener('touchstart', unlockAudio, { once: true });
+        function initFirebaseSpecialStage() {
+            if (!window.db) return;
+            const configRef = window.dbRef(window.db, 'gameConfig/specialStageOpen');
+            window.dbOnValue(configRef, (snapshot) => {
+                isSpecialStageOpen = snapshot.val() === true;
+                updateAdminSpecialBadge();
+            });
+        }
+        window.initFirebaseSpecialStage = initFirebaseSpecialStage;
+        function setSpecialStageOpenStatus(isOpen) {
+            isSpecialStageOpen = isOpen;
+            if (window.db) {
+                window.dbSet(window.dbRef(window.db, 'gameConfig/specialStageOpen'), isOpen);
+            }
+            updateAdminSpecialBadge();
+        }
+        function updateAdminSpecialBadge() {
+            const badge = document.getElementById('admin-special-status-badge');
+            if (badge) {
+                if (isSpecialStageOpen) {
+                    badge.innerText = "OPEN";
+                    badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-600 text-white";
+                } else {
+                    badge.innerText = "CLOSED";
+                    badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-rose-600 text-white";
+                }
+            }
+        }
         function stopAllGlobalMedia() {
             stopBGM();
             stopIntroVideoCompletely();
@@ -1093,20 +1159,37 @@
             }
         }
         
+        // HỆ THỐNG CHỌN TEST RUN PHONE HOẶC PC NGAY TỪ ĐẦU
         function testRunSlide(slideType, stageNum, mode = 'pc') {
             closeUploadModal();
+            if (mode === 'phone') {
+                openPhoneSimulator(slideType, stageNum);
+                return;
+            }
             stopAllGlobalMedia();
             if (slideType === 'intro') {
-                showIntroScreen(mode === 'phone');
+                showIntroScreen(false);
             } else if (slideType === 'stage-select') {
                 skipIntroToStageSelect();
             } else if (slideType === 'stage') {
-                startGame(stageNum || 1, mode);
+                startGame(stageNum || 1, 'pc');
             } else if (slideType === 'result-yes') {
-                handleBonusChoice('YES', mode);
+                handleBonusChoice('YES', 'pc');
             } else if (slideType === 'result-no') {
-                handleBonusChoice('NO', mode);
+                handleBonusChoice('NO', 'pc');
             }
+        }
+        function openPhoneSimulator(slideType, stageNum) {
+            const modal = document.getElementById('phone-simulator-modal');
+            const iframe = document.getElementById('phone-simulator-iframe');
+            iframe.src = "phone.html"; 
+            modal.classList.remove('hidden');
+        }
+        function closePhoneSimulator() {
+            const modal = document.getElementById('phone-simulator-modal');
+            const iframe = document.getElementById('phone-simulator-iframe');
+            iframe.src = "about:blank";
+            modal.classList.add('hidden');
         }
         function showIntroScreen(isPhone = false) {
             stopAllGlobalMedia();
@@ -1148,6 +1231,7 @@
         function openUploadModal() {
             renderUploadModalGrids();
             renderAdminCommentsManager();
+            updateAdminSpecialBadge();
             document.getElementById('upload-config-modal').classList.remove('hidden');
         }
         function closeUploadModal() {
@@ -1265,6 +1349,9 @@
             } else if (stage === 4) {
                 totalPairsInStage = 10;
                 board.className = "grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 w-full max-w-2xl mx-auto p-3";
+            } else if (stage === 5) {
+                totalPairsInStage = 14;
+                board.className = "grid grid-cols-7 gap-2 sm:gap-2.5 w-full max-w-3xl mx-auto p-2 scale-pc-special"; 
             }
             deck = photos.map((imgUrl, idx) => ({
                 index: idx,
@@ -1295,7 +1382,7 @@
                 cardEl.onclick = () => handleCardClick(cardEl);
                 board.appendChild(cardEl);
             });
-            let previewSeconds = stage === 4 ? 5 : 3;
+            let previewSeconds = (stage === 4 || stage === 5) ? 5 : 3;
             const previewEl = document.getElementById('preview-countdown');
             const previewBox = document.getElementById('preview-countdown-box');
             if (previewBox) previewBox.classList.remove('hidden');
@@ -1356,26 +1443,44 @@
             stopBGM();
             playVictoryFanfareSound();
             const modal = document.getElementById('victory-modal');
+            const subtitleEl = document.getElementById('victory-subtitle-label');
             const questionEl = document.getElementById('victory-question');
             const victoryImg = document.getElementById('victory-stage-img');
+            const victoryVid = document.getElementById('victory-stage-vid');
             const actionBtn = document.getElementById('victory-action-btn');
             const bonusBtns = document.getElementById('bonus-choice-buttons');
-            questionEl.innerText = victoryQuestions[currentStage] || victoryQuestions[1];
             
-            const vicImages = stageVictoryImages;
-            if (vicImages[currentStage] && vicImages[currentStage].trim() !== '') {
-                victoryImg.src = vicImages[currentStage];
-                victoryImg.classList.remove('hidden');
-            } else {
+            if (currentStage === 5) {
+                if (subtitleEl) subtitleEl.innerText = "STAGE SPECIAL CLEARED!";
+                questionEl.innerHTML = victoryQuestions[5];
                 victoryImg.classList.add('hidden');
-            }
-            if (currentStage === 4) {
-                actionBtn.classList.add('hidden');
-                bonusBtns.classList.remove('hidden');
-            } else {
+                victoryVid.src = stageVictoryImages[5];
+                victoryVid.classList.remove('hidden');
+                victoryVid.currentTime = 0;
+                victoryVid.play().catch(()=>{});
+                
                 actionBtn.classList.remove('hidden');
                 bonusBtns.classList.add('hidden');
-                actionBtn.innerText = victoryBtnLabels[currentStage] || 'NEXT STAGE ➔';
+                actionBtn.innerText = victoryBtnLabels[5];
+            } else {
+                if (subtitleEl) subtitleEl.innerText = "Stage Cleared!";
+                questionEl.innerHTML = victoryQuestions[currentStage] || victoryQuestions[1];
+                victoryVid.classList.add('hidden');
+                const vicImages = stageVictoryImages;
+                if (vicImages[currentStage] && vicImages[currentStage].trim() !== '') {
+                    victoryImg.src = vicImages[currentStage];
+                    victoryImg.classList.remove('hidden');
+                } else {
+                    victoryImg.classList.add('hidden');
+                }
+                if (currentStage === 4) {
+                    actionBtn.classList.add('hidden');
+                    bonusBtns.classList.remove('hidden');
+                } else {
+                    actionBtn.classList.remove('hidden');
+                    bonusBtns.classList.add('hidden');
+                    actionBtn.innerText = victoryBtnLabels[currentStage] || 'NEXT STAGE ➔';
+                }
             }
             modal.classList.remove('hidden');
         }
@@ -1384,6 +1489,7 @@
             if (currentStage === 1) startGame(2);
             else if (currentStage === 2) startGame(3);
             else if (currentStage === 3) startGame(4);
+            else if (currentStage === 5) showIntroScreen();
         }
         function handleBonusChoice(choice, mode = 'pc') {
             document.getElementById('victory-modal').classList.add('hidden');
@@ -1393,6 +1499,7 @@
             const commentBox = document.getElementById('comment-section-box');
             
             currentChoiceVote = choice.toUpperCase(); 
+            actionClickCount = 0;
             const nameInput = document.getElementById('comment-name');
             if (nameInput) nameInput.value = '';
             container.innerHTML = '';
@@ -1403,8 +1510,8 @@
             
             if (actionBtn) {
                 actionBtn.classList.remove('hidden');
-                if (key === 'NO') actionBtn.innerText = "WHY NOT ME!?";
-                else actionBtn.innerText = "EM CHIP CAM ON";
+                actionBtn.innerText = "ㅋㅋㅋㅋㅋㅋ";
+                actionBtn.className = "px-6.5 py-3.5 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-sm rounded-2xl transition shadow-md font-bubble-title transform hover:scale-105 border-2 border-white/40 w-auto px-6 mt-2";
             }
             if (mediaData && mediaData.type === 'video' && mediaData.video) {
                 container.innerHTML = `<video id="result-active-video" src="${mediaData.video}" class="w-full h-auto max-h-[50vh] object-contain rounded-xl" controls autoplay loop playsinline preload="auto" oncanplay="if(this.currentTime>0.5)this.currentTime=0;"></video>`;
@@ -1418,27 +1525,27 @@
             modal.classList.remove('hidden');
         }
         function handleResultActionButtonClick() {
-            if (resultActionState === 0) {
-                resultActionState = 1;
-                const commentBox = document.getElementById('comment-section-box');
-                const commentInput = document.getElementById('comment-text');
-                const actionBtn = document.getElementById('result-action-button');
-                if (commentBox) {
-                    commentBox.classList.remove('hidden');
-                    commentBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
+            actionClickCount++;
+            const commentBox = document.getElementById('comment-section-box');
+            const commentInput = document.getElementById('comment-text');
+            const actionBtn = document.getElementById('result-action-button');
+            if (actionClickCount === 1) {
+                if (commentBox) commentBox.classList.remove('hidden');
                 if (actionBtn) {
-                    actionBtn.classList.remove('mt-4');
-                    actionBtn.classList.add('mt-2');
+                    actionBtn.innerText = currentChoiceVote === 'YES' ? "ㅋㅋㅋㅋㅋㅋ" : "aniyaaa~";
                 }
                 if (commentInput) commentInput.focus();
             } else {
                 closeMediaDisplayModal();
-                goToStageSelect();
+                if (isSpecialStageOpen) {
+                    startGame(5);
+                } else {
+                    showIntroScreen();
+                }
             }
         }
         function setUploadTab(tabKey) {
-            const tabs = ['intro', 's1', 's2', 's3', 's4', 'result', 'comments'];
+            const tabs = ['intro', 's1', 's2', 's3', 's4', 'special', 'result', 'comments'];
             tabs.forEach(t => {
                 const sec = document.getElementById(`tab-sec-${t}`);
                 const btn = document.getElementById(`tab-btn-${t}`);
@@ -1450,9 +1557,10 @@
             if (activeSec) activeSec.classList.remove('hidden');
             if (activeBtn) activeBtn.className = "px-4 py-2 text-xs font-extrabold rounded-xl bg-teal-400 text-stone-900 whitespace-nowrap shadow";
             if (tabKey === 'comments') renderAdminCommentsManager();
+            if (tabKey === 'special') updateAdminSpecialBadge();
         }
         function renderUploadModalGrids() {
-            [1, 2, 3, 4].forEach(s => {
+            [1, 2, 3, 4, 5].forEach(s => {
                 const bgmLabel = document.getElementById(`bgm-label-${s}`);
                 if (bgmLabel && stageBGMTracks[s]) bgmLabel.innerText = `Loaded: ${stageBGMTracks[s]} ✅`;
                 const grid = document.getElementById(`cards-grid-s${s}`);
@@ -1485,12 +1593,12 @@
                 const vicCard = document.createElement('div');
                 vicCard.className = "p-3 bg-[#23182d] rounded-2xl border border-amber-400/50 flex flex-col items-center justify-between gap-2 shadow";
                 vicCard.innerHTML = `
-                    <div class="text-[11px] font-extrabold text-amber-300">🏆 Victory Image</div>
+                    <div class="text-[11px] font-extrabold text-amber-300">🏆 Victory Media</div>
                     <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center p-1">
-                        <img src="${stageVictoryImages[s]}" class="w-full h-full object-contain">
+                        ${s === 5 ? `<video src="${stageVictoryImages[5]}" class="w-full h-full object-cover" autoplay loop muted></video>` : `<img src="${stageVictoryImages[s]}" class="w-full h-full object-contain">`}
                     </div>
-                    <input type="file" id="input-vic-${s}" accept="image/*" onchange="uploadVictoryPhoto(event, ${s})" class="hidden">
-                    <button onclick="document.getElementById('input-vic-${s}').click()" class="w-full py-1.5 bg-amber-500 text-stone-900 font-extrabold text-xs rounded-xl shadow">Select Image</button>
+                    <input type="file" id="input-vic-${s}" accept="${s === 5 ? 'video/*' : 'image/*'}" onchange="uploadVictoryPhoto(event, ${s})" class="hidden">
+                    <button onclick="document.getElementById('input-vic-${s}').click()" class="w-full py-1.5 bg-amber-500 text-stone-900 font-extrabold text-xs rounded-xl shadow">Select Media</button>
                 `;
                 grid.appendChild(vicCard);
             });
