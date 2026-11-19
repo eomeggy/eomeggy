@@ -1,48 +1,213 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IS SEONGHYEON A CAT? - Universal Version</title>
+    <title>MINI GAMES - CAT & SANTA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #c96b92;
+            background-color: #fce8ee;
+            font-family: 'Titan One', cursive, sans-serif;
+            color: #4a152b;
         }
+
+        /* Màn hình chọn game khi vừa mở link */
+        #game-picker {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            padding: 20px;
+            background: linear-gradient(180deg, #fff2f6 0%, #f8d2e0 100%);
+            text-align: center;
+        }
+
+        #game-picker.hidden {
+            display: none;
+        }
+
+        .picker-title {
+            margin: 0;
+            font-size: clamp(26px, 5vw, 48px);
+            letter-spacing: 0.04em;
+            color: #4a152b;
+            text-shadow:
+                -2px -2px 0 #fff5f8,
+                 2px -2px 0 #fff5f8,
+                -2px  2px 0 #fff5f8,
+                 2px  2px 0 #fff5f8,
+                 0px  4px 0 rgba(74, 21, 43, 0.16);
+        }
+
+        .picker-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+        }
+
+        .pick-card-btn {
+            font-family: 'Titan One', cursive, sans-serif;
+            font-size: clamp(20px, 3.2vw, 30px);
+            letter-spacing: 0.05em;
+            padding: 18px 34px;
+            border-radius: 20px;
+            border: 3.5px solid #4a152b;
+            cursor: pointer;
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+
+        .pick-card-btn:active {
+            transform: translateY(3px);
+        }
+
+        #pick-cat-btn {
+            background: #ffffff;
+            color: #4a152b;
+            box-shadow: 0 6px 0 #4a152b;
+        }
+
+        #pick-santa-btn {
+            background: #e11d48;
+            color: #fff5f8;
+            box-shadow: 0 6px 0 #881337;
+        }
+
+        /* Khung chứa game */
         #app-frame {
             width: 100%;
             height: 100%;
             border: none;
+            display: block;
+        }
+
+        /* Thanh chuyển game nhỏ gọn khi đang chơi */
+        #top-game-bar {
+            position: fixed;
+            bottom: 12px;
+            left: 12px;
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding: 5px;
+            border-radius: 14px;
+            background: rgba(255, 245, 248, 0.92);
+            border: 2.5px solid #4a152b;
+            box-shadow: 0 4px 12px rgba(74, 21, 43, 0.25);
+        }
+
+        #top-game-bar.visible {
+            display: flex;
+        }
+
+        .mini-switch-btn {
+            font-family: 'Titan One', cursive, sans-serif;
+            font-size: 12px;
+            letter-spacing: 0.04em;
+            padding: 6px 12px;
+            border-radius: 10px;
+            border: 2px solid #4a152b;
+            background: #ffffff;
+            color: #4a152b;
+            cursor: pointer;
+        }
+
+        .mini-switch-btn.active {
+            background: #4a152b;
+            color: #fff5f8;
         }
     </style>
 </head>
 <body>
 
-    <!-- Khung chứa giao diện game được load tự động tùy theo thiết bị -->
+    <!-- Màn hình chọn game khi mở link -->
+    <div id="game-picker">
+        <h1 class="picker-title">CHOOSE A GAME</h1>
+        <div class="picker-buttons">
+            <button id="pick-cat-btn" type="button" class="pick-card-btn" onclick="openGame('CAT')">CAT</button>
+            <button id="pick-santa-btn" type="button" class="pick-card-btn" onclick="openGame('SANTA')">SANTA</button>
+        </div>
+    </div>
+
+    <!-- Thanh chuyển nhanh giữa CAT và SANTA -->
+    <div id="top-game-bar" aria-label="Game Switcher">
+        <button id="bar-cat-btn" type="button" class="mini-switch-btn" onclick="openGame('CAT')">CAT</button>
+        <button id="bar-santa-btn" type="button" class="mini-switch-btn" onclick="openGame('SANTA')">SANTA</button>
+    </div>
+
+    <!-- Khung chứa giao diện game -->
     <iframe id="app-frame" src="" allow="autoplay"></iframe>
 
     <script>
-        function loadAppropriateVersion() {
-            const frame = document.getElementById('app-frame');
-            
-            // Kiểm tra xem thiết bị truy cập có phải là Mobile / Tablet hay không
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+        }
 
-            if (isMobile) {
-                // Nếu là điện thoại, load code bản Phone đã chuẩn hóa
-                frame.src = 'phone.html'; 
-            } else {
-                // Nếu là máy tính (PC), load code bản PC
-                frame.src = 'pc.html';
+        function getCatFileByDevice() {
+            return isMobileDevice() ? 'phone.html' : 'pc.html';
+        }
+
+        function resolveSantaUrl(callback) {
+            const primaryUrl = 'santa-game/index.html';
+            const fallbackUrl = 'santa-game/what_will_santa_bring_chip.html';
+
+            fetch(primaryUrl, { method: 'HEAD', cache: 'no-store' })
+                .then((res) => {
+                    callback(res.ok ? primaryUrl : fallbackUrl);
+                })
+                .catch(() => {
+                    callback(fallbackUrl);
+                });
+        }
+
+        function updateActiveButton(gameName) {
+            document.getElementById('bar-cat-btn').classList.toggle('active', gameName === 'CAT');
+            document.getElementById('bar-santa-btn').classList.toggle('active', gameName === 'SANTA');
+        }
+
+        function openGame(gameName) {
+            const frame = document.getElementById('app-frame');
+            const picker = document.getElementById('game-picker');
+            const bar = document.getElementById('top-game-bar');
+
+            picker.classList.add('hidden');
+            bar.classList.add('visible');
+            updateActiveButton(gameName);
+
+            if (gameName === 'CAT') {
+                frame.src = getCatFileByDevice();
+            } else if (gameName === 'SANTA') {
+                resolveSantaUrl((santaUrl) => {
+                    frame.src = santaUrl;
+                });
             }
         }
 
-        // Chạy ngay khi tải trang
-        window.onload = loadAppropriateVersion;
+        window.addEventListener('load', () => {
+            const params = new URLSearchParams(window.location.search);
+            const selected = (params.get('game') || '').toUpperCase();
+            if (selected === 'CAT' || selected === 'SANTA') {
+                openGame(selected);
+            }
+        });
     </script>
 </body>
 </html>
