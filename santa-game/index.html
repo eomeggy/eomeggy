@@ -930,8 +930,8 @@
       var santaState = {
         x: 200,
         y: 118,
-        w: 150,
-        h: 112,
+        w: 252,
+        h: 192,
         dir: 1,
         speed: 220
       };
@@ -981,8 +981,9 @@
         }
       }
       function getGiftDimensions(giftIdx) {
-        var baseW = deviceMode === "phone" ? 58 : deviceMode === "ipad" ? 70 : 78;
-        var baseH = deviceMode === "phone" ? 44 : deviceMode === "ipad" ? 52 : 58;
+        // Tăng kích thước quà lên x1.5 lần
+        var baseW = (deviceMode === "phone" ? 58 : deviceMode === "ipad" ? 70 : 78) * 1.5;
+        var baseH = (deviceMode === "phone" ? 44 : deviceMode === "ipad" ? 52 : 58) * 1.5;
         var scaleW = 1 + ((giftIdx % 3) - 1) * 0.05;
         var scaleH = 1 + (giftIdx % 2) * 0.04;
         return {
@@ -990,10 +991,12 @@
           h: Math.round(baseH * scaleH)
         };
       }
-      function getCarrierGiftPosition() {
+      function getCarrierGiftPosition(giftH) {
+        // Đặt quà nằm ngay dưới và dính sát vào đáy ảnh Santa (không đè lên Santa)
+        var h = giftH || (carrierGift ? carrierGift.h : 80);
         return {
           x: santaState.x,
-          y: santaState.y + santaState.h * 0.08
+          y: santaState.y + santaState.h * 0.5 + h * 0.5 - 2
         };
       }
       function getAverageGiftSize() {
@@ -1142,7 +1145,7 @@
           canvas.height = Math.round(stageH * dpr);
           ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
           if (deviceMode === "phone") {
-            santaState.w = Math.min(126, stageW * 0.3);
+            santaState.w = Math.min(126, stageW * 0.3) * 1.5;
             santaState.h = santaState.w * 0.78;
             santaState.y = 114;
             santaState.speed = Math.max(155, stageW * 0.48);
@@ -1151,8 +1154,8 @@
             sleighState.x = stageW * 0.5;
             sleighState.y = stageH - 68;
           } else if (deviceMode === "ipad") {
-            santaState.w = 152;
-            santaState.h = 118;
+            santaState.w = 152 * 1.5;
+            santaState.h = 118 * 1.5;
             santaState.y = 120;
             santaState.speed = Math.max(210, stageW * 0.34);
             sleighState.w = 256;
@@ -1160,9 +1163,9 @@
             sleighState.x = stageW * 0.5;
             sleighState.y = stageH - 80;
           } else {
-            // PC: tăng kích thước ảnh sleigh lên x2 lần (284 * 2 = 568, 114 * 2 = 228)
-            santaState.w = 168;
-            santaState.h = 128;
+            // PC: santa tăng x1.5 (168*1.5=252, 128*1.5=192), sleigh tăng x2 (284*2=568, 114*2=228)
+            santaState.w = 168 * 1.5;
+            santaState.h = 128 * 1.5;
             santaState.y = 118;
             santaState.speed = Math.max(250, Math.min(390, stageW * 0.28));
             sleighState.w = 568;
@@ -1232,7 +1235,7 @@
         var idx = carrierGift.index;
         var w = carrierGift.w;
         var h = carrierGift.h;
-        var startPos = getCarrierGiftPosition();
+        var startPos = getCarrierGiftPosition(h);
         var body = MatterBodies.rectangle(startPos.x, startPos.y, w * 0.88, h * 0.88, {
           density: 0.0026,
           friction: 0.88,
@@ -1610,10 +1613,9 @@
               );
             }
           }
-          // Vẽ Santa trước, sau đó vẽ ảnh gift nằm chồng trên ảnh Santa
           drawSantaGraphic(ctx, santaState.x, santaState.y, santaState.w, santaState.h);
           if (carrierGift && gamePhase === "playing") {
-            var carrierPos = getCarrierGiftPosition();
+            var carrierPos = getCarrierGiftPosition(carrierGift.h);
             drawGiftGraphic(
               ctx,
               carrierGift.index,
