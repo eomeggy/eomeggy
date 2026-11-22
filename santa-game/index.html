@@ -4,11 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>WHAT WILL SANTA BRING CHÍP?</title>
-  <!-- Titan One Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet" />
-  <!-- Matter.js 2D Rigid-Body Physics Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
   <style>
     :root {
@@ -374,7 +372,7 @@
     }
     .snapshot-frame {
       width: 100%;
-      max-width: 460px;
+      max-width: 440px;
       aspect-ratio: 4 / 3;
       background: linear-gradient(180deg, #ffeef0 0%, #fbd5da 100%);
       border: 4px solid var(--mauve);
@@ -465,7 +463,7 @@
         <div class="video-card">
           <video
             id="intro-video"
-            src="intro-santa-video.mp4"
+            src="../intro-santa-video.mp4"
             muted
             playsinline
             controls
@@ -513,7 +511,7 @@
             </button>
           </div>
         </header>
-        <div id="status-banner" class="status-banner">GIFTS SETTLING...</div>
+        <div id="status-banner" class="status-banner">WAITING FOR LAST FALLING GIFT...</div>
         <div id="drop-hint" class="drop-hint-banner">
           TAP / CLICK / PRESS SPACE TO DROP GIFT!
         </div>
@@ -554,7 +552,7 @@
       </div>
     </section>
   </div>
-  <audio id="bgm-audio" src="santa-audio.mp3" loop preload="none"></audio>
+  <audio id="bgm-audio" src="../santa-audio.mp3" loop preload="none"></audio>
   <script>
     (function () {
       "use strict";
@@ -590,23 +588,25 @@
       }
       detectDeviceMode();
       /* =====================================================================
-         2. ASSET PRELOADER (background-img.jpg + transparent .png sprites)
+         2. ASSET PRELOADER (Root directory paths from santa-game/index.html)
          ===================================================================== */
       var ASSET_FILES = {
-        background: "background-img.jpg",
-        santa: "santa-img.png",
-        sleigh: "sleigh-img.png",
+        introVideo: "../intro-santa-video.mp4",
+        background: "../background-img.jpg",
+        audio: "../santa-audio.mp3",
+        santa: "../santa-img.png",
+        sleigh: "../sleigh-img.png",
         gifts: [
-          "gift-1-img.png",
-          "gift-2-img.png",
-          "gift-3-img.png",
-          "gift-4-img.png",
-          "gift-5-img.png",
-          "gift-6-img.png",
-          "gift-7-img.png",
-          "gift-8-img.png",
-          "gift-9-img.png",
-          "gift-10-img.png"
+          "../gift-1-img.png",
+          "../gift-2-img.png",
+          "../gift-3-img.png",
+          "../gift-4-img.png",
+          "../gift-5-img.png",
+          "../gift-6-img.png",
+          "../gift-7-img.png",
+          "../gift-8-img.png",
+          "../gift-9-img.png",
+          "../gift-10-img.png"
         ]
       };
       var loadedImages = {
@@ -659,6 +659,9 @@
         var bgmTimer = null;
         var noteIdx = 0;
         var bgmEl = document.getElementById("bgm-audio");
+        if (bgmEl && bgmEl.getAttribute("src") !== ASSET_FILES.audio) {
+          bgmEl.src = ASSET_FILES.audio;
+        }
         var usingExternalMp3 = false;
         var HOLIDAY_NOTES = [
           [659.25, 1], [659.25, 1], [659.25, 2],
@@ -816,6 +819,9 @@
         knock: document.getElementById("slide-knock")
       };
       var introVideo = document.getElementById("intro-video");
+      if (introVideo && introVideo.getAttribute("src") !== ASSET_FILES.introVideo) {
+        introVideo.src = ASSET_FILES.introVideo;
+      }
       var introFallbackCard = document.getElementById("intro-fallback-card");
       var introFallbackActive = false;
       function showIntroFallback() {
@@ -899,7 +905,7 @@
         }
       });
       /* =====================================================================
-         5. MATTER.JS PHYSICS ENGINE, EXTENDED SETTLING & SNAPSHOT CAPTURE
+         5. MATTER.JS RIGID-BODY PHYSICS & EXACT SLEIGH SNAPSHOT/COUNT PIPELINE
          ===================================================================== */
       var MatterEngine = Matter.Engine;
       var MatterWorld = Matter.World;
@@ -921,7 +927,6 @@
       var engine = null;
       var world = null;
       var sleighDeckBody = null;
-      var floorCatcherBody = null;
       var santaState = {
         x: 200,
         y: 118,
@@ -948,19 +953,19 @@
         { box: "#0ea5e9", ribbon: "#ffffff", label: "9" },
         { box: "#d97706", ribbon: "#fef9c3", label: "10" }
       ];
-      // giftItems: { index, w, h, body, dropped }
       var giftItems = [];
-      var carrierGift = null; // { index, w, h }
+      var carrierGift = null;
       var nextGiftIndex = 0;
       var scoreCount = 0;
       var elapsedSeconds = 0;
-      var gamePhase = "idle"; // "idle" | "playing" | "settling" | "victory_hold" | "ended"
-      var phaseTimer = 0;
+      var gamePhase = "idle";
+      var waitFallsElapsed = 0;
+      var MAX_FALL_WAIT_SECONDS = 9.0;
+      var victoryHoldElapsed = 0;
+      var VICTORY_HOLD_SECONDS = 1.4;
       var dropCooldown = 0;
       var snowFlakes = [];
       var lastTimestamp = 0;
-      var SETTLE_GRACE_DURATION = 1.95; // Extended time so falling gifts finish dropping off sleigh
-      var VICTORY_HOLD_DURATION = 1.9;
       function initSnowflakes() {
         snowFlakes = [];
         var count = deviceMode === "phone" ? 44 : 74;
@@ -985,10 +990,23 @@
           h: Math.round(baseH * scaleH)
         };
       }
-      function getCarrierGiftPos() {
+      function getCarrierGiftPosition() {
         return {
           x: santaState.x,
-          y: santaState.y + santaState.h * 0.06
+          y: santaState.y + santaState.h * 0.08
+        };
+      }
+      function getAverageGiftSize() {
+        var sumW = 0;
+        var sumH = 0;
+        for (var i = 0; i < 10; i++) {
+          var d = getGiftDimensions(i);
+          sumW += d.w;
+          sumH += d.h;
+        }
+        return {
+          avgW: sumW / 10,
+          avgH: sumH / 10
         };
       }
       function getSleighDeckY() {
@@ -997,24 +1015,71 @@
       function getSleighDeckWidth() {
         return sleighState.w * 0.78;
       }
-      function isGiftStablyOnSleigh(item) {
-        if (!item || !item.body || !item.dropped) return false;
-        var pos = item.body.position;
-        var deckY = getSleighDeckY();
-        var halfDeck = getSleighDeckWidth() * 0.56;
-        var withinHorizontal = Math.abs(pos.x - sleighState.x) <= halfDeck;
-        var aboveFloor = pos.y + item.h * 0.4 < deckY + sleighState.h * 0.34 && pos.y < stageH - 12;
-        var reasonableAngle = Math.abs(item.body.angle) < 1.25;
-        return withinHorizontal && aboveFloor && reasonableAngle;
+      function getSleighBottomY() {
+        return sleighState.y + sleighState.h * 0.5;
       }
-      function recountStableGiftsOnSleigh() {
+      function getBottomFallThresholdY() {
+        return stageH - (deviceMode === "phone" ? 12 : 16);
+      }
+      function hasGiftCrossedBottomLine(item) {
+        if (!item || !item.body) return true;
+        var pos = item.body.position;
+        var thresholdY = getBottomFallThresholdY();
+        var bottomEdge = pos.y + item.h * 0.5;
+        return bottomEdge >= thresholdY || pos.y > stageH + item.h;
+      }
+      function isGiftOnSleighAtFreeze(item) {
+        if (!item || !item.body || !item.dropped || item.crossedThreshold) return false;
+        var pos = item.body.position;
+        var avg = getAverageGiftSize();
+        var deckY = getSleighDeckY();
+        var sleighBottomY = getSleighBottomY();
+        var halfCaptureW = (sleighState.w + avg.avgW) * 0.5;
+        var withinHorizontal = Math.abs(pos.x - sleighState.x) <= halfCaptureW;
+        var withinVertical = pos.y + item.h * 0.5 >= deckY - item.h * 0.65 && pos.y - item.h * 0.5 <= sleighBottomY + 6;
+        return withinHorizontal && withinVertical;
+      }
+      function evaluateFallingGifts() {
+        var deckY = getSleighDeckY();
+        var halfDeck = getSleighDeckWidth() * 0.58;
+        var anyFallingAboveThreshold = false;
+        for (var i = 0; i < giftItems.length; i++) {
+          var item = giftItems[i];
+          if (!item || !item.body || !item.dropped) continue;
+          var pos = item.body.position;
+          var vel = item.body.velocity;
+          var pastDeckLevel = pos.y > deckY + item.h * 0.35;
+          var outsideDeckX = Math.abs(pos.x - sleighState.x) > halfDeck;
+          var tippingSeverely = Math.abs(item.body.angle) > 1.1 && pos.y > santaState.y + santaState.h * 0.6;
+          var slidingOffDownward = vel.y > 3.5 && pos.y > deckY - item.h * 0.35;
+          if (pastDeckLevel && (outsideDeckX || pos.y > deckY + sleighState.h * 0.34)) {
+            item.doomedToFall = true;
+          } else if (tippingSeverely && outsideDeckX) {
+            item.doomedToFall = true;
+          } else if (slidingOffDownward && outsideDeckX) {
+            item.doomedToFall = true;
+          }
+          if (hasGiftCrossedBottomLine(item)) {
+            item.crossedThreshold = true;
+            item.doomedToFall = true;
+          }
+          if (item.doomedToFall && !item.crossedThreshold) {
+            anyFallingAboveThreshold = true;
+          }
+        }
+        return anyFallingAboveThreshold;
+      }
+      function countGiftsOnSleighNow() {
         var count = 0;
         for (var i = 0; i < giftItems.length; i++) {
-          if (isGiftStablyOnSleigh(giftItems[i])) {
+          if (isGiftOnSleighAtFreeze(giftItems[i])) {
             count++;
           }
         }
-        scoreCount = Math.min(10, count);
+        return Math.min(10, count);
+      }
+      function syncLiveScoreCounter() {
+        scoreCount = countGiftsOnSleighNow();
         updateHudDisplay();
         return scoreCount;
       }
@@ -1047,12 +1112,7 @@
           restitution: 0.04,
           label: "sleigh_deck"
         });
-        floorCatcherBody = MatterBodies.rectangle(stageW * 0.5, stageH + 70, stageW * 3, 50, {
-          isStatic: true,
-          isSensor: true,
-          label: "floor_sensor"
-        });
-        MatterWorld.add(world, [sleighDeckBody, floorCatcherBody]);
+        MatterWorld.add(world, [sleighDeckBody]);
         MatterEvents.on(engine, "collisionStart", function (evt) {
           if (gamePhase === "ended") return;
           for (var i = 0; i < evt.pairs.length; i++) {
@@ -1100,7 +1160,7 @@
             sleighState.x = stageW * 0.5;
             sleighState.y = stageH - 80;
           } else {
-            // PC: tăng kích thước sleigh lên x2 lần (284*2 = 568, 114*2 = 228)
+            // PC: tăng kích thước ảnh sleigh lên x2 lần (284 * 2 = 568, 114 * 2 = 228)
             santaState.w = 168;
             santaState.h = 128;
             santaState.y = 118;
@@ -1114,10 +1174,11 @@
             var deckY = getSleighDeckY();
             var deckW = getSleighDeckWidth();
             MatterBody.setPosition(sleighDeckBody, { x: sleighState.x, y: deckY + 8 });
-            MatterBody.setScale(sleighDeckBody, deckW / Math.max(1, sleighDeckBody.bounds.max.x - sleighDeckBody.bounds.min.x), 1);
-          }
-          if (world && floorCatcherBody) {
-            MatterBody.setPosition(floorCatcherBody, { x: stageW * 0.5, y: stageH + 70 });
+            MatterBody.setScale(
+              sleighDeckBody,
+              deckW / Math.max(1, sleighDeckBody.bounds.max.x - sleighDeckBody.bounds.min.x),
+              1
+            );
           }
         } catch (_err) {}
       }
@@ -1141,7 +1202,8 @@
         nextGiftIndex = 0;
         scoreCount = 0;
         elapsedSeconds = 0;
-        phaseTimer = 0;
+        waitFallsElapsed = 0;
+        victoryHoldElapsed = 0;
         dropCooldown = 0;
         gamePhase = "playing";
         santaState.x = stageW * 0.5;
@@ -1151,16 +1213,17 @@
         prepareNextCarrierGift();
         updateHudDisplay();
       }
-      function beginSettlingPhase(bannerMessage) {
-        if (gamePhase === "settling" || gamePhase === "ended") return;
-        gamePhase = "settling";
-        phaseTimer = 0;
+      function enterWaitingForFallingGifts(bannerText) {
+        if (gamePhase === "ended") return;
+        if (gamePhase !== "waiting_falls") {
+          gamePhase = "waiting_falls";
+          waitFallsElapsed = 0;
+        }
         carrierGift = null;
-        if (bannerMessage) {
-          statusBannerEl.textContent = bannerMessage;
+        if (bannerText) {
+          statusBannerEl.textContent = bannerText;
           statusBannerEl.classList.add("is-visible");
         }
-        recountStableGiftsOnSleigh();
       }
       function dropGiftFromSanta() {
         if (gamePhase !== "playing" || !carrierGift || dropCooldown > 0) return;
@@ -1169,12 +1232,12 @@
         var idx = carrierGift.index;
         var w = carrierGift.w;
         var h = carrierGift.h;
-        var startPos = getCarrierGiftPos();
+        var startPos = getCarrierGiftPosition();
         var body = MatterBodies.rectangle(startPos.x, startPos.y, w * 0.88, h * 0.88, {
-          density: 0.0024,
-          friction: 0.9,
-          frictionStatic: 1.5,
-          restitution: 0.05,
+          density: 0.0026,
+          friction: 0.88,
+          frictionStatic: 1.45,
+          restitution: 0.08,
           chamfer: { radius: 6 },
           label: "gift_" + (idx + 1)
         });
@@ -1189,6 +1252,8 @@
           h: h,
           body: body,
           dropped: true,
+          doomedToFall: false,
+          crossedThreshold: false,
           landedSoundPlayed: false
         });
         SoundController.playDrop();
@@ -1196,9 +1261,37 @@
         prepareNextCarrierGift();
       }
       /* =====================================================================
-         6. SNAPSHOT CAPTURE OF ACTUAL REMAINING GIFTS ON SLEIGH
+         6. FREEZE-MOMENT SLEIGH SNAPSHOT & UNIFIED GIFT COUNTING
          ===================================================================== */
-      function captureRemainingSleighSnapshot() {
+      function computeSleighFreezeBounds(giftsOnSleigh) {
+        var avg = getAverageGiftSize();
+        var sleighBottomY = getSleighBottomY();
+        var minX = sleighState.x - (sleighState.w + avg.avgW) * 0.5;
+        var maxX = sleighState.x + (sleighState.w + avg.avgW) * 0.5;
+        var highestGiftTopY = getSleighDeckY();
+        for (var i = 0; i < giftsOnSleigh.length; i++) {
+          var g = giftsOnSleigh[i];
+          var topY = g.body.position.y - g.h * 0.5;
+          if (topY < highestGiftTopY) {
+            highestGiftTopY = topY;
+          }
+          var leftX = g.body.position.x - g.w * 0.5;
+          var rightX = g.body.position.x + g.w * 0.5;
+          if (leftX < minX) minX = leftX;
+          if (rightX > maxX) maxX = rightX;
+        }
+        var minY = highestGiftTopY - avg.avgH * 0.5;
+        var maxY = sleighBottomY;
+        return {
+          left: minX,
+          right: maxX,
+          top: minY,
+          bottom: maxY,
+          width: Math.max(80, maxX - minX),
+          height: Math.max(60, maxY - minY)
+        };
+      }
+      function captureFreezeMomentSnapshot(giftsOnSleigh) {
         try {
           var snapW = 640;
           var snapH = 480;
@@ -1217,32 +1310,17 @@
             sctx.arc((i * 73) % snapW, (i * 47) % (snapH - 50), 3 + (i % 3), 0, Math.PI * 2);
             sctx.fill();
           }
-          var remaining = giftItems.filter(function (g) {
-            return isGiftStablyOnSleigh(g);
-          });
-          var minX = sleighState.x - sleighState.w * 0.65;
-          var maxX = sleighState.x + sleighState.w * 0.65;
-          var minY = sleighState.y - sleighState.h * 0.85;
-          var maxY = sleighState.y + sleighState.h * 0.55;
-          for (var k = 0; k < remaining.length; k++) {
-            var rg = remaining[k];
-            var p = rg.body.position;
-            minX = Math.min(minX, p.x - rg.w * 0.85);
-            maxX = Math.max(maxX, p.x + rg.w * 0.85);
-            minY = Math.min(minY, p.y - rg.h * 0.95);
-          }
-          var boxW = Math.max(240, maxX - minX);
-          var boxH = Math.max(180, maxY - minY);
-          var fitScale = Math.min((snapW * 0.82) / boxW, (snapH * 0.82) / boxH);
-          var centerX = (minX + maxX) * 0.5;
-          var centerY = (minY + maxY) * 0.5;
+          var bounds = computeSleighFreezeBounds(giftsOnSleigh);
+          var fitScale = Math.min((snapW * 0.84) / bounds.width, (snapH * 0.84) / bounds.height);
+          var centerX = (bounds.left + bounds.right) * 0.5;
+          var centerY = (bounds.top + bounds.bottom) * 0.5;
           sctx.save();
-          sctx.translate(snapW * 0.5, snapH * 0.54);
+          sctx.translate(snapW * 0.5, snapH * 0.5);
           sctx.scale(fitScale, fitScale);
           sctx.translate(-centerX, -centerY);
           drawSleighGraphic(sctx, sleighState.x, sleighState.y, sleighState.w, sleighState.h);
-          for (var r = 0; r < remaining.length; r++) {
-            var item = remaining[r];
+          for (var r = 0; r < giftsOnSleigh.length; r++) {
+            var item = giftsOnSleigh[r];
             drawGiftGraphic(
               sctx,
               item.index,
@@ -1259,12 +1337,17 @@
           return "";
         }
       }
-      function finalizeVictorySlide() {
+      function finalizeVictoryAtLastGiftCross() {
         if (gamePhase === "ended") return;
         gamePhase = "ended";
         statusBannerEl.classList.remove("is-visible");
-        var finalCount = recountStableGiftsOnSleigh();
-        var dataUrl = captureRemainingSleighSnapshot();
+        var frozenGiftsOnSleigh = giftItems.filter(function (g) {
+          return isGiftOnSleighAtFreeze(g);
+        });
+        var finalCount = Math.min(10, frozenGiftsOnSleigh.length);
+        scoreCount = finalCount;
+        updateHudDisplay();
+        var dataUrl = captureFreezeMomentSnapshot(frozenGiftsOnSleigh);
         if (dataUrl) {
           snapshotImgEl.src = dataUrl;
         }
@@ -1279,7 +1362,7 @@
         goToSlide("victory");
       }
       /* =====================================================================
-         7. CANVAS SPRITE DRAWING HELPERS (NO roundRect CALLS)
+         7. CANVAS SPRITE DRAWING HELPERS
          ===================================================================== */
       function traceCapsule(c, x, y, w, h, r) {
         var rad = Math.max(2, Math.min(r, w * 0.5, h * 0.5));
@@ -1442,7 +1525,7 @@
         c.restore();
       }
       /* =====================================================================
-         8. SIMULATION & RENDER LOOP
+         8. SIMULATION & RENDER LOOP (WAIT UNTIL LAST FALLING GIFT PASSES LINE)
          ===================================================================== */
       function stepSimulation(dt) {
         for (var i = 0; i < snowFlakes.length; i++) {
@@ -1476,42 +1559,36 @@
         if (engine) {
           MatterEngine.update(engine, Math.min(32, dt * 1000));
         }
-        recountStableGiftsOnSleigh();
+        syncLiveScoreCounter();
+        var anyFallingAboveThreshold = evaluateFallingGifts();
         if (gamePhase === "playing") {
-          var anyDroppedPastSleigh = false;
-          for (var g = 0; g < giftItems.length; g++) {
-            var item = giftItems[g];
-            if (item.dropped && item.body.position.y > sleighState.y + sleighState.h * 0.55) {
-              anyDroppedPastSleigh = true;
-              break;
-            }
-          }
-          if (anyDroppedPastSleigh) {
-            beginSettlingPhase("GIFT FALLING... WAITING TO SETTLE");
+          if (anyFallingAboveThreshold) {
+            enterWaitingForFallingGifts("GIFTS FALLING... WAITING FOR LAST ONE");
           } else if (nextGiftIndex >= 10 && !carrierGift) {
             var lastItem = giftItems[giftItems.length - 1];
             if (!lastItem || lastItem.body.position.y > santaState.y + 70) {
-              beginSettlingPhase("CHECKING SLEIGH BALANCE...");
+              if (scoreCount >= 10) {
+                gamePhase = "victory_hold";
+                victoryHoldElapsed = 0;
+                statusBannerEl.textContent = "10/10 GIFTS STACKED!";
+                statusBannerEl.classList.add("is-visible");
+              } else {
+                enterWaitingForFallingGifts("CHECKING SLEIGH...");
+              }
             }
           }
-        }
-        if (gamePhase === "settling") {
-          phaseTimer += dt;
-          if (phaseTimer >= SETTLE_GRACE_DURATION) {
-            finalizeVictorySlide();
+        } else if (gamePhase === "waiting_falls") {
+          waitFallsElapsed += dt;
+          if (!anyFallingAboveThreshold || waitFallsElapsed >= MAX_FALL_WAIT_SECONDS) {
+            finalizeVictoryAtLastGiftCross();
             return;
           }
         } else if (gamePhase === "victory_hold") {
-          phaseTimer += dt;
-          if (phaseTimer >= VICTORY_HOLD_DURATION) {
-            finalizeVictorySlide();
+          victoryHoldElapsed += dt;
+          if (victoryHoldElapsed >= VICTORY_HOLD_SECONDS) {
+            finalizeVictoryAtLastGiftCross();
             return;
           }
-        } else if (gamePhase === "playing" && scoreCount >= 10 && nextGiftIndex >= 10) {
-          gamePhase = "victory_hold";
-          phaseTimer = 0;
-          statusBannerEl.textContent = "10/10 GIFTS STACKED! CELEBRATING...";
-          statusBannerEl.classList.add("is-visible");
         }
       }
       function renderScene() {
@@ -1521,7 +1598,7 @@
           drawSleighGraphic(ctx, sleighState.x, sleighState.y, sleighState.w, sleighState.h);
           for (var i = 0; i < giftItems.length; i++) {
             var item = giftItems[i];
-            if (item.body && item.body.position.y < stageH + 140) {
+            if (item.body && !item.crossedThreshold) {
               drawGiftGraphic(
                 ctx,
                 item.index,
@@ -1533,14 +1610,15 @@
               );
             }
           }
+          // Vẽ Santa trước, sau đó vẽ ảnh gift nằm chồng trên ảnh Santa
           drawSantaGraphic(ctx, santaState.x, santaState.y, santaState.w, santaState.h);
           if (carrierGift && gamePhase === "playing") {
-            var cPos = getCarrierGiftPos();
+            var carrierPos = getCarrierGiftPosition();
             drawGiftGraphic(
               ctx,
               carrierGift.index,
-              cPos.x,
-              cPos.y,
+              carrierPos.x,
+              carrierPos.y,
               carrierGift.w,
               carrierGift.h,
               Math.sin(elapsedSeconds * 5) * 0.06
