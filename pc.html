@@ -2,7 +2,7 @@
 <html lang="en"><head>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, push, set, remove, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
         const firebaseConfig = {
     apiKey: "AIzaSyCY640ZkYMIA9t8TAFwuznAPA-liPYBYrU",
     authDomain: "seonghyeon-cat-game.firebaseapp.com",
@@ -19,6 +19,7 @@
         window.dbRef = ref;
         window.dbPush = push;
         window.dbSet = set;
+        window.dbRemove = remove;
         window.dbOnValue = onValue;
         if (typeof window.initFirebaseComments === 'function') {
             window.initFirebaseComments();
@@ -92,15 +93,6 @@
             transform-origin: center;
             margin: 10px;
         }
-        /* YouTube-style hover play/pause overlay */
-        .yt-hover-wrapper .yt-hover-overlay {
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-        .yt-hover-wrapper:hover .yt-hover-overlay,
-        .yt-hover-wrapper.is-paused .yt-hover-overlay {
-            opacity: 1;
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-between p-2 sm:p-4 select-none bg-[#c96b92]">
@@ -118,13 +110,10 @@
                 IS SEONGHYEON A CAT?
             </h1>
             <!-- Video Frame Container -->
-            <div id="intro-video-container" class="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-[#fcebeb] flex items-center justify-center relative yt-hover-wrapper">
+            <div id="intro-video-container" class="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-[#fcebeb] flex items-center justify-center relative">
                 <div id="intro-video-wrapper" class="w-full h-full relative">
                     <video id="main-intro-video" class="w-full h-full object-cover" controls autoplay loop playsinline preload="auto" src="intro-video.mp4" oncanplay="if(this.currentTime>0.5)this.currentTime=0;"></video>
                 </div>
-                <button type="button" onclick="toggleHoverVideoPlayback('main-intro-video', 'intro-video-container', 'intro-yt-icon')" aria-label="Play or pause intro video" class="yt-hover-overlay absolute bottom-12 left-4 z-20 w-11 h-11 rounded-full bg-black/70 hover:bg-black/90 text-white flex items-center justify-center shadow-lg transition cursor-pointer">
-                    <i id="intro-yt-icon" class="fa-solid fa-pause text-base"></i>
-                </button>
                 <div id="intro-placeholder-text" class="absolute inset-0 flex items-center justify-center text-[#5d223c] font-bold text-base sm:text-lg bg-[#fff0f0] p-4 text-center rounded-2xl font-vietnamese hidden">
                     (No Intro Video Loaded. Press F2 or click Admin Upload to configure media)
                 </div>
@@ -223,9 +212,6 @@
             <div id="victory-image-container" class="w-full max-h-52 my-3 flex items-center justify-center overflow-hidden relative">
                 <img id="victory-stage-img" src="" class="max-h-48 object-contain drop-shadow-lg" alt="Stage Victory Image">
                 <video id="victory-stage-vid" src="" class="max-h-48 object-contain drop-shadow-lg hidden" autoplay loop muted playsinline></video>
-                <button id="eggy-victory-yt-btn" type="button" onclick="toggleHoverVideoPlayback('victory-stage-vid', 'victory-image-container', 'eggy-victory-yt-icon')" aria-label="Play or pause victory video" class="yt-hover-overlay hidden bottom-12 left-4 z-20 w-11 h-11 rounded-full bg-black/70 hover:bg-black/90 text-white flex items-center justify-center shadow-lg transition cursor-pointer">
-                    <i id="eggy-victory-yt-icon" class="fa-solid fa-pause text-base"></i>
-                </button>
             </div>
             <button id="victory-action-btn" onclick="handleVictoryNext()" class="w-full py-4 bg-[#5d223c] text-white font-black text-lg rounded-2xl shadow-lg hover:bg-[#461a2d] transition transform hover:scale-105 cursor-pointer mt-2 font-bubble-title hidden">ABSOLUTELY ➔</button>
             <div id="bonus-choice-buttons" class="w-full flex items-center justify-center gap-4 mt-4">
@@ -602,7 +588,7 @@
             2: 'victory2-img.png', 
             3: 'victory3-img.png', 
             4: 'victory-bonus-img.png',
-            5: 'victory-eggy-img-phone.mp4'
+            5: 'victory-eggy-img.mp4'
         };
         let phoneStageVictoryImages = { 
             1: 'victory1-img-phone.png', 
@@ -739,35 +725,6 @@
                 }
             }
         }
-        function toggleHoverVideoPlayback(videoId, containerId, iconId) {
-            const vid = document.getElementById(videoId);
-            const container = document.getElementById(containerId);
-            const icon = document.getElementById(iconId);
-            if (!vid) return;
-            if (vid.paused) {
-                vid.play().catch(()=>{});
-                if (container) container.classList.remove('is-paused');
-                if (icon) icon.className = "fa-solid fa-pause text-base";
-            } else {
-                vid.pause();
-                if (container) container.classList.add('is-paused');
-                if (icon) icon.className = "fa-solid fa-play text-base ml-0.5";
-            }
-        }
-        function syncHoverVideoState(videoId, containerId, iconId) {
-            const vid = document.getElementById(videoId);
-            const container = document.getElementById(containerId);
-            const icon = document.getElementById(iconId);
-            if (!vid) return;
-            vid.addEventListener('play', () => {
-                if (container) container.classList.remove('is-paused');
-                if (icon) icon.className = "fa-solid fa-pause text-base";
-            });
-            vid.addEventListener('pause', () => {
-                if (container) container.classList.add('is-paused');
-                if (icon) icon.className = "fa-solid fa-play text-base ml-0.5";
-            });
-        }
         function stopAllGlobalMedia() {
             stopBGM();
             stopIntroVideoCompletely();
@@ -795,7 +752,6 @@
                 };
                 vid.src = isPhone ? phoneIntroVideoUrl : introVideoUrl;
                 wrapper.appendChild(vid);
-                syncHoverVideoState('main-intro-video', 'intro-video-container', 'intro-yt-icon');
             }
         }
         let audioCtx = null;
@@ -899,6 +855,12 @@
                 osc.stop(ctx.currentTime + 0.15);
             } catch (e) {}
         }
+        function normalizeRepliesArray(repliesVal) {
+            if (!repliesVal) return [];
+            if (Array.isArray(repliesVal)) return repliesVal.filter(Boolean);
+            if (typeof repliesVal === 'object') return Object.values(repliesVal).filter(Boolean);
+            return [];
+        }
         function sortCommentsData() {
             userCommentsList.sort((a, b) => {
                 const likesA = a.likes || 0;
@@ -922,7 +884,8 @@
                 let isMyComment = (c.authorId === mySessionId);
                 let likedUsers = c.likedUsers || {};
                 let isLikedByMe = likedUsers[mySessionId] === true;
-                let repliesHtml = (c.replies || []).map((rep, rIdx) => {
+                const repliesArr = normalizeRepliesArray(c.replies);
+                let repliesHtml = repliesArr.map((rep, rIdx) => {
                     let repVoteBadge = rep.vote ? ` voted ${rep.vote}` : '';
                     let repLikedUsers = rep.likedUsers || {};
                     let isRepLikedByMe = repLikedUsers[mySessionId] === true;
@@ -979,7 +942,7 @@
                             </button>
                             <button onclick="toggleReplyBox('${c.id}')" class="flex items-center gap-1.5 hover:text-[#5d223c] transition">
                                 <i class="fa-regular fa-comment"></i>
-                                <span class="font-bold">${(c.replies || []).length}</span>
+                                <span class="font-bold">${repliesArr.length}</span>
                             </button>
                         </div>
                         <div id="reply-box-${c.id}" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-pink-200">
@@ -1005,7 +968,9 @@
                 userCommentsList = [];
                 if (data) {
                     Object.keys(data).forEach(key => {
-                        userCommentsList.push({ id: key, ...data[key] });
+                        const item = data[key] || {};
+                        item.replies = normalizeRepliesArray(item.replies);
+                        userCommentsList.push({ id: key, ...item });
                     });
                 }
                 renderCommentsList();
@@ -1042,7 +1007,7 @@
             if (menu) menu.classList.toggle('hidden');
         }
         function editComment(id) {
-            const target = userCommentsList.find(c => c.id === id);
+            const target = userCommentsList.find(c => String(c.id) === String(id));
             if (!target) return;
             const newText = prompt("Edit your comment:", target.text);
             if (newText !== null && newText.trim() !== "") {
@@ -1054,7 +1019,7 @@
             }
         }
         function toggleLikeComment(id) {
-            const target = userCommentsList.find(c => c.id === id);
+            const target = userCommentsList.find(c => String(c.id) === String(id));
             if (!target) return;
             if (!target.likedUsers) target.likedUsers = {};
             if (!target.likes) target.likes = 0;
@@ -1072,8 +1037,10 @@
             renderCommentsList();
         }
         function toggleReplyLike(cId, rIndex) {
-            const target = userCommentsList.find(c => c.id === cId);
-            if (!target || !target.replies || !target.replies[rIndex]) return;
+            const target = userCommentsList.find(c => String(c.id) === String(cId));
+            if (!target) return;
+            target.replies = normalizeRepliesArray(target.replies);
+            if (!target.replies[rIndex]) return;
             let rep = target.replies[rIndex];
             if (!rep.likedUsers) rep.likedUsers = {};
             if (!rep.likes) rep.likes = 0;
@@ -1107,9 +1074,9 @@
             const nameInput = document.getElementById(`reply-name-${id}`);
             const input = document.getElementById(`reply-input-${id}`);
             if (!input || !input.value.trim()) return;
-            const target = userCommentsList.find(c => c.id === id);
+            const target = userCommentsList.find(c => String(c.id) === String(id));
             if (!target) return;
-            if (!target.replies) target.replies = [];
+            target.replies = normalizeRepliesArray(target.replies);
             target.replies.push({
                 authorId: mySessionId,
                 name: nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Anonymous',
@@ -1129,9 +1096,9 @@
             const nameInput = document.getElementById(`r2r-name-${cId}-${rIndex}`);
             const input = document.getElementById(`r2r-input-${cId}-${rIndex}`);
             if (!input || !input.value.trim()) return;
-            const target = userCommentsList.find(c => c.id === cId);
+            const target = userCommentsList.find(c => String(c.id) === String(cId));
             if (!target) return;
-            if (!target.replies) target.replies = [];
+            target.replies = normalizeRepliesArray(target.replies);
             target.replies.push({
                 authorId: mySessionId,
                 name: nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Anonymous',
@@ -1155,6 +1122,8 @@
             }
             let htmlContent = '';
             userCommentsList.forEach((c) => {
+                const safeCommentId = String(c.id).replace(/'/g, "\\'");
+                const repliesArr = normalizeRepliesArray(c.replies);
                 htmlContent += `
                     <div class="bg-[#23182d] p-3 rounded-2xl border border-purple-900/60 flex flex-col gap-2 font-vietnamese">
                         <div class="flex items-center justify-between gap-3">
@@ -1162,21 +1131,21 @@
                                 <span class="text-xs font-bold text-teal-300">${c.name || 'Anonymous'} <span class="text-rose-400 font-normal">(${c.vote || 'YES/NO'})</span> <span class="text-pink-300 font-normal ml-2">❤️ ${c.likes || 0}</span></span>
                                 <span class="text-xs text-gray-300">💬 ${c.text}</span>
                             </div>
-                            <button onclick="adminDeleteComment('${c.id}', null)" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow transition shrink-0">
+                            <button type="button" onclick="adminDeleteComment('${safeCommentId}', null)" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow transition shrink-0 cursor-pointer">
                                 Delete Comment
                             </button>
                         </div>
                 `;
-                if (c.replies && c.replies.length > 0) {
+                if (repliesArr.length > 0) {
                     htmlContent += `<div class="ml-4 pl-3 border-l-2 border-teal-500/50 space-y-2 mt-1">`;
-                    c.replies.forEach((rep, rIdx) => {
+                    repliesArr.forEach((rep, rIdx) => {
                         htmlContent += `
                             <div class="bg-[#18111e] p-2.5 rounded-xl border border-purple-900/40 flex items-center justify-between gap-3">
                                 <div class="flex flex-col overflow-hidden">
                                     <span class="text-[11px] font-bold text-pink-300">↳ ${rep.name || 'Anonymous'} <span class="text-gray-400 font-normal">(@${rep.replyTo || c.name})</span> <span class="text-rose-400 font-normal ml-1">❤️ ${rep.likes || 0}</span></span>
                                     <span class="text-[11px] text-gray-300">💬 ${rep.text}</span>
                                 </div>
-                                <button onclick="adminDeleteComment('${c.id}', ${rIdx})" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] rounded-lg shadow transition shrink-0">
+                                <button type="button" onclick="adminDeleteComment('${safeCommentId}', ${rIdx})" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] rounded-lg shadow transition shrink-0 cursor-pointer">
                                     Delete Reply
                                 </button>
                             </div>
@@ -1188,22 +1157,44 @@
             });
             container.innerHTML = htmlContent;
         }
-        function adminDeleteComment(cId, rIdx) {
+        async function adminDeleteComment(cId, rIdx) {
+            const commentKey = String(cId);
             if (rIdx === null || rIdx === undefined) {
-                if (confirm("Admin, are you sure you want to delete this player's comment?")) {
-                    userCommentsList = userCommentsList.filter(c => c.id !== cId);
-                    if (window.db) window.dbSet(window.dbRef(window.db, `comments/${cId}`), null);
-                    renderCommentsList();
-                    renderAdminCommentsManager();
+                userCommentsList = userCommentsList.filter(c => String(c.id) !== commentKey);
+                renderCommentsList();
+                renderAdminCommentsManager();
+                if (window.db) {
+                    try {
+                        const targetRef = window.dbRef(window.db, `comments/${commentKey}`);
+                        if (typeof window.dbRemove === 'function') {
+                            await window.dbRemove(targetRef);
+                        } else {
+                            await window.dbSet(targetRef, null);
+                        }
+                    } catch (err) {
+                        console.error("Failed to delete comment from Firebase:", err);
+                        alert("Không thể xóa comment trên Firebase: " + (err && err.message ? err.message : err));
+                    }
                 }
             } else {
-                if (confirm("Admin, are you sure you want to delete this player's reply?")) {
-                    const target = userCommentsList.find(c => c.id === cId);
-                    if (target && target.replies) {
-                        target.replies.splice(rIdx, 1);
-                        if (window.db) window.dbSet(window.dbRef(window.db, `comments/${cId}/replies`), target.replies);
-                        renderCommentsList();
-                        renderAdminCommentsManager();
+                const target = userCommentsList.find(c => String(c.id) === commentKey);
+                if (!target) return;
+                const repliesArr = normalizeRepliesArray(target.replies);
+                repliesArr.splice(Number(rIdx), 1);
+                target.replies = repliesArr;
+                renderCommentsList();
+                renderAdminCommentsManager();
+                if (window.db) {
+                    try {
+                        const repliesRef = window.dbRef(window.db, `comments/${commentKey}/replies`);
+                        if (repliesArr.length === 0 && typeof window.dbRemove === 'function') {
+                            await window.dbRemove(repliesRef);
+                        } else {
+                            await window.dbSet(repliesRef, repliesArr);
+                        }
+                    } catch (err) {
+                        console.error("Failed to delete reply from Firebase:", err);
+                        alert("Không thể xóa reply trên Firebase: " + (err && err.message ? err.message : err));
                     }
                 }
             }
@@ -1500,7 +1491,6 @@
             const victoryContainer = document.getElementById('victory-image-container');
             const victoryImg = document.getElementById('victory-stage-img');
             const victoryVid = document.getElementById('victory-stage-vid');
-            const eggyYtBtn = document.getElementById('eggy-victory-yt-btn');
             const actionBtn = document.getElementById('victory-action-btn');
             const bonusBtns = document.getElementById('bonus-choice-buttons');
             
@@ -1513,21 +1503,15 @@
                 questionEl.className = "text-3xl sm:text-5xl font-bubble-title title-exact-match mb-4 tracking-wide text-center";
                 questionEl.innerHTML = victoryQuestions[5];
 
-                victoryContainer.className = "w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-[#fcebeb] flex items-center justify-center relative yt-hover-wrapper";
+                victoryContainer.className = "w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-black flex items-center justify-center relative";
                 victoryImg.classList.add('hidden');
-                victoryVid.src = "victory-eggy-img-phone.mp4";
-                victoryVid.className = "w-full h-full object-cover";
+                victoryVid.src = stageVictoryImages[5] || "victory-eggy-img.mp4";
+                victoryVid.className = "w-full h-full object-contain";
                 victoryVid.classList.remove('hidden');
                 victoryVid.muted = false;
                 victoryVid.controls = true;
                 victoryVid.currentTime = 0;
                 victoryVid.play().catch(()=>{});
-                syncHoverVideoState('victory-stage-vid', 'victory-image-container', 'eggy-victory-yt-icon');
-
-                if (eggyYtBtn) {
-                    eggyYtBtn.classList.remove('hidden');
-                    eggyYtBtn.classList.add('flex');
-                }
 
                 actionBtn.className = "px-6 sm:px-8 py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-sm sm:text-base rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 font-bubble-title mt-6 cursor-pointer";
                 actionBtn.classList.remove('hidden');
@@ -1548,10 +1532,6 @@
                 victoryContainer.className = "w-full max-h-52 my-3 flex items-center justify-center overflow-hidden relative";
                 victoryVid.classList.add('hidden');
                 victoryVid.pause();
-                if (eggyYtBtn) {
-                    eggyYtBtn.classList.add('hidden');
-                    eggyYtBtn.classList.remove('flex');
-                }
 
                 const vicImages = stageVictoryImages;
                 if (vicImages[currentStage] && vicImages[currentStage].trim() !== '') {
@@ -1688,7 +1668,7 @@
                 vicCard.innerHTML = `
                     <div class="text-[11px] font-extrabold text-amber-300">🏆 Victory Media</div>
                     <div class="w-full aspect-square bg-[#18111e] rounded-xl overflow-hidden border border-purple-900/50 flex items-center justify-center p-1">
-                        ${s === 5 ? `<video src="${stageVictoryImages[5]}" class="w-full h-full object-cover" autoplay loop muted></video>` : `<img src="${stageVictoryImages[s]}" class="w-full h-full object-contain">`}
+                        ${s === 5 ? `<video src="${stageVictoryImages[5]}" class="w-full h-full object-contain" autoplay loop muted></video>` : `<img src="${stageVictoryImages[s]}" class="w-full h-full object-contain">`}
                     </div>
                     <input type="file" id="input-vic-${s}" accept="${s === 5 ? 'video/*' : 'image/*'}" onchange="uploadVictoryPhoto(event, ${s})" class="hidden">
                     <button onclick="document.getElementById('input-vic-${s}').click()" class="w-full py-1.5 bg-amber-500 text-stone-900 font-extrabold text-xs rounded-xl shadow">Select Media</button>
