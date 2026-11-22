@@ -981,7 +981,6 @@
         }
       }
       function getGiftDimensions(giftIdx) {
-        // Tăng kích thước quà lên x1.5 lần
         var baseW = (deviceMode === "phone" ? 58 : deviceMode === "ipad" ? 70 : 78) * 1.5;
         var baseH = (deviceMode === "phone" ? 44 : deviceMode === "ipad" ? 52 : 58) * 1.5;
         var scaleW = 1 + ((giftIdx % 3) - 1) * 0.05;
@@ -992,7 +991,6 @@
         };
       }
       function getCarrierGiftPosition(giftH) {
-        // Đặt quà nằm ngay dưới và dính sát vào đáy ảnh Santa (không đè lên Santa)
         var h = giftH || (carrierGift ? carrierGift.h : 80);
         return {
           x: santaState.x,
@@ -1021,6 +1019,9 @@
       function getSleighBottomY() {
         return sleighState.y + sleighState.h * 0.5;
       }
+      function getSantaTopBoundY() {
+        return santaState.y - santaState.h * 0.5;
+      }
       function getBottomFallThresholdY() {
         return stageH - (deviceMode === "phone" ? 12 : 16);
       }
@@ -1031,20 +1032,23 @@
         var bottomEdge = pos.y + item.h * 0.5;
         return bottomEdge >= thresholdY || pos.y > stageH + item.h;
       }
+      // Phạm vi tính kết quả gift: chiều cao từ xe (sleighBottomY) lên đến Santa (santaTopBoundY)
       function isGiftOnSleighAtFreeze(item) {
         if (!item || !item.body || !item.dropped || item.crossedThreshold) return false;
         var pos = item.body.position;
         var avg = getAverageGiftSize();
-        var deckY = getSleighDeckY();
+        var santaTopY = getSantaTopBoundY();
         var sleighBottomY = getSleighBottomY();
-        var halfCaptureW = (sleighState.w + avg.avgW) * 0.5;
+        var halfCaptureW = Math.max(sleighState.w * 0.5, santaState.w * 0.5) + avg.avgW * 0.65;
         var withinHorizontal = Math.abs(pos.x - sleighState.x) <= halfCaptureW;
-        var withinVertical = pos.y + item.h * 0.5 >= deckY - item.h * 0.65 && pos.y - item.h * 0.5 <= sleighBottomY + 6;
-        return withinHorizontal && withinVertical;
+        var withinVerticalFromSleighToSanta =
+          pos.y + item.h * 0.5 >= santaTopY - item.h * 0.25 &&
+          pos.y - item.h * 0.5 <= sleighBottomY + 8;
+        return withinHorizontal && withinVerticalFromSleighToSanta;
       }
       function evaluateFallingGifts() {
         var deckY = getSleighDeckY();
-        var halfDeck = getSleighDeckWidth() * 0.58;
+        var halfDeck = getSleighDeckWidth() * 0.62;
         var anyFallingAboveThreshold = false;
         for (var i = 0; i < giftItems.length; i++) {
           var item = giftItems[i];
@@ -1053,9 +1057,9 @@
           var vel = item.body.velocity;
           var pastDeckLevel = pos.y > deckY + item.h * 0.35;
           var outsideDeckX = Math.abs(pos.x - sleighState.x) > halfDeck;
-          var tippingSeverely = Math.abs(item.body.angle) > 1.1 && pos.y > santaState.y + santaState.h * 0.6;
+          var tippingSeverely = Math.abs(item.body.angle) > 1.15 && pos.y > santaState.y + santaState.h * 0.6;
           var slidingOffDownward = vel.y > 3.5 && pos.y > deckY - item.h * 0.35;
-          if (pastDeckLevel && (outsideDeckX || pos.y > deckY + sleighState.h * 0.34)) {
+          if (pastDeckLevel && (outsideDeckX || pos.y > deckY + sleighState.h * 0.36)) {
             item.doomedToFall = true;
           } else if (tippingSeverely && outsideDeckX) {
             item.doomedToFall = true;
@@ -1163,7 +1167,6 @@
             sleighState.x = stageW * 0.5;
             sleighState.y = stageH - 80;
           } else {
-            // PC: santa tăng x1.5 (168*1.5=252, 128*1.5=192), sleigh tăng x2 (284*2=568, 114*2=228)
             santaState.w = 168 * 1.5;
             santaState.h = 128 * 1.5;
             santaState.y = 118;
@@ -1264,34 +1267,35 @@
         prepareNextCarrierGift();
       }
       /* =====================================================================
-         6. FREEZE-MOMENT SLEIGH SNAPSHOT & UNIFIED GIFT COUNTING
+         6. FREEZE-MOMENT SLEIGH-TO-SANTA SNAPSHOT & UNIFIED GIFT COUNTING
          ===================================================================== */
+      // Khung chụp Victory tính chiều cao từ xe (sleighBottomY) lên đến Santa (santaTopBoundY)
       function computeSleighFreezeBounds(giftsOnSleigh) {
         var avg = getAverageGiftSize();
         var sleighBottomY = getSleighBottomY();
-        var minX = sleighState.x - (sleighState.w + avg.avgW) * 0.5;
-        var maxX = sleighState.x + (sleighState.w + avg.avgW) * 0.5;
-        var highestGiftTopY = getSleighDeckY();
+        var santaTopY = getSantaTopBoundY();
+        var minX = sleighState.x - Math.max(sleighState.w * 0.5, santaState.w * 0.5) - avg.avgW * 0.5;
+        var maxX = sleighState.x + Math.max(sleighState.w * 0.5, santaState.w * 0.5) + avg.avgW * 0.5;
         for (var i = 0; i < giftsOnSleigh.length; i++) {
           var g = giftsOnSleigh[i];
           var topY = g.body.position.y - g.h * 0.5;
-          if (topY < highestGiftTopY) {
-            highestGiftTopY = topY;
+          if (topY < santaTopY) {
+            santaTopY = topY;
           }
           var leftX = g.body.position.x - g.w * 0.5;
           var rightX = g.body.position.x + g.w * 0.5;
           if (leftX < minX) minX = leftX;
           if (rightX > maxX) maxX = rightX;
         }
-        var minY = highestGiftTopY - avg.avgH * 0.5;
-        var maxY = sleighBottomY;
+        var minY = santaTopY - avg.avgH * 0.35;
+        var maxY = sleighBottomY + 8;
         return {
           left: minX,
           right: maxX,
           top: minY,
           bottom: maxY,
-          width: Math.max(80, maxX - minX),
-          height: Math.max(60, maxY - minY)
+          width: Math.max(120, maxX - minX),
+          height: Math.max(120, maxY - minY)
         };
       }
       function captureFreezeMomentSnapshot(giftsOnSleigh) {
@@ -1314,7 +1318,7 @@
             sctx.fill();
           }
           var bounds = computeSleighFreezeBounds(giftsOnSleigh);
-          var fitScale = Math.min((snapW * 0.84) / bounds.width, (snapH * 0.84) / bounds.height);
+          var fitScale = Math.min((snapW * 0.86) / bounds.width, (snapH * 0.86) / bounds.height);
           var centerX = (bounds.left + bounds.right) * 0.5;
           var centerY = (bounds.top + bounds.bottom) * 0.5;
           sctx.save();
@@ -1334,6 +1338,7 @@
               item.body.angle
             );
           }
+          drawSantaGraphic(sctx, santaState.x, santaState.y, santaState.w, santaState.h);
           sctx.restore();
           return snapCanvas.toDataURL("image/png");
         } catch (_err) {
