@@ -92,6 +92,15 @@
             transform-origin: center;
             margin: 10px;
         }
+        /* YouTube-style hover play/pause overlay */
+        .yt-hover-wrapper .yt-hover-overlay {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .yt-hover-wrapper:hover .yt-hover-overlay,
+        .yt-hover-wrapper.is-paused .yt-hover-overlay {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-between p-2 sm:p-4 select-none bg-[#c96b92]">
@@ -109,10 +118,13 @@
                 IS SEONGHYEON A CAT?
             </h1>
             <!-- Video Frame Container -->
-            <div id="intro-video-container" class="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-[#fcebeb] flex items-center justify-center relative">
-                <div id="intro-video-wrapper" class="w-full h-full">
+            <div id="intro-video-container" class="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-[#fcebeb] flex items-center justify-center relative yt-hover-wrapper">
+                <div id="intro-video-wrapper" class="w-full h-full relative">
                     <video id="main-intro-video" class="w-full h-full object-cover" controls autoplay loop playsinline preload="auto" src="intro-video.mp4" oncanplay="if(this.currentTime>0.5)this.currentTime=0;"></video>
                 </div>
+                <button type="button" onclick="toggleHoverVideoPlayback('main-intro-video', 'intro-video-container', 'intro-yt-icon')" aria-label="Play or pause intro video" class="yt-hover-overlay absolute bottom-12 left-4 z-20 w-11 h-11 rounded-full bg-black/70 hover:bg-black/90 text-white flex items-center justify-center shadow-lg transition cursor-pointer">
+                    <i id="intro-yt-icon" class="fa-solid fa-pause text-base"></i>
+                </button>
                 <div id="intro-placeholder-text" class="absolute inset-0 flex items-center justify-center text-[#5d223c] font-bold text-base sm:text-lg bg-[#fff0f0] p-4 text-center rounded-2xl font-vietnamese hidden">
                     (No Intro Video Loaded. Press F2 or click Admin Upload to configure media)
                 </div>
@@ -199,8 +211,8 @@
     </main>
     <!-- STAGE TRANSITION & VICTORY MODAL -->
     <div id="victory-modal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-[#fff7e6] rounded-3xl p-6 sm:p-8 max-w-lg w-full text-center shadow-2xl border-4 border-white flex flex-col items-center">
-            <div class="text-yellow-500 text-4xl mb-2">
+        <div id="victory-card" class="bg-[#fff7e6] rounded-3xl p-6 sm:p-8 max-w-lg w-full text-center shadow-2xl border-4 border-white flex flex-col items-center">
+            <div id="victory-trophy-icon" class="text-yellow-500 text-4xl mb-2">
                 <i class="fa-solid fa-trophy"></i>
             </div>
             <div id="victory-subtitle-label" class="text-xs font-bold text-emerald-600 tracking-widest uppercase mb-2 font-vietnamese">
@@ -208,9 +220,12 @@
             </div>
             
             <h2 id="victory-question" class="text-2xl sm:text-3xl font-black text-[#5d223c] mb-4 leading-snug px-2 font-bubble-title">IS SEONGHYEON A CAT?</h2>
-            <div id="victory-image-container" class="w-full max-h-52 my-3 flex items-center justify-center overflow-hidden">
+            <div id="victory-image-container" class="w-full max-h-52 my-3 flex items-center justify-center overflow-hidden relative">
                 <img id="victory-stage-img" src="" class="max-h-48 object-contain drop-shadow-lg" alt="Stage Victory Image">
                 <video id="victory-stage-vid" src="" class="max-h-48 object-contain drop-shadow-lg hidden" autoplay loop muted playsinline></video>
+                <button id="eggy-victory-yt-btn" type="button" onclick="toggleHoverVideoPlayback('victory-stage-vid', 'victory-image-container', 'eggy-victory-yt-icon')" aria-label="Play or pause victory video" class="yt-hover-overlay hidden bottom-12 left-4 z-20 w-11 h-11 rounded-full bg-black/70 hover:bg-black/90 text-white flex items-center justify-center shadow-lg transition cursor-pointer">
+                    <i id="eggy-victory-yt-icon" class="fa-solid fa-pause text-base"></i>
+                </button>
             </div>
             <button id="victory-action-btn" onclick="handleVictoryNext()" class="w-full py-4 bg-[#5d223c] text-white font-black text-lg rounded-2xl shadow-lg hover:bg-[#461a2d] transition transform hover:scale-105 cursor-pointer mt-2 font-bubble-title hidden">ABSOLUTELY ➔</button>
             <div id="bonus-choice-buttons" class="w-full flex items-center justify-center gap-4 mt-4">
@@ -298,7 +313,7 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <span class="font-black text-teal-300 text-sm block">ADMIN COMMENT &amp; REPLY MODERATION</span>
-                            <span class="text-xs text-gray-400 font-vietnamese">Admin có toàn quyền kiểm duyệt và xóa bỏ cả bình luận gốc lẫn các phản hồi (reply) của người chơi.</span>
+                            <span class="text-xs text-gray-400 font-vietnamese">Admin có toàn quyền kiểm duyệt và xóa bỏ mọi bình luận gốc lẫn các phản hồi (reply) của tất cả người chơi.</span>
                         </div>
                     </div>
                     <div id="admin-comments-manage-list" class="space-y-3"></div>
@@ -587,7 +602,7 @@
             2: 'victory2-img.png', 
             3: 'victory3-img.png', 
             4: 'victory-bonus-img.png',
-            5: 'victory-eggy-img.mp4'
+            5: 'victory-eggy-img-phone.mp4'
         };
         let phoneStageVictoryImages = { 
             1: 'victory1-img-phone.png', 
@@ -666,7 +681,7 @@
             2: 'HAVE YOU STARTING TO BELIEVING?',
             3: 'ARE YOU FULLY CONVINCED NOW?',
             4: 'IS SEONGHYEON A CAT?',
-            5: 'THANK YOU FOR JOINING THE GAME!<br>SEE YOU NEXT TIME!👋'
+            5: 'THANK YOU FOR LOVING SEONGHYEON'
         };
         
         const victoryBtnLabels = {
@@ -724,6 +739,35 @@
                 }
             }
         }
+        function toggleHoverVideoPlayback(videoId, containerId, iconId) {
+            const vid = document.getElementById(videoId);
+            const container = document.getElementById(containerId);
+            const icon = document.getElementById(iconId);
+            if (!vid) return;
+            if (vid.paused) {
+                vid.play().catch(()=>{});
+                if (container) container.classList.remove('is-paused');
+                if (icon) icon.className = "fa-solid fa-pause text-base";
+            } else {
+                vid.pause();
+                if (container) container.classList.add('is-paused');
+                if (icon) icon.className = "fa-solid fa-play text-base ml-0.5";
+            }
+        }
+        function syncHoverVideoState(videoId, containerId, iconId) {
+            const vid = document.getElementById(videoId);
+            const container = document.getElementById(containerId);
+            const icon = document.getElementById(iconId);
+            if (!vid) return;
+            vid.addEventListener('play', () => {
+                if (container) container.classList.remove('is-paused');
+                if (icon) icon.className = "fa-solid fa-pause text-base";
+            });
+            vid.addEventListener('pause', () => {
+                if (container) container.classList.add('is-paused');
+                if (icon) icon.className = "fa-solid fa-play text-base ml-0.5";
+            });
+        }
         function stopAllGlobalMedia() {
             stopBGM();
             stopIntroVideoCompletely();
@@ -751,6 +795,7 @@
                 };
                 vid.src = isPhone ? phoneIntroVideoUrl : introVideoUrl;
                 wrapper.appendChild(vid);
+                syncHoverVideoState('main-intro-video', 'intro-video-container', 'intro-yt-icon');
             }
         }
         let audioCtx = null;
@@ -1114,7 +1159,7 @@
                     <div class="bg-[#23182d] p-3 rounded-2xl border border-purple-900/60 flex flex-col gap-2 font-vietnamese">
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex flex-col overflow-hidden">
-                                <span class="text-xs font-bold text-teal-300">${c.name} <span class="text-rose-400 font-normal">(${c.vote || 'YES/NO'})</span> <span class="text-pink-300 font-normal ml-2">❤️ ${c.likes || 0}</span></span>
+                                <span class="text-xs font-bold text-teal-300">${c.name || 'Anonymous'} <span class="text-rose-400 font-normal">(${c.vote || 'YES/NO'})</span> <span class="text-pink-300 font-normal ml-2">❤️ ${c.likes || 0}</span></span>
                                 <span class="text-xs text-gray-300">💬 ${c.text}</span>
                             </div>
                             <button onclick="adminDeleteComment('${c.id}', null)" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow transition shrink-0">
@@ -1128,7 +1173,7 @@
                         htmlContent += `
                             <div class="bg-[#18111e] p-2.5 rounded-xl border border-purple-900/40 flex items-center justify-between gap-3">
                                 <div class="flex flex-col overflow-hidden">
-                                    <span class="text-[11px] font-bold text-pink-300">↳ ${rep.name} <span class="text-gray-400 font-normal">(@${rep.replyTo})</span> <span class="text-rose-400 font-normal ml-1">❤️ ${rep.likes || 0}</span></span>
+                                    <span class="text-[11px] font-bold text-pink-300">↳ ${rep.name || 'Anonymous'} <span class="text-gray-400 font-normal">(@${rep.replyTo || c.name})</span> <span class="text-rose-400 font-normal ml-1">❤️ ${rep.likes || 0}</span></span>
                                     <span class="text-[11px] text-gray-300">💬 ${rep.text}</span>
                                 </div>
                                 <button onclick="adminDeleteComment('${c.id}', ${rIdx})" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] rounded-lg shadow transition shrink-0">
@@ -1145,15 +1190,20 @@
         }
         function adminDeleteComment(cId, rIdx) {
             if (rIdx === null || rIdx === undefined) {
-                if (confirm("Admin, are you sure you want to delete this main comment?")) {
+                if (confirm("Admin, are you sure you want to delete this player's comment?")) {
+                    userCommentsList = userCommentsList.filter(c => c.id !== cId);
                     if (window.db) window.dbSet(window.dbRef(window.db, `comments/${cId}`), null);
+                    renderCommentsList();
+                    renderAdminCommentsManager();
                 }
             } else {
-                if (confirm("Admin, are you sure you want to delete this reply?")) {
+                if (confirm("Admin, are you sure you want to delete this player's reply?")) {
                     const target = userCommentsList.find(c => c.id === cId);
                     if (target && target.replies) {
                         target.replies.splice(rIdx, 1);
                         if (window.db) window.dbSet(window.dbRef(window.db, `comments/${cId}/replies`), target.replies);
+                        renderCommentsList();
+                        renderAdminCommentsManager();
                     }
                 }
             }
@@ -1443,29 +1493,66 @@
             stopBGM();
             playVictoryFanfareSound();
             const modal = document.getElementById('victory-modal');
+            const victoryCard = document.getElementById('victory-card');
+            const trophyIcon = document.getElementById('victory-trophy-icon');
             const subtitleEl = document.getElementById('victory-subtitle-label');
             const questionEl = document.getElementById('victory-question');
+            const victoryContainer = document.getElementById('victory-image-container');
             const victoryImg = document.getElementById('victory-stage-img');
             const victoryVid = document.getElementById('victory-stage-vid');
+            const eggyYtBtn = document.getElementById('eggy-victory-yt-btn');
             const actionBtn = document.getElementById('victory-action-btn');
             const bonusBtns = document.getElementById('bonus-choice-buttons');
             
             if (currentStage === 5) {
-                if (subtitleEl) subtitleEl.innerText = "STAGE SPECIAL CLEARED!";
+                modal.className = "fixed inset-0 bg-[#fcebeb] z-50 flex flex-col items-center justify-center p-4 sm:p-8";
+                victoryCard.className = "w-full max-w-4xl bg-[#fcebeb] flex flex-col items-center justify-center text-center";
+                if (trophyIcon) trophyIcon.classList.add('hidden');
+                if (subtitleEl) subtitleEl.classList.add('hidden');
+
+                questionEl.className = "text-3xl sm:text-5xl font-bubble-title title-exact-match mb-4 tracking-wide text-center";
                 questionEl.innerHTML = victoryQuestions[5];
+
+                victoryContainer.className = "w-full max-w-3xl aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-[#fcebeb] flex items-center justify-center relative yt-hover-wrapper";
                 victoryImg.classList.add('hidden');
-                victoryVid.src = stageVictoryImages[5];
+                victoryVid.src = "victory-eggy-img-phone.mp4";
+                victoryVid.className = "w-full h-full object-cover";
                 victoryVid.classList.remove('hidden');
+                victoryVid.muted = false;
+                victoryVid.controls = true;
                 victoryVid.currentTime = 0;
                 victoryVid.play().catch(()=>{});
-                
+                syncHoverVideoState('victory-stage-vid', 'victory-image-container', 'eggy-victory-yt-icon');
+
+                if (eggyYtBtn) {
+                    eggyYtBtn.classList.remove('hidden');
+                    eggyYtBtn.classList.add('flex');
+                }
+
+                actionBtn.className = "px-6 sm:px-8 py-3 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-sm sm:text-base rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 font-bubble-title mt-6 cursor-pointer";
                 actionBtn.classList.remove('hidden');
-                bonusBtns.classList.add('hidden');
                 actionBtn.innerText = victoryBtnLabels[5];
+                bonusBtns.classList.add('hidden');
             } else {
-                if (subtitleEl) subtitleEl.innerText = "Stage Cleared!";
+                modal.className = "fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4";
+                victoryCard.className = "bg-[#fff7e6] rounded-3xl p-6 sm:p-8 max-w-lg w-full text-center shadow-2xl border-4 border-white flex flex-col items-center";
+                if (trophyIcon) trophyIcon.classList.remove('hidden');
+                if (subtitleEl) {
+                    subtitleEl.classList.remove('hidden');
+                    subtitleEl.innerText = "Stage Cleared!";
+                }
+
+                questionEl.className = "text-2xl sm:text-3xl font-black text-[#5d223c] mb-4 leading-snug px-2 font-bubble-title";
                 questionEl.innerHTML = victoryQuestions[currentStage] || victoryQuestions[1];
+
+                victoryContainer.className = "w-full max-h-52 my-3 flex items-center justify-center overflow-hidden relative";
                 victoryVid.classList.add('hidden');
+                victoryVid.pause();
+                if (eggyYtBtn) {
+                    eggyYtBtn.classList.add('hidden');
+                    eggyYtBtn.classList.remove('flex');
+                }
+
                 const vicImages = stageVictoryImages;
                 if (vicImages[currentStage] && vicImages[currentStage].trim() !== '') {
                     victoryImg.src = vicImages[currentStage];
@@ -1477,6 +1564,7 @@
                     actionBtn.classList.add('hidden');
                     bonusBtns.classList.remove('hidden');
                 } else {
+                    actionBtn.className = "w-full py-4 bg-[#5d223c] text-white font-black text-lg rounded-2xl shadow-lg hover:bg-[#461a2d] transition transform hover:scale-105 cursor-pointer mt-2 font-bubble-title";
                     actionBtn.classList.remove('hidden');
                     bonusBtns.classList.add('hidden');
                     actionBtn.innerText = victoryBtnLabels[currentStage] || 'NEXT STAGE ➔';
@@ -1485,11 +1573,16 @@
             modal.classList.remove('hidden');
         }
         function handleVictoryNext() {
+            const victoryVid = document.getElementById('victory-stage-vid');
+            if (victoryVid) {
+                victoryVid.pause();
+                victoryVid.currentTime = 0;
+            }
             document.getElementById('victory-modal').classList.add('hidden');
             if (currentStage === 1) startGame(2);
             else if (currentStage === 2) startGame(3);
             else if (currentStage === 3) startGame(4);
-            else if (currentStage === 5) showIntroScreen();
+            else if (currentStage === 5) showIntroScreen(false);
         }
         function handleBonusChoice(choice, mode = 'pc') {
             document.getElementById('victory-modal').classList.add('hidden');
@@ -1510,7 +1603,7 @@
             
             if (actionBtn) {
                 actionBtn.classList.remove('hidden');
-                actionBtn.innerText = "ㅋㅋㅋㅋㅋㅋ";
+                actionBtn.innerText = key === 'NO' ? "aniyaaa~" : "ㅋㅋㅋㅋㅋㅋ";
                 actionBtn.className = "px-6.5 py-3.5 bg-[#5d223c] hover:bg-[#461a2d] text-white font-black text-sm rounded-2xl transition shadow-md font-bubble-title transform hover:scale-105 border-2 border-white/40 w-auto px-6 mt-2";
             }
             if (mediaData && mediaData.type === 'video' && mediaData.video) {
